@@ -6,7 +6,23 @@ section{
     display: flex;
     flex-direction: column;
 }
+
 .chatbox-header{
     width: 100%;
     height: 50px;
+    .chatbox-header-left{
+        height: 100%;
+        display: flex;
+        align-items: center;
+    }    
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+h2{
+    font-family: 'Nunito', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #000000;
 }

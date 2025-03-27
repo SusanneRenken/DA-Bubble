@@ -1,1 +1,16 @@
-<p>user-name works!</p>
+<main>
+    <div class="avatar">
+        <span>Marcel Test</span>
+        <img src="/img/firstAvatar.png">
+    </div>
+    <button (click)="toggleLogOut()" #toggleBtn>
+        <img class="default" src="/img/arrowDown.png">
+        <img class="hover" src="/img/arrowDownBlue.png">
+    </button>
+</main>
+<section *ngIf="isLogOutVisible" >
+    <div class="logOut" #logOutBox>
+        <button>Profil</button>
+        <button>Log out</button>
+    </div>
+</section>

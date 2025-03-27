@@ -2,12 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-search-bar',
+  selector: 'app-channels',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './search-bar.component.html',
-  styleUrl: './search-bar.component.scss'
+  templateUrl: './channels.component.html',
+  styleUrl: './channels.component.scss'
 })
-export class SearchBarComponent {
+export class ChannelsComponent {
 
 }

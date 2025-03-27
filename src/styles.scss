@@ -2,6 +2,7 @@
   padding: 0;
   margin: 0;
   background-color: #ECEEFE;
+  box-sizing: border-box;
 }
 @mixin fontStyle($size, $fontColor, $fontWeight) {
     font-size: $size;
@@ -12,6 +13,13 @@
     display: $flex;
     align-items: $align;
     justify-content: $justify;
+}
+@mixin flexBox($direction, $justify, $align, $gap) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+  gap: $gap + px;
 }
 .nunitoFont {
     font-family: 'Nunito', sans-serif;
@@ -127,5 +135,4 @@
   font-style: italic;
   font-weight: 900;
   src: url("/font/nunito/nunito-v26-latin-900italic.woff2") format("woff2");
-
 }

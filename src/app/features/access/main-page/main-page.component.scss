@@ -1,0 +1,45 @@
+section {
+  background-color: #eceefe;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+
+  > footer {
+    display: flex;
+    gap: 45px;
+    position: absolute;
+    bottom: 0;
+    margin-bottom: 48px;
+  }
+}
+
+.logo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin-top: 75px;
+  margin-left: 75px;
+}
+
+.sign-in-container {
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+  gap: 20px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-top: 75px;
+  margin-right: 75px;
+}
+
+.card {
+  position: relative;
+  background-color: #FFFFFF;
+  padding: 40px 53px;
+  border-radius: 30px;
+  box-shadow: 0px 2px 10px 0px #00000014;
+}

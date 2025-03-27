@@ -1,0 +1,41 @@
+main{
+    width: 900px;
+    background-color: white;
+    position: relative;
+    height: 70px;
+    padding: 17.5px 45px;
+    border-radius: 62px;
+    border: none;
+    z-index: 1;
+}
+.searchButton{
+    position: absolute;
+    border: none;
+    right: 45px;
+    top: 35px;
+    background-color: white;
+    z-index: 3;
+    cursor: pointer;
+    >img{
+        height: 35px;
+        width: 35px;
+        background-color: white;
+    }
+}
+
+input{
+    position: absolute;
+    height: 70px;
+    left: 0;
+    top: 0px;
+    font-size: 24px;
+    width: 900px;
+    padding: 17.5px 45px;
+    border-radius: 62px;
+    background-color: white;
+    border: none;
+    z-index: 2;
+}
+input:focus{
+    outline: 2px solid blue;
+}

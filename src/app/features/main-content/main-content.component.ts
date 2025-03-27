@@ -1,11 +1,17 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { HeaderComponent } from './header/header.component';
+import { ContactBarComponent } from './contact-bar/contact-bar.component';
+import { MessageAreaComponent } from './message-area/message-area.component';
 
 @Component({
   selector: 'app-main-content',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule, HeaderComponent, ContactBarComponent, MessageAreaComponent],
   templateUrl: './main-content.component.html',
-  styleUrl: './main-content.component.scss'
+  styleUrls: ['./main-content.component.scss']  
 })
+
 export class MainContentComponent {
 
 }

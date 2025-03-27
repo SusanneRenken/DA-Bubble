@@ -1,0 +1,47 @@
+@import "../../../../styles.scss";
+
+section {
+  height: 100%;
+  width: 100%;
+  padding: 24px;
+  background-color: #ffffff;
+  border-radius: 30px;
+  @include flexBox(column, initial, initial, 0);
+}
+
+.chatbox-header {
+  width: 100%;
+  height: 50px;
+  @include flexBox(row, initial, center, 0);
+  .private-header {
+    height: 100%;
+    @include flexBox(row, initial, center, 16);
+  }
+  .channel-header {
+    height: 100%;
+    @include flexBox(row, space-between, center, 0);
+  }
+}
+
+.channel-name {
+  @include flexBox(row, initial, center, 10);
+  span {
+    font-family: "Nunito", sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #000000;
+  }
+}
+
+h2 {
+  font-family: "Nunito", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #000000;
+}
+
+.avatar-small {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}

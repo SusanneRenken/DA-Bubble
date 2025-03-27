@@ -1,0 +1,9 @@
+@import '../../../../styles.scss';
+header{
+    @include centerFlex(flex, center, space-between);
+    padding-inline: 25px;
+    height: 100%;
+}
+img{
+    width: 330px;
+}

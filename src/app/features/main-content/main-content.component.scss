@@ -10,8 +10,7 @@ section{
 
 app-header{
     width: 100%;
-    height: 100px;
-    background-color: rgb(208, 231, 173);
+    height: 105px;
 }
 
 .content-container{
@@ -20,7 +19,6 @@ app-header{
     gap: 20px;
     app-contact-bar{
         width: 366px;
-        background-color: rgb(167, 103, 116);
     }
 
     app-message-area{

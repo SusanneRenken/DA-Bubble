@@ -1,7 +1,8 @@
 @import '../../../../styles.scss';
 header{
     @include centerFlex(flex, center, space-between);
-    margin: 25px 45px 16px 45px;
+    padding-inline: 25px;
+    height: 100%;
 }
 img{
     width: 330px;

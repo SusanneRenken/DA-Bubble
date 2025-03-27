@@ -1,8 +1,11 @@
 section{
     width: 100svw;
     height: 100svh;
+    padding: 20px;
+    background-color: rgb(236, 238, 254);
     display: flex;
     flex-direction: column;
+    gap: 20px;
 }
 
 app-header{
@@ -14,6 +17,7 @@ app-header{
 .content-container{
     height: 100%;
     display: flex;
+    gap: 20px;
     app-contact-bar{
         width: 366px;
         background-color: rgb(167, 103, 116);
@@ -21,6 +25,5 @@ app-header{
 
     app-message-area{
         flex: 1;
-        background-color: rgb(159, 169, 199);
     }
 }

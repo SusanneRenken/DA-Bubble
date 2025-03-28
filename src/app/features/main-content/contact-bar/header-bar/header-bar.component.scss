@@ -1,0 +1,31 @@
+@import '../../../../../styles.scss';
+header{
+    width: 310px;
+    margin: 0 auto;
+    padding-top: 30px
+}
+section{
+    @include flexBox('', space-between, center, '');
+    height: 60px;
+}
+.logoText{
+    @include flexBox('', left, center, 15);
+    @include fontStyle(24px, black, 700);
+    width: 250px;
+    img{
+        height: 60px;
+        width: 60px;
+    }
+}
+.squareImage{
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    background-color: white;
+    border: none;
+    cursor: pointer;
+    img{
+        height: 24px;
+        width: 24px;        
+    }
+}

@@ -1,0 +1,8 @@
+@import '../../../../../styles.scss';
+
+main{
+    width: 310px;
+}
+header{
+    @include flexBox('', space-between, center, '');
+}

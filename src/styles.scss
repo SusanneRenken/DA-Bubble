@@ -1,11 +1,11 @@
 * {
   padding: 0;
   margin: 0;
-  background-color: #ECEEFE;
   box-sizing: border-box;
 }
 body{
   font-family: 'Nunito', sans-serif;
+  background-color: #ECEEFE;
 }
 @mixin fontStyle($size, $fontColor, $fontWeight) {
     font-size: $size;

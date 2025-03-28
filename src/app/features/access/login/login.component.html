@@ -16,7 +16,7 @@
   </div>
   <button>Anmelden mit Google</button>
   <div class="btn-container">
-    <app-button [text]="'Anmelden'"></app-button>
+    <app-button (click)="changeComponent('avatar')" [text]="'Anmelden'"></app-button>
     <app-button [text]="'Gäste-Login'"></app-button>
   </div>
 </form>

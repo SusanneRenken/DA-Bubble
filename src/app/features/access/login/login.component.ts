@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ButtonComponent } from '../../general-components/button/button.component';
+import { ComponentSwitcherService } from '../../../shared/services/component-switcher.service';
 
 @Component({
   selector: 'app-login',
@@ -9,4 +10,9 @@ import { ButtonComponent } from '../../general-components/button/button.componen
 })
 export class LoginComponent {
 
+  constructor(public componentSwitcher: ComponentSwitcherService) {}
+
+  changeComponent(componentName: string) {
+    this.componentSwitcher.setComponent(componentName);
+  }
 }

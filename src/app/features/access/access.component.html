@@ -2,14 +2,14 @@
 
 <div class="sign-in-container">
   <p>Neu bei DABubble?</p>
-  <p class="link font-figtree" (click)="setComponent('signin')">Konto erstellen</p>
+  <p class="link font-figtree" (click)="changeComponent('signin')">Konto erstellen</p>
 </div>
 
 <div class="card">
-  <ng-container *ngComponentOutlet="currentComponent"></ng-container>
+  <ng-container *ngComponentOutlet="componentSwitcher.currentComponent()"></ng-container>
 </div>
 
 <footer>
-  <p class="link font-figtree" (click)="setComponent('imprit')">Impressum</p>
-  <p class="link font-figtree" (click)="setComponent('privacy')">Dateschutz</p>
+  <p class="link font-figtree" (click)="changeComponent('imprit')">Impressum</p>
+  <p class="link font-figtree" (click)="changeComponent('privacy')">Dateschutz</p>
 </footer>

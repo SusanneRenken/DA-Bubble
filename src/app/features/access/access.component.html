@@ -1,1 +1,15 @@
-<p>access works!</p>
+<div class="logo">Mein Logo</div>
+
+<div class="sign-in-container">
+  <p>Neu bei DABubble?</p>
+  <p class="link font-figtree" (click)="setComponent('signin')">Konto erstellen</p>
+</div>
+
+<div class="card">
+  <ng-container *ngComponentOutlet="currentComponent"></ng-container>
+</div>
+
+<footer>
+  <p class="link font-figtree">Impressum</p>
+  <p class="link font-figtree">Dateschutz</p>
+</footer>

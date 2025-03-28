@@ -75,6 +75,44 @@ section {
   }
 }
 
+.chatbox-textfield {
+  position: relative;
+  width: calc(100% - 90px);
+  margin: 40px 45px;
+  padding: 20px;
+  border: 1px solid #adb0d9;
+  border-radius: 20px;
+  @include flexBox(column, initial, initial, 15);
+
+  &:focus-within {
+    border-color: #444df2;
+  }
+
+  textarea {
+    all: unset;
+    word-break: break-word;
+    font-size: 18px;
+    z-index: 2;
+  }
+
+  .textfield-buttons {
+    @include flexBox(row, space-between, center, 0);
+    div {
+      @include flexBox(row, initial, initial, 5);
+    }
+  }
+}
+
+.icon-button {
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50px;
+  color: #686868;
+  @include flexBox(row, center, center, 0);
+}
+
 h1 {
   font-size: 24px;
   font-weight: 700;

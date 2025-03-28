@@ -1,0 +1,61 @@
+:host {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.logo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin-top: 75px;
+  margin-left: 75px;
+}
+
+.sign-in-container {
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+  gap: 20px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-top: 75px;
+  margin-right: 75px;
+}
+
+.card {
+  position: relative;
+  background-color: #ffffff;
+  max-width: 650px;
+  padding: 40px 53px;
+  border-radius: 30px;
+  box-shadow: 0px 2px 10px 0px #00000014;
+}
+
+footer {
+  display: flex;
+  gap: 45px;
+  position: absolute;
+  bottom: 0;
+  margin-bottom: 48px;
+}
+
+.link {
+  cursor: pointer;
+  padding: 10px 15px;
+  color: #797ef3;
+  font-size: 18px;
+  font-weight: 400;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: #444df2;
+    font-weight: 500;
+    border: 1px solid #adb0d9;
+    border-radius: 30px;
+  }
+}

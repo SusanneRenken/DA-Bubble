@@ -1,15 +1,22 @@
-<h1>Anmeldung</h1>
-<p>Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit verwendest.</p>
-<input type="email">
-<input type="password">
-<a href="">Passwort vergessen?</a>
-<div class="or-container">
-  <span>
-    ODER
-  </span>
-</div>
-<button>Anmelden mit Google</button>
-<div class="btn-container">
-  <app-button [text]="'Anmelden'"></app-button>
-  <app-button [text]="'Gäste-Login'"></app-button>
-</div>
+<form action="">
+  <h1>Anmeldung</h1>
+  <p>
+    Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit
+    verwendest.
+  </p>
+  <label for="">
+    <input type="email" />
+  </label>
+  <label for="">
+    <input type="password" />
+  </label>
+  <span>Passwort vergessen?</span>
+  <div class="or-container">
+    <span> ODER </span>
+  </div>
+  <button>Anmelden mit Google</button>
+  <div class="btn-container">
+    <app-button [text]="'Anmelden'"></app-button>
+    <app-button [text]="'Gäste-Login'"></app-button>
+  </div>
+</form>

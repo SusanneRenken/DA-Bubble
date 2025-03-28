@@ -1,16 +1,19 @@
-<h1>Konto erstellen</h1>
-<p>Mit deinem Namen und deiner E-Mail-Adresse hast du dein neues DABubble-Konto.</p>
-<input type="text">
-<input type="email">
-<input type="password">
-<div>
-  <input type="checkbox">
+<form action="">
+  <h1>Konto erstellen</h1>
   <p>
-    Ich stimme deiner
-    <a href="">Datenschutzerklärung</a>
-    zu.
+    Mit deinem Namen und deiner E-Mail-Adresse hast du dein neues
+    DABubble-Konto.
   </p>
+  <input type="text" />
+  <input type="email" />
+  <input type="password" />
+  <div class="checkbox-container">
+    <input type="checkbox" />
+    Ich stimme deiner
+    <span>Datenschutzerklärung</span>
+    zu.
+  </div>
   <div>
     <app-button [text]="'Weiter'"></app-button>
   </div>
-</div>
+</form>

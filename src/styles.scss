@@ -3,17 +3,11 @@
   margin: 0;
   box-sizing: border-box;
 }
-<<<<<<< HEAD
-body{
-  background-color: #ECEEFE;
-  font-family: 'Nunito', sans-serif;
-=======
 
 html,
 body {
   font-family: "Nunito", sans-serif;
   background-color: rgb(236, 238, 254);
->>>>>>> main
 }
 
 @mixin fontStyle($size, $fontColor, $fontWeight) {

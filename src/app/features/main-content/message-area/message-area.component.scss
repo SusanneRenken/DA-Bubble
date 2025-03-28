@@ -103,6 +103,11 @@ section {
   }
 }
 
+.thread-margin{
+    width: calc(100% - 40px);
+  margin: 40px 20px;
+}
+
 .icon-button {
   cursor: pointer;
   width: 40px;

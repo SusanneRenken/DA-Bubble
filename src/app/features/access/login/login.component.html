@@ -1,22 +1,33 @@
-<form action="">
+<form [formGroup]="loginData" (ngSubmit)="onSubmit()">
   <h1>Anmeldung</h1>
   <p>
     Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit
     verwendest.
   </p>
-  <label for="">
-    <input type="email" />
+  <label for="email">
+    <input
+      type="email"
+      name="email"
+      id="email"
+      formControlName="email"
+      pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
+    />
   </label>
-  <label for="">
-    <input type="password" />
+  <label for="password">
+    <input
+      type="password"
+      name="password"
+      id="password"
+      formControlName="password"
+    />
   </label>
   <span>Passwort vergessen?</span>
   <div class="or-container">
     <span> ODER </span>
   </div>
-  <button>Anmelden mit Google</button>
+  <button type="button">Anmelden mit Google</button>
   <div class="btn-container">
-    <app-button (click)="changeComponent('avatar')" [text]="'Anmelden'"></app-button>
-    <app-button [text]="'Gäste-Login'"></app-button>
+    <app-button type="submit" [disabled]="!loginData.valid">Anmelden</app-button>
+    <app-button>Gäste-Login</app-button>
   </div>
 </form>

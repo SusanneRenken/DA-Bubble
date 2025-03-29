@@ -4,6 +4,8 @@ import { CreateAccountComponent } from '../../features/access/create-account/cre
 import { ImprintComponent } from '../../features/access/imprint/imprint.component';
 import { PrivacyComponent } from '../../features/access/privacy/privacy.component';
 import { SelectAvatarComponent } from '../../features/access/select-avatar/select-avatar.component';
+import { ConfirmEmailComponent } from '../../features/access/confirm-email/confirm-email.component';
+import { ConfirmPasswordComponent } from '../../features/access/confirm-password/confirm-password.component';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +31,12 @@ export class ComponentSwitcherService {
         break;
       case 'avatar':
         this.currentComponent.set(SelectAvatarComponent);
+        break;
+      case 'conMail':
+        this.currentComponent.set(ConfirmEmailComponent);
+        break;
+      case 'conPassword':
+        this.currentComponent.set(ConfirmPasswordComponent);
         break;
       default:
         this.currentComponent.set(LoginComponent);

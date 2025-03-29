@@ -1,0 +1,18 @@
+@import '../../../../styles.scss';
+
+:host {
+  position: relative;
+  @include dFlex($gap: 10px, $direction: column);
+}
+
+.arrow {
+  position: absolute;
+  top: 10px;
+  left: 0;
+}
+
+.img-contaier {
+  background-color: #797EF3;
+  border-radius: 50%;
+  padding: 40px;
+}

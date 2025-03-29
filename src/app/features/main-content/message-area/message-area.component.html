@@ -2,13 +2,13 @@
   <div class="chatbox-header">
     <div class="private-header">
       <img class="avatar-small" src="/assets/img/avatar-5.png" alt="" />
-      <h2>Sofia Müller</h2>
+      <h1>Sofia Müller</h1>
     </div>
 
     <!-- <div class="channel-header">
       <a class="channel-name">
-        <span>#</span>
-        <h2>Entwicklerteam</h2>
+        <img src="/assets/icons/hashtag.svg" alt="arrow down" />
+        <h1>Entwicklerteam</h1>
         <img src="/assets/icons/keyboard-arrow-down.svg" alt="arrow down" />
       </a>
 
@@ -39,12 +39,100 @@
     </div> -->
   </div>
 
-  <div class="chatbox-textfield">
-    <textarea
-      type="text"
-      placeholder="Nachricht an"
-      rows="2"
-    ></textarea>
+  <div class="chatbox-messages">
+    <div class="thread-separator">
+      <p>2 Antworten</p>
+      <span></span>
+    </div>
+
+    <div class="date-separator">
+      <span></span>
+      <p>Freitag, 27. März</p>
+      <span></span>
+    </div>
+
+    <div class="message">
+      <img class="avatar-small" src="/assets/img/avatar-4.png" alt="" />
+
+      <div>
+        <div>
+          <h3>Tim Schuster</h3>
+          <h5>12:31 Uhr</h5>
+        </div>
+        <div class="message-text">Hey, wie geht's dir so?</div>
+        <div>
+          <h4>2 Antworten</h4>
+          <h5>Letzte Antwort 14:56 Uhr</h5>
+        </div>
+      </div>
+    </div>
+
+    <div class="date-separator">
+      <span></span>
+      <p>Heute</p>
+      <span></span>
+    </div>
+
+    <div class="message user-message">
+      <img class="avatar-small" src="/assets/img/avatar-5.png" alt="" />
+      <div>
+        <div>
+          <h3>Sofia Müller</h3>
+          <h5>12:31 Uhr</h5>
+        </div>
+        <div class="message-text">
+          Danke, bei mir ist alles gut. Heute war ein langer Tag und ich
+          schreibe jetzt zum Testen einen langen Text. Und bei dir?
+        </div>
+
+        <div>
+          <span class="reaction-field">
+            <div>💚 2</div>
+            <div>🥰 3</div>
+            <img
+              class="avatar-small"
+              src="/assets/icons/add-reaction.svg"
+              alt=""
+            />
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="message">
+      <img class="avatar-small" src="/assets/img/avatar-4.png" alt="" />
+      <div>
+        <div>
+          <h3>Tim Schuster</h3>
+          <h5>12:31 Uhr</h5>
+        </div>
+
+        <div class="message-text">
+          Bei mir auch. Jetzt antworte ich mit einem langen Text, um zu testen,
+          ob es auch hier funktioniert... Der Text muss noch etwas länger
+          werden...
+        </div>
+
+        <div>
+          <span class="reaction-field">
+            <div>😉 3</div>
+            <div>🎈 1</div>
+            <div>🤷🏻‍♀️ 2</div>
+            <img
+              class="avatar-small"
+              src="/assets/icons/add-reaction.svg"
+              alt=""
+            />
+          </span>
+          <h4>2 Antworten</h4>
+          <h5>Letzte Antwort 14:56 Uhr</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chatbox-textfield thread-margin">
+    <textarea type="text" placeholder="Nachricht an" rows="2"></textarea>
 
     <div class="textfield-buttons">
       <div>

@@ -143,6 +143,24 @@ section {
   }
 }
 
+.thread-separator {
+  width: 100%;
+  display: flex;
+  gap: 20px;
+  p {
+    color: #adb0d9;
+    font-size: 18px;
+    margin: 0;
+    width: fit-content;
+  }
+  span {
+    background-color: #adb0d9;
+    height: 1px;
+    flex: 1;
+    align-self: center;
+  }
+}
+
 .message {
   width: 100%;
   padding: 0px 100px 0px 10px;
@@ -170,16 +188,31 @@ section {
 }
 
 .user-message {
-    padding: 0px 10px 0px 100px;
+  padding: 0px 10px 0px 100px;
   flex-direction: row-reverse;
-  div{
+  div {
     div {
       @include flexBox(row, flex-end, center, 20);
     }
   }
   .message-text {
     color: #ffffff;
-    background-color: #797ef3
+    background-color: #797ef3;
+  }
+}
+
+.reaction-field {
+  @include flexBox(row, initial, center, 10);
+  div {
+    height: 34px;
+    padding: 5px 10px;
+    border: 1px solid #adb0d9;
+    border-radius: 20px;
+  }
+  img{
+    width: 24px;
+    height: 24px;
+    border-radius: 0px;
   }
 }
 

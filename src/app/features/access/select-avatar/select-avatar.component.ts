@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ButtonComponent } from '../../general-components/button/button.component';
+import { ComponentSwitcherService } from '../../../shared/services/component-switcher.service';
 
 @Component({
   selector: 'app-select-avatar',
@@ -8,5 +9,9 @@ import { ButtonComponent } from '../../general-components/button/button.componen
   styleUrl: './select-avatar.component.scss'
 })
 export class SelectAvatarComponent {
+  constructor(public componentSwitcher: ComponentSwitcherService) {}
 
+  changeComponent(componentName: string) {
+    this.componentSwitcher.setComponent(componentName);
+  }
 }

@@ -1,8 +1,21 @@
+@import '../../../../styles.scss';
+
+:host {
+  position: relative;
+}
+
+.arrow {
+  position: absolute;
+  top: 10px;
+  left: 0;
+}
+
 form {
-  display: flex;
-  align-items: center;
-  gap: 40px;
-  flex-direction: column;
+  @include dFlex($gap: 40px, $direction: column);
+
+  > p {
+    text-align: center;
+  }
 }
 
 .checkbox-container {

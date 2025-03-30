@@ -1,4 +1,5 @@
 <svg
+  (click)="changeComponent('signin')"
   class="arrow"
   width="16"
   height="16"
@@ -30,5 +31,5 @@
 <span>Aus der Liste wählen</span>
 <div>Hier kommt die Auswahl an Profil Bildern hin.</div>
 <div>
-  <app-button>Weiter</app-button>
+  <app-button (click)="changeComponent('login')">Weiter</app-button>
 </div>

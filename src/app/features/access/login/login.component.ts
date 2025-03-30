@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { ButtonComponent } from '../../general-components/button/button.component';
 import { ComponentSwitcherService } from '../../../shared/services/component-switcher.service';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
 export class LoginComponent {
   private fB = inject(FormBuilder);
 
-  loginData = this.fB.group ({
+  loginData = this.fB.group({
     email: ['', Validators.required],
     password: ['', Validators.required]
   });
@@ -23,7 +23,6 @@ export class LoginComponent {
   onSubmit() {
     if (this.loginData.valid) {
       console.log('Login-Data: ', this.loginData.value);
-      this.changeComponent('avatar');
     }
   }
 

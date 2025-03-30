@@ -1,6 +1,6 @@
 @import '../../../../../styles.scss';
 main{
-    width: 310px;
+    width: 300px;
     margin: 0 auto;
 }
 header{
@@ -40,9 +40,14 @@ header{
     width: 30px;
     border: none;
     background-color: white;
+    border-radius: 50%;
+    cursor: pointer;
     img{
         height: 24px;
         width: 24px;
+    }
+    &:hover{
+        background-color: #ECEEFE;
     }
 }
 section{
@@ -56,13 +61,46 @@ section{
     margin-left: 32px;
     background-color: white;
     border: none;
+    cursor: pointer;
     img{
-        height: 24px;
-        width: 24px;
+        height: 20px;
+        width: 20px;
         border: 1px solid black;
         border-radius: 50%;
     }
     span{
         @include fontStyle(18px, black, 400);
     }
+}
+.addChannel:hover span{
+    color: #535AF1;
+}
+.everyChannel{
+    @include flexBox('', left, center, 15);
+    height: 35px;
+    margin-left: 25px;
+    width: 275px;
+    padding: 0 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    span{
+        @include fontStyle(18px, black, 700);
+    }
+    &:hover{
+        background-color: #ECEEFE;
+    }
+}
+.everyChannel:hover span{
+    color: #535AF1;
+}
+.tagImage{
+    @include flexBox('', center, center, '');
+    img{
+        height: 24px;
+        width: 24px;
+    }
+}
+.newChannels{
+    @include flexBox(column, '', '', 25);
+    margin-top: 25px;
 }

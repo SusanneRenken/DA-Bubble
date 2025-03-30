@@ -1,8 +1,31 @@
 @import '../../../../../styles.scss';
 
 main{
-    width: 310px;
+    width: 300px;
+    margin: 0 auto;
 }
-header{
-    @include flexBox('', space-between, center, '');
+.directMessageButton{
+    @include flexBox('', left, center, 15);
+    width: 260px;
+    background-color: white;
+    border: none;
+}
+.directMessage{
+    @include flexBox('', space-between, center, 10);
+    @include fontStyle(20px, black, 700);
+    img{
+        height: 24px;
+        width: 24px;
+        border-radius: 50%;
+        
+    }
+}
+.keyDownUser{
+    @include flexBox('', center, center, '');
+    width: 30px;
+    height: 30px;
+    img{
+        height: 24px;
+        width: 24px;
+    }
 }

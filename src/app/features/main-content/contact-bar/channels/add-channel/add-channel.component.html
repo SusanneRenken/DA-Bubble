@@ -1,0 +1,36 @@
+<main>
+    <section>
+        <header>
+            <div class="headlineClose">
+                <span>Channel erstellen</span>
+                <button class="closeButton" (click)="closeWindow()">
+                    <img src="/assets/icons/close-button.svg">
+                </button>
+                
+            </div>
+            <div class="addChannelText">
+                <span>Channels dienen deinem Team zur Kommunikation. Am besten sollten sie themenbezogen sein <br> #marketing zum Beispiel.</span>
+            </div>
+            
+        </header>
+        <div class="channelFields">
+            <span class="channelField">Channel-Name</span>
+            <div class="inputSpan">
+                <img src="/assets/icons/tag.svg">
+                <input  #channelNameInput placeholder="z.B. Kooperationsprojekte" type="text">
+            </div>
+        </div>
+        <div class="channelFields">
+            <div>
+                <span class="channelField">Beschreibung</span>
+                <span class="channelFieldOptional">(optional)</span>
+            </div>
+            <div class="channelTextArea">
+                <textarea #channelDescriptionInput placeholder="Dein Text hier" name="" id=""></textarea>
+            </div>
+        </div>
+        <div class="addChannel">
+            <button (click)="createChannel(channelNameInput.value, channelDescriptionInput.value)" class="addChannelButton">Erstellen</button>
+        </div>
+    </section>
+</main>

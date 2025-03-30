@@ -2,25 +2,30 @@
     <header>
         <button class="channelHeadShow">
             <button class="showChannels">
-                <img src="/assets/img/arrowDown.png">
+                <img src="/assets/icons/arrow_drop_down.svg">
             </button>
             <div class="workSpaceText">
-                <img src="/assets/img/workspaces.png">
+                <img src="/assets/icons/workspaces.svg">
                 <span>Channels</span>
             </div>
         </button>
-        <button class="addButton">
-            <img src="/assets/img/add.png">
+        <button class="addButton" (click)="toggleAddChannel()">
+            <img src="/assets/icons/add.svg">
         </button>
     </header>
     <section>
         <div class="newChannels">
-
-        </div>
-        <button class="addChannel">
-            <img src="/assets/img/add.png">
+            <div class="everyChannel" *ngFor="let channel of channels$ | async">
+              <div class="tagImage">
+                <img src="/assets/icons/tagBlack.svg" alt="Channel Icon">
+              </div>
+              <span>{{ channel.name }}</span>
+            </div>
+          </div>
+        <button class="addChannel" (click)="toggleAddChannel()">
+            <img src="/assets/icons/add.svg">
             <span>Channel hinzufügen</span>
         </button>
-
     </section>
+    <app-add-channel *ngIf="showAddChannel" (close)="toggleAddChannel()"></app-add-channel>
 </main>

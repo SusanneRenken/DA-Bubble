@@ -1,11 +1,13 @@
 @import "../../../../styles.scss";
 main{
+    @include flexBox(column, top, left, 25);
     height: 100%;
     background-color: white;
     width: 370px;
     border-radius: 30px;
 }
 .toogleBar{
+    @include flexBox('', center, left, '');
     width: 60px;
     height: 350px;
     position: absolute;
@@ -13,8 +15,10 @@ main{
     left: 0;
     background-color: white;
     z-index: 20;
-    border-radius: 0 0 30px 0;
+    border: none;
+    border-radius: 0 30px 30px 0;
     box-shadow: 4px 4px 7px 0px #00000033;
+    color: black;
     cursor: pointer;
     span{
         @include fontStyle(20px, black, 500);
@@ -26,33 +30,17 @@ main{
         left: 50%;
         transform: translateX(-50%) rotate(270deg);
     }
-    &:hover{
-        background-color: #ECEEFE;
+    &:hover span{
+      color: blue;
     }
 }
-.toogleBar {
-    &:hover {
-      span {
-        background-color: #ECEEFE;
-      }
-      .imageChange {
-        background-color: #ECEEFE;
-  
-        img {
-          background-color: #ECEEFE;
-        }
-      }
-    }
+.imageChange img {
+  margin-top: 24px;
+  position: relative;
+  z-index: 40;
+  width: 32px;
+  height: 32px;
+  color: black;
+  transition: color 0.3s ease;
 }
-.imageChange{
-    background-color: white;
-    @include centerFlex(flex, center, center);
-    margin-top: 30px;
-    height: 32px;
-    width: 100%;
-    img{
-        background-color: white;
-        height: 32px;
-        width: 32px;
-    }
-}
+

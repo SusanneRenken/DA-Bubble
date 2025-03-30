@@ -1,13 +1,20 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { ChatState } from '../interfaces/chatStatus.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatStatusService {
-  chatState = signal<ChatState | null>(null);
+  private chatStateSubject = new BehaviorSubject<ChatState | null>(null);
+  public chatState$ = this.chatStateSubject.asObservable();
+
 
   setChatState(state: ChatState) {
-    this.chatState.set(state);
+    this.chatStateSubject.next(state);
+  }
+
+  getCurrentChatState(): ChatState | null {
+    return this.chatStateSubject.getValue();
   }
 }

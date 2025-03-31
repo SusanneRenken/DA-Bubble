@@ -5,5 +5,5 @@ import { MainContentComponent } from './features/main-content/main-content.compo
 export const routes: Routes = [
   { path: '', component: AccessComponent },
   { path: 'home', component: MainContentComponent },
-  { path: 'home/:userId', component: MainContentComponent },
+  { path: 'home/:activeUserId', component: MainContentComponent },
 ];

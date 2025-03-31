@@ -1,6 +1,7 @@
 * {
   padding: 0;
   margin: 0;
+  font-size: 18px;
   box-sizing: border-box;
 }
 
@@ -8,6 +9,35 @@ html,
 body {
   font-family: "Nunito", sans-serif;
   background-color: rgb(236, 238, 254);
+}
+
+h1 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #000000;
+}
+
+h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #000000;
+}
+
+h3 {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+h4 {
+  color: #444df2;
+  font-size: 18px;
+  font-weight: 400;
+}
+
+h5 {
+  color: #686868;
+  font-size: 14px;
+  font-weight: 400;
 }
 
 @mixin fontStyle($size, $fontColor, $fontWeight) {
@@ -165,4 +195,24 @@ body {
 
 .font-figtree {
   font-family: 'Figtree';
+}
+
+@font-face {
+  font-family: 'MaterialSymbols';
+  font-style: normal;
+  src: url('/assets/font/MaterialSymbolsOutlined.woff2') format('woff');
+}
+
+.material-symbols{
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  font-family: 'MaterialSymbols';
+  font-size: 24px;
+  border-radius: 50%;
+  @include flexBox(row, center, center, 0);
+  &:hover{
+    color: #535AF1;
+    background-color: red;
+  }
 }

@@ -1,5 +1,5 @@
-import { Component, effect, inject, OnInit } from '@angular/core';
-import { Observable, of, switchMap, take } from 'rxjs';
+import { Component, inject, OnInit } from '@angular/core';
+import { Observable, of, switchMap } from 'rxjs';
 import { Message } from '../../../shared/interfaces/message.interface';
 import { MessageService } from '../../../shared/services/message.service';
 import { ChatState } from '../../../shared/interfaces/chatStatus.interface';
@@ -7,21 +7,20 @@ import { ChatStatusService } from '../../../shared/services/chatStatus.service';
 
 @Component({
   selector: 'app-message-area',
-  imports: [],
   templateUrl: './message-area.component.html',
-  styleUrl: './message-area.component.scss',
+  styleUrls: ['./message-area.component.scss']
 })
-export class MessageAreaComponent {
+export class MessageAreaComponent implements OnInit {
   private messageService = inject(MessageService);
   private chatStatusService = inject(ChatStatusService);
 
   messages$: Observable<Message[]> = of([]);
 
   ngOnInit(): void {
-    //Zum Testen der Chat-Status-Änderung - muss später entfernt werden
+    // Zum Testen: Setze einen ChatState
     this.chatStatusService.setChatState({
       type: 'private',
-      id: 'sEg8GcSNNZ6YWhxRs4SE',
+      id: 'sEg8GcSNNZ6YWhxRs4SE'
     });
 
     this.messages$ = this.chatStatusService.chatState$.pipe(
@@ -29,7 +28,6 @@ export class MessageAreaComponent {
         if (!state) {
           return this.messageService.getMessageCollection();
         }
-
         switch (state.type) {
           case 'private':
             return this.messageService.getDirectMessages(
@@ -48,6 +46,8 @@ export class MessageAreaComponent {
   }
 
   testMessage(): void {
-    console.log(this.messages$);
+    this.messages$.subscribe((messages) => {
+      console.log('Direct Messages:', messages);
+    });
   }
 }

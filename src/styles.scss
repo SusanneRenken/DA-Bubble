@@ -15,11 +15,6 @@ body {
   color: $fontColor;
   font-weight: $fontWeight;
 }
-@mixin centerFlex($flex, $align, $justify) {
-  display: $flex;
-  align-items: $align;
-  justify-content: $justify;
-}
 @mixin flexBox($direction, $justify, $align, $gap) {
   display: flex;
   flex-direction: $direction;

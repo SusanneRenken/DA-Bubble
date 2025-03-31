@@ -5,7 +5,6 @@ main{
 }
 header{
     @include flexBox('', space-between, center, '');
-    margin-top: 25px;
     height: 46px;
     width: 100%;
 }
@@ -15,24 +14,37 @@ header{
     width: 30px;
     background-color: white;
     border: none;
+}
+.showChannelsIcon{
+    height: 32px;
+    width: 32px;
     
-    img{
-        height: 24px;
-    }
 }
 .channelHeadShow{
     all: unset;
     @include flexBox('', left, center, 15);
     width: 180px;
-    height: 40px;
+    height: 40px;   
 }
 .workSpaceText{
     @include flexBox('', left, center, 10);
     @include fontStyle(20px, black, 700);
-    img{
-        height: 24px;
-        width: 24px;
-    }
+}
+.workSpaceIcon, .addIcon, .hashtagIcon{
+    height: 24px;
+    width: 24px;
+}
+
+.channelHeadShow:hover .workSpaceIcon,
+.channelHeadShow:hover .showChannelsIcon,
+.channelHeadShow:hover .channelText,
+.addButton:hover .addIcon,
+.addChannel:hover span,
+.everyChannel:hover span,
+.everyChannel:hover .hashtagIcon
+{
+    color: #535AF1;
+    cursor: pointer;
 }
 .addButton{
     @include flexBox('', center, center, '');
@@ -41,11 +53,6 @@ header{
     border: none;
     background-color: white;
     border-radius: 50%;
-    cursor: pointer;
-    img{
-        height: 24px;
-        width: 24px;
-    }
     &:hover{
         background-color: #ECEEFE;
     }
@@ -62,18 +69,9 @@ section{
     background-color: white;
     border: none;
     cursor: pointer;
-    img{
-        height: 20px;
-        width: 20px;
-        border: 1px solid black;
-        border-radius: 50%;
-    }
     span{
         @include fontStyle(18px, black, 400);
     }
-}
-.addChannel:hover span{
-    color: #535AF1;
 }
 .everyChannel{
     @include flexBox('', left, center, 15);
@@ -90,17 +88,20 @@ section{
         background-color: #ECEEFE;
     }
 }
-.everyChannel:hover span{
-    color: #535AF1;
-}
 .tagImage{
     @include flexBox('', center, center, '');
-    img{
-        height: 24px;
-        width: 24px;
-    }
 }
 .newChannels{
     @include flexBox(column, '', '', 25);
     margin-top: 25px;
+}
+.addIconChannel{
+    height: 20px;
+    width: 20px;
+    border: 1px solid black;
+    border-radius: 50%;
+}
+.addChannel:hover .addIconChannel{
+    color: #535AF1;
+    border-color: #535AF1;
 }

@@ -13,7 +13,8 @@ import { map } from 'rxjs/operators';
   styleUrl: './channels.component.scss'
 })
 export class ChannelsComponent{
-  
+  showAddChannel = false;
+  showChannels = false;
   private firestore = inject(Firestore);
 
   channels$ = collectionData(
@@ -31,10 +32,10 @@ export class ChannelsComponent{
     )
   );
   
-  showAddChannel = false;
-  
-  
   toggleAddChannel() {
     this.showAddChannel = !this.showAddChannel;
+  }
+  showAllChannels(){
+    this.showChannels = !this.showChannels
   }
 }

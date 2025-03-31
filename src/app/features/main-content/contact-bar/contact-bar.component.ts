@@ -12,5 +12,9 @@ import { ChannelsComponent } from './channels/channels.component';
   styleUrl: './contact-bar.component.scss'
 })
 export class ContactBarComponent {
+  sectionVisible = true;
 
+  toggleSection() {
+    this.sectionVisible = !this.sectionVisible;
+  }
 }

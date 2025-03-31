@@ -22,10 +22,10 @@ main{
 }
 .keyDownUser{
     @include flexBox('', center, center, '');
-    width: 30px;
-    height: 30px;
-    img{
-        height: 24px;
-        width: 24px;
-    }
+    width: 32px;
+    height: 32px;
+}
+.showMessagesIcon{
+    height: 32px;
+    width: 32px;
 }

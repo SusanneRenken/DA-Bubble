@@ -1,7 +1,15 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, collection, query, where, onSnapshot } from '@angular/fire/firestore';
+import {
+  Firestore,
+  collection,
+  query,
+  where,
+  onSnapshot,
+  serverTimestamp,
+} from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Message } from '../interfaces/message.interface';
+import { addDoc } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +21,7 @@ export class MessageService {
     return {
       mId: id || '',
       mText: obj.mText || '',
-      mReactions: obj.mReactions || '',
+      mReactions: obj.mReactions || [],
       mTime: obj.mTime || new Date(),
       mSenderId: obj.mSenderId || '',
       mUserId: obj.mUserId || '',
@@ -41,7 +49,10 @@ export class MessageService {
     }
   }
 
-  private getPrivateMessages(chatId: string, activeUserId: string | null): Observable<Message[]> {
+  private getPrivateMessages(
+    chatId: string,
+    activeUserId: string | null
+  ): Observable<Message[]> {
     return new Observable<Message[]>((observer) => {
       const messagesCollection = collection(this.firestore, 'messages');
 
@@ -121,4 +132,14 @@ export class MessageService {
       return () => unsubscribe && unsubscribe();
     });
   }
+
+  // Beispiel-Daten für eine Nachricht
+  // createMessage(message: Partial<Message>): Promise<any> {
+  //   const messagesCollection = collection(this.firestore, 'messages');
+  //   const newMessage = {
+  //     ...message,
+  //     mTime: serverTimestamp(),
+  //   };
+  //   return addDoc(messagesCollection, newMessage);
+  // }
 }

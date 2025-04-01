@@ -1,6 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ButtonComponent } from '../../general-components/button/button.component';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ComponentSwitcherService } from '../../../shared/services/component-switcher.service';
 
 @Component({
@@ -9,18 +9,22 @@ import { ComponentSwitcherService } from '../../../shared/services/component-swi
   templateUrl: './confirm-email.component.html',
   styleUrl: './confirm-email.component.scss'
 })
-export class ConfirmEmailComponent {
-  private fB = inject(FormBuilder);
-
-  confirmedMail = this.fB.group({
-    email: ['', Validators.required]
-  });
+export class ConfirmEmailComponent  implements OnInit {
+  
+  confirmForm!: FormGroup;
+  
 
   constructor(public componentSwitcher: ComponentSwitcherService) {}
 
+  ngOnInit(): void {
+    this.confirmForm = new FormGroup({
+      conEmail: new FormControl('', [Validators.required, Validators.email])
+    });
+  }
+
   onSubmit() {
-    if (this.confirmedMail.valid) {
-      console.log('Mail ist confirmed: ', this.confirmedMail.value);
+    if (this.confirmForm.valid) {
+      console.log('Mail ist confirmed: ', this.confirmForm.value);
       this.changeComponent('conPassword');
     }
   }

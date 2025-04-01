@@ -13,7 +13,7 @@
   />
 </svg>
 
-<form [formGroup]="createData" (ngSubmit)="onSubmit()">
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
   <h1>Konto erstellen</h1>
 
   <p>
@@ -22,15 +22,15 @@
   </p>
 
   <label for="name">
-    <input type="text" name="name" id="name" formControlName="name"/>
+    <input type="text" name="name" id="name" formControlName="regName"/>
   </label>
 
   <label for="email">
-    <input type="email" name="email" id="email" formControlName="email"/>
+    <input type="email" name="email" id="email" formControlName="regEmail"/>
   </label>
 
   <label for="password">
-    <input type="password" name="password" id="password" formControlName="password"/>
+    <input type="password" name="password" id="password" formControlName="regPassword"/>
   </label>
 
   <div class="checkbox-container">
@@ -44,6 +44,6 @@
   </div>
 
   <div>
-    <app-button type="submit" [disabled]="!createData.valid">Weiter</app-button>
+    <app-button type="submit" [disabled]="registerForm.invalid">Weiter</app-button>
   </div>
 </form>

@@ -29,7 +29,16 @@
 </div>
 <h2>Beispiel Name</h2>
 <span>Aus der Liste wählen</span>
-<div>Hier kommt die Auswahl an Profil Bildern hin.</div>
+<div class="avatar-container">
+  @for (avatar of avatars; track $index) {
+  <img
+    (click)="selectAvatar(avatar)"
+    [class.selected]="selectedAvatar === avatar"
+    [src]="'assets/img/' + avatar"
+    [alt]="avatar"
+  />
+  }
+</div>
 <div>
-  <app-button (click)="changeComponent('login')">Weiter</app-button>
+  <app-button (click)="onNext()">Weiter</app-button>
 </div>

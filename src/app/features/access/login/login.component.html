@@ -1,4 +1,4 @@
-<form [formGroup]="loginData" (ngSubmit)="onSubmit()">
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
   <h1>Anmeldung</h1>
   <p>
     Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit
@@ -27,7 +27,7 @@
   </div>
   <button type="button">Anmelden mit Google</button>
   <div class="btn-container">
-    <app-button type="submit" [disabled]="!loginData.valid">Anmelden</app-button>
+    <app-button type="submit" [disabled]="loginForm.invalid">Anmelden</app-button>
     <app-button>Gäste-Login</app-button>
   </div>
 </form>

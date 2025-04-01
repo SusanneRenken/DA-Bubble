@@ -2,7 +2,7 @@
   <div class="chatbox-header">
     @if((chatType$ | async) === 'private'){
     <div class="private-header">
-      <img class="avatar-small" src="/assets/img/avatar-5.png" alt="" />
+      <img src="/assets/img/avatar-5.png" alt="" />
       <h1 (click)="testMessage()">Sofia Müller</h1>
     </div>
     } @else if((chatType$ | async) === 'channel'){
@@ -54,40 +54,12 @@
       <p>Freitag, 27. März</p>
       <span></span>
     </div>
+
+    @for (message of messages; track message) {
+      <app-message [message]="message"></app-message>
+    }
     
 
-    <div class="message">
-      <img class="avatar-small" src="/assets/img/avatar-4.png" alt="" />
-      <div>
-        <div>
-          <h3>Tim Schuster</h3>
-          <h5>12:31 Uhr</h5>
-        </div>
-
-        <div class="message-text">
-          Bei mir auch. Jetzt antworte ich mit einem langen Text, um zu testen,
-          ob es auch hier funktioniert... Der Text muss noch etwas länger
-          werden...
-        </div>
-
-        <div>
-          <span class="reaction-field">
-            <div>😉 3</div>
-            <div>🎈 1</div>
-            <div>🤷🏻‍♀️ 2</div>
-            <img
-              class="avatar-small"
-              src="/assets/icons/add-reaction.svg"
-              alt=""
-            />
-          </span>
-          <h4>2 Antworten</h4>
-          <h5>Letzte Antwort 14:56 Uhr</h5>
-        </div>
-      </div>
-    </div>
-
-    
   </div>
 
   <div class="chatbox-textfield thread-margin">

@@ -22,7 +22,7 @@ section {
     min-height: 0;
     padding: 20px 35px;
     overflow-y: auto;
-    @include flexBox(column, initial, center, 20);
+    @include flexBox(column, initial, flex-start, 20);
   }
 
   .chatbox-textfield {
@@ -44,6 +44,11 @@ section {
 .private-header {
   height: 100%;
   @include flexBox(row, initial, center, 16);
+  img{
+    width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  }
 }
 
 .channel-header {
@@ -127,7 +132,7 @@ section {
     align-self: center;
   }
 }
-
+//  Von hier
 .message {
   width: 100%;
   padding: 0px 100px 0px 10px;
@@ -183,6 +188,8 @@ section {
   }
 }
 
+// Bis hier weg
+
 textarea {
   all: unset;
   word-break: break-word;
@@ -210,8 +217,4 @@ textarea {
   color: #686868;
   @include flexBox(row, center, center, 0);
 }
-.avatar-small {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-}
+

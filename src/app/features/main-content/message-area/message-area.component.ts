@@ -5,10 +5,11 @@ import { MessageService } from '../../../shared/services/message.service';
 import { Message } from '../../../shared/interfaces/message.interface';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { MessageComponent } from './message/message.component';
 
 @Component({
   selector: 'app-message-area',
-  imports: [CommonModule],
+  imports: [CommonModule, MessageComponent],
   templateUrl: './message-area.component.html',
   styleUrls: ['./message-area.component.scss'],
 })
@@ -49,7 +50,7 @@ export class MessageAreaComponent implements OnInit, OnDestroy {
     this.chatIdSubject.next(newId);
   }
 
-  
+
 
   // Beispiel-Daten für eine Nachricht
   testMessage(): void {

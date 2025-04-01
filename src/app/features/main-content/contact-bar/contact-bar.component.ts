@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { HeaderBarComponent } from './header-bar/header-bar.component';
 import { DirectMessageComponent } from './direct-message/direct-message.component';
 import { ChannelsComponent } from './channels/channels.component';
@@ -12,9 +12,10 @@ import { ChannelsComponent } from './channels/channels.component';
   styleUrl: './contact-bar.component.scss'
 })
 export class ContactBarComponent {
-  sectionVisible = true;
+  @Input() sectionVisible: boolean = true;
+  @Output() toggle = new EventEmitter<void>();
 
   toggleSection() {
-    this.sectionVisible = !this.sectionVisible;
+    this.toggle.emit();
   }
 }

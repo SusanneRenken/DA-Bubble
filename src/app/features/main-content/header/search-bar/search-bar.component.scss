@@ -1,16 +1,19 @@
 main{
     width: 900px;
     position: relative;
-    height: 105px;
-    border-radius: 62px;
+    height: 100%;
+    border-radius: 42px;
     border: none;
     z-index: 1;
+}
+:host {
+  height: 100%;
 }
 .searchButton{
     position: absolute;
     border: none;
     right: 45px;
-    top: 35px;
+    top: 17.5px;
     background-color: white;
     z-index: 3;
     cursor: pointer;
@@ -27,8 +30,8 @@ input{
     top: 0px;
     font-size: 24px;
     width: 900px;
-    padding: 0 45px;
-    border-radius: 62px;
+    padding: 17.5px 45px;
+    border-radius: 42px;
     background-color: white;
     border: none;
     z-index: 2;

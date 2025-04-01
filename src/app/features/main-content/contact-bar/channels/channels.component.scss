@@ -14,17 +14,18 @@ header{
     width: 30px;
     background-color: white;
     border: none;
+    cursor: pointer;
 }
 .showChannelsIcon{
-    height: 32px;
-    width: 32px;
-    
+    height: 24px;
+    width: 24px;
 }
 .channelHeadShow{
     all: unset;
     @include flexBox('', left, center, 15);
     width: 180px;
     height: 40px;   
+    cursor: pointer;
 }
 .workSpaceText{
     @include flexBox('', left, center, 10);

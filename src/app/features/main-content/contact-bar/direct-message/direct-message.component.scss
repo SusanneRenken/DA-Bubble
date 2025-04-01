@@ -9,6 +9,13 @@ main{
     width: 260px;
     background-color: white;
     border: none;
+    cursor: pointer;
+}
+.directMessageButton:hover .directMessage,
+.directMessageButton:hover .accountCircle,
+.directMessageButton:hover .showMessagesIcon
+{
+    color: #535AF1;
 }
 .directMessage{
     @include flexBox('', space-between, center, 10);
@@ -26,6 +33,7 @@ main{
     height: 32px;
 }
 .showMessagesIcon{
-    height: 32px;
-    width: 32px;
+    color: black;
+    height: 24px;
+    width: 24px;
 }

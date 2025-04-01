@@ -3,53 +3,9 @@ main{
   @include flexBox(column, top, left, 25);
     height: 100%;
     background-color: white;
-    width: 370px;
+    width: 100%;
     border-radius: 30px;
 }
-.toogleBar{
-    @include flexBox('', center, left, '');
-    width: 60px;
-    height: 350px;
-    position: absolute;
-    top: 480px;
-    left: 0;
-    background-color: white;
-    z-index: 20;
-    border: none;
-    border-radius: 0 30px 30px 0;
-    box-shadow: 4px 4px 7px 0px #00000033;
-    color: black;
-    cursor: pointer;
-    span{
-        @include fontStyle(20px, black, 500);
-        background-color: white;
-        display: inline-block; 
-        white-space: nowrap;
-        position: absolute;
-        top: 180px;
-        left: 50%;
-        transform: translateX(-50%) rotate(270deg);
-    }
-    &:hover span{
-      color: blue;
-    }
-}
-.imageChange{
-  position: relative;
-  width: 80px;
-  height: 80px;
-}
-.closeIcon{
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 40;
-  width: 24px;
-  height: 24px;
-  transition: opacity 0.3s ease;
-}
-.toogleBar:hover .closeIcon{
-  color: #535AF1;
-}
+
+
 

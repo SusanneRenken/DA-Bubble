@@ -22,7 +22,7 @@ section {
     min-height: 0;
     padding: 20px 35px;
     overflow-y: auto;
-    @include flexBox(column, initial, center, 20);
+    @include flexBox(column, initial, flex-start, 20);
   }
 
   .chatbox-textfield {
@@ -44,6 +44,11 @@ section {
 .private-header {
   height: 100%;
   @include flexBox(row, initial, center, 16);
+  img{
+    width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  }
 }
 
 .channel-header {
@@ -128,59 +133,8 @@ section {
   }
 }
 
-.message {
+app-message{
   width: 100%;
-  padding: 0px 100px 0px 10px;
-  @include flexBox(row, initial, initial, 20);
-  img {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-  }
-  div {
-    @include flexBox(column, initial, initial, 8);
-    div {
-      @include flexBox(row, flex-start, center, 20);
-    }
-  }
-  .message-text {
-    width: fit-content;
-    padding: 15px;
-    border-radius: 0px 30px 30px 30px;
-    background-color: #eceefe;
-    word-break: break-word;
-    white-space: pre-wrap;
-    font-size: 18px;
-  }
-}
-
-.user-message {
-  padding: 0px 10px 0px 100px;
-  flex-direction: row-reverse;
-  div {
-    div {
-      @include flexBox(row, flex-end, center, 20);
-    }
-  }
-  .message-text {
-    color: #ffffff;
-    background-color: #797ef3;
-  }
-}
-
-.reaction-field {
-  @include flexBox(row, initial, center, 10);
-  div {
-    height: 34px;
-    padding: 5px 10px;
-    border: 1px solid #adb0d9;
-    border-radius: 20px;
-  }
-  img{
-    width: 24px;
-    height: 24px;
-    border-radius: 0px;
-  }
 }
 
 textarea {
@@ -210,8 +164,4 @@ textarea {
   color: #686868;
   @include flexBox(row, center, center, 0);
 }
-.avatar-small {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-}
+

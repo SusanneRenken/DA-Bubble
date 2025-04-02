@@ -16,11 +16,10 @@ import { User } from '../../../shared/interfaces/user.interface';
 })
 export class MessageAreaComponent implements OnInit, OnDestroy {
   private messageService = inject(MessageService);
-  private route = inject(ActivatedRoute);
 
   @Input() setChatType!: BehaviorSubject<'private' | 'channel' | 'thread' | 'new'>;
   @Input() setChatId!: BehaviorSubject<string | null>;
-  @Input() activeUser!: User;
+  @Input() activeUserId: string | null = null;
 
   
   public chatType$!: Observable<'private' | 'channel' | 'thread' | 'new'>;
@@ -33,12 +32,10 @@ export class MessageAreaComponent implements OnInit, OnDestroy {
     this.chatType$ = this.setChatType.asObservable();
     
     this.messagesSubscription = combineLatest([this.setChatType, this.setChatId])
-      .pipe(switchMap(([chatType, chatId]) => this.messageService.getMessages(chatType, chatId, this.activeUser?.uId)))
+      .pipe(switchMap(([chatType, chatId]) => this.messageService.getMessages(chatType, chatId, this.activeUserId)))
       .subscribe((messages) => {
         this.messages = messages;
       });
-
-      console.log('Active User in message-area:', this.activeUser);
       
   }
 

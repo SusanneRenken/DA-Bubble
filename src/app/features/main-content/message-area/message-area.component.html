@@ -55,7 +55,7 @@
     </div>
 
     @for (message of messages; track message) {
-    <app-message [message]="message" [activeUser]="activeUser" [chatType]="chatType$ | async"></app-message>
+    <app-message [message]="message" [activeUserId]="activeUserId" [chatType]="chatType$ | async"></app-message>
     }
   </div>
 

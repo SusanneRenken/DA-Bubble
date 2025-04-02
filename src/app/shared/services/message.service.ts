@@ -31,7 +31,7 @@ export class MessageService {
   getMessages(
     chatType: 'private' | 'channel' | 'thread' | 'new',
     chatId: string | null,
-    activeUserId: string | undefined
+    activeUserId: string | null
   ): Observable<Message[]> {
     switch (chatType) {
       case 'private':
@@ -49,7 +49,7 @@ export class MessageService {
 
   private getPrivateMessages(
     chatId: string | null,
-    activeUserId: string | undefined
+    activeUserId: string | null
   ): Observable<Message[]> {
     return new Observable<Message[]>((observer) => {
       const messagesCollection = collection(this.firestore, 'messages');

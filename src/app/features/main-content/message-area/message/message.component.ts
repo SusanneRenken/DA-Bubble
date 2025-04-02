@@ -17,7 +17,7 @@ export class MessageComponent implements OnInit {
 
   @Input() chatType: 'private' | 'channel' | 'thread' | 'new' | null = null;
   @Input() message!: Message;
-  @Input() activeUser!: User;
+  @Input() activeUserId: string | null = null;
 
   ngOnInit(): void {
     this.getUserData();

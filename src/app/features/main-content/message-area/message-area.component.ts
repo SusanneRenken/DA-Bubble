@@ -30,7 +30,7 @@ export class MessageAreaComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.activeUserId = this.route.snapshot.paramMap.get('activeUserId');
-    console.log('activeUserId:', this.activeUserId);    
+    console.log('activeUserId:', this.activeUserId);
     
     this.messagesSubscription = combineLatest([this.chatTypeSubject, this.chatIdSubject])
       .pipe(switchMap(([chatType, chatId]) => this.messageService.getMessages(chatType, chatId, this.activeUserId)))

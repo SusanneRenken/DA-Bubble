@@ -4,8 +4,7 @@ import {
   collection,
   query,
   where,
-  onSnapshot,
-  serverTimestamp,
+  onSnapshot
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Message } from '../interfaces/message.interface';

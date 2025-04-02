@@ -2,34 +2,48 @@ import { Component, inject, Input, OnInit } from '@angular/core';
 import { Message } from '../../../../shared/interfaces/message.interface';
 import { Timestamp } from 'firebase/firestore';
 import { UserService } from '../../../../shared/services/user.service';
+import { User } from '../../../../shared/interfaces/user.interface';
+import { MessageAreaComponent } from '../message-area.component';
 
 @Component({
   selector: 'app-message',
   imports: [],
   templateUrl: './message.component.html',
-  styleUrl: './message.component.scss'
+  styleUrl: './message.component.scss',
 })
 export class MessageComponent implements OnInit {
+  private MessageAreaComponent = inject(MessageAreaComponent);
   private userService = inject(UserService);
-  user: string = '';  
+
+  user: User | null = null;
+  activeUserId: string | null = null;
+
+  @Input() chatType: 'private' | 'channel' | 'thread' | null = null;
   @Input() message!: Message;
 
   ngOnInit(): void {
-    this.userService.getUser(this.message.mSenderId)
+    this.getUserData();
+    this.activeUserId = this.MessageAreaComponent.activeUserId;   
+  }
+
+  getUserData() {
+    this.userService
+      .getUser(this.message.mSenderId)
       .then((userData) => {
-        this.user = userData.name || 'Unbekannt';
+        this.user = userData;
       })
       .catch((error) => {
         console.error('Fehler beim Laden des Users:', error);
-        this.user = 'Fehler';
       });
   }
-
 
   getTimeInHours(timestamp: Timestamp): any {
     if (timestamp instanceof Timestamp) {
       const date = timestamp.toDate();
-      const time = date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+      const time = date.toLocaleTimeString('en-GB', {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
       return time;
     }
   }

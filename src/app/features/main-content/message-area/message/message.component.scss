@@ -32,6 +32,9 @@
     div {
       div {
         @include flexBox(row, flex-end, center, 20);
+      &:first-child {
+        @include flexBox(row-reverse, flex-start, center, 20);
+      }
       }
     }
     .message-text {

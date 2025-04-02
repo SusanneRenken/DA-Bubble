@@ -1,11 +1,12 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
+import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { MessageService } from '../../../shared/services/message.service';
 import { Message } from '../../../shared/interfaces/message.interface';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MessageComponent } from './message/message.component';
+import { User } from '../../../shared/interfaces/user.interface';
 
 @Component({
   selector: 'app-message-area',
@@ -17,26 +18,28 @@ export class MessageAreaComponent implements OnInit, OnDestroy {
   private messageService = inject(MessageService);
   private route = inject(ActivatedRoute);
 
-  private chatTypeSubject = new BehaviorSubject<'private' | 'channel' | 'thread'>('private');
-  public readonly chatType$ = this.chatTypeSubject.asObservable();
+  @Input() setChatType!: BehaviorSubject<'private' | 'channel' | 'thread' | 'new'>;
+  @Input() setChatId!: BehaviorSubject<string | null>;
+  @Input() activeUser!: User;
 
-  private chatIdSubject = new BehaviorSubject<string>('sEg8GcSNNZ6YWhxRs4SE');
-
+  
+  public chatType$!: Observable<'private' | 'channel' | 'thread' | 'new'>;
   private messagesSubscription: Subscription = new Subscription();
 
   messages: Message[] = [];
-  activeUserId: string | null = null;
 
 
   ngOnInit(): void {
-    this.activeUserId = this.route.snapshot.paramMap.get('activeUserId');
-    console.log('activeUserId:', this.activeUserId);
+    this.chatType$ = this.setChatType.asObservable();
     
-    this.messagesSubscription = combineLatest([this.chatTypeSubject, this.chatIdSubject])
-      .pipe(switchMap(([chatType, chatId]) => this.messageService.getMessages(chatType, chatId, this.activeUserId)))
+    this.messagesSubscription = combineLatest([this.setChatType, this.setChatId])
+      .pipe(switchMap(([chatType, chatId]) => this.messageService.getMessages(chatType, chatId, this.activeUser?.uId)))
       .subscribe((messages) => {
         this.messages = messages;
       });
+
+      console.log('Active User in message-area:', this.activeUser);
+      
   }
 
   ngOnDestroy(): void {
@@ -44,13 +47,6 @@ export class MessageAreaComponent implements OnInit, OnDestroy {
       this.messagesSubscription.unsubscribe();
     }
   }
-
-  changeChat(newType: 'private' | 'channel' | 'thread', newId: string): void {
-    this.chatTypeSubject.next(newType);
-    this.chatIdSubject.next(newId);
-  }
-
-
 
   // Beispiel-Daten für eine Nachricht
   testMessage(): void {

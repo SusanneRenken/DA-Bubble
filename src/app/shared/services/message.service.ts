@@ -8,7 +8,6 @@ import {
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Message } from '../interfaces/message.interface';
-import { addDoc } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root',
@@ -30,9 +29,9 @@ export class MessageService {
   }
 
   getMessages(
-    chatType: 'private' | 'channel' | 'thread',
-    chatId: string,
-    activeUserId: string | null
+    chatType: 'private' | 'channel' | 'thread' | 'new',
+    chatId: string | null,
+    activeUserId: string | undefined
   ): Observable<Message[]> {
     switch (chatType) {
       case 'private':
@@ -49,8 +48,8 @@ export class MessageService {
   }
 
   private getPrivateMessages(
-    chatId: string,
-    activeUserId: string | null
+    chatId: string | null,
+    activeUserId: string | undefined
   ): Observable<Message[]> {
     return new Observable<Message[]>((observer) => {
       const messagesCollection = collection(this.firestore, 'messages');
@@ -102,7 +101,7 @@ export class MessageService {
     });
   }
 
-  private getChannelMessages(chatId: string): Observable<Message[]> {
+  private getChannelMessages(chatId: string | null): Observable<Message[]> {
     return new Observable<Message[]>((observer) => {
       const messagesCollection = collection(this.firestore, 'messages');
       const q = query(messagesCollection, where('mChannelId', '==', chatId));
@@ -117,7 +116,7 @@ export class MessageService {
     });
   }
 
-  private getThreadMessages(chatId: string): Observable<Message[]> {
+  private getThreadMessages(chatId: string | null): Observable<Message[]> {
     return new Observable<Message[]>((observer) => {
       const messagesCollection = collection(this.firestore, 'messages');
       const q = query(messagesCollection, where('mThreadId', '==', chatId));

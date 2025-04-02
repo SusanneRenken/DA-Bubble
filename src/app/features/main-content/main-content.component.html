@@ -3,8 +3,8 @@
   <div class="content-container">
     <button class="toogleBar" (click)="toggleSection()">
       <div>
-          <span *ngIf="sectionVisible">Workspace-Menü schließen</span>
-          <span *ngIf="!sectionVisible">Workspace-Menü öffnen</span>
+        <span *ngIf="sectionVisible">Workspace-Menü schließen</span>
+        <span *ngIf="!sectionVisible">Workspace-Menü öffnen</span>
       </div>
       <div class="imageChange" *ngIf="sectionVisible">
           <svg class="closeIcon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -21,7 +21,30 @@
           </svg>
       </div>
     </button>
-    <app-contact-bar *ngIf="sectionVisible" [sectionVisible]="sectionVisible" (toggle)="toggleSection()"></app-contact-bar>
-    <app-message-area></app-message-area>
+
+    <app-contact-bar
+      *ngIf="sectionVisible"
+      [sectionVisible]="sectionVisible"
+      (toggle)="toggleSection()"
+    ></app-contact-bar>
+
+
+    <app-message-area
+      class="chat-message-area"
+      [setChatType]="setChatType"
+      [setChatId]="setChatId"
+      [activeUser]="activeUser"
+    >
+    </app-message-area>
+
+    @if (isThreadOpen) {
+    <app-message-area
+      class="thread-message-area"
+      [setChatType]="setChatType"
+      [setChatId]="setThreadId"
+      [activeUser]="activeUser"
+    >
+    </app-message-area>
+    }
   </div>
 </section>

@@ -1,11 +1,11 @@
 <section>
   <div class="chatbox-header">
-    @if((chatType$ | async) === 'private'){
+    @if(chatType === 'private'){
     <div class="private-header">
-      <img src="/assets/img/{{ user?.uUserImage }}.png" alt="" />
-      <h1 (click)="testMessage()">{{user?.uName}}</h1>
+      <img src="/assets/img/{{ chatPartner?.uUserImage }}" alt="" />
+      <h1 (click)="testMessage()">{{ chatPartner?.uName }}</h1>
     </div>
-    } @else if((chatType$ | async) === 'channel'){
+    } @else if(chatType === 'channel'){
     <div class="channel-header">
       <a class="channel-name">
         <img src="/assets/icons/hashtag.svg" alt="arrow down" />
@@ -25,7 +25,7 @@
         </button>
       </div>
     </div>
-    } @else if((chatType$ | async) === 'thread'){
+    } @else if(chatType === 'thread'){
     <div class="thread-header">
       <div>
         <h1>Thread</h1>
@@ -38,7 +38,6 @@
         <img src="/assets/icons/close-button.svg" alt="" />
       </button>
     </div>
-
     }
   </div>
 
@@ -55,7 +54,11 @@
     </div>
 
     @for (message of messages; track message) {
-    <app-message [message]="message" [activeUserId]="activeUserId" [chatType]="chatType$ | async"></app-message>
+    <app-message
+      [message]="message"
+      [activeUserId]="activeUserId"
+      [chatType]="chatType"
+    ></app-message>
     }
   </div>
 

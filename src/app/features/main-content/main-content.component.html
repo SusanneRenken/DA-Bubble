@@ -70,18 +70,18 @@
     
     <app-message-area
       class="chat-message-area"
-      [setChatType]="setChatType"
-      [setChatId]="setChatId"
+      [chatType]="chatType"
+      [chatId]="chatId"
       [activeUserId]="activeUserId"
     >
     </app-message-area>
 
     @if (isThreadOpen) {
     <app-message-area
-      class="thread-message-area"
-      [setChatType]="setChatType"
-      [setChatId]="setThreadId"
-      [activeUserId]="activeUserId"
+    class="thread-message-area"
+    [chatType]="'thread'"
+    [chatId]="threadId"
+    [activeUserId]="activeUserId"
     >
     </app-message-area>
     } 

@@ -1,9 +1,14 @@
-import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
-import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import {
+  Component,
+  inject,
+  Input,
+  OnChanges,
+  OnDestroy,
+  SimpleChanges,
+} from '@angular/core';
+import { Subscription } from 'rxjs';
 import { MessageService } from '../../../shared/services/message.service';
 import { Message } from '../../../shared/interfaces/message.interface';
-import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MessageComponent } from './message/message.component';
 import { User } from '../../../shared/interfaces/user.interface';
@@ -15,31 +20,25 @@ import { UserService } from '../../../shared/services/user.service';
   templateUrl: './message-area.component.html',
   styleUrls: ['./message-area.component.scss'],
 })
-export class MessageAreaComponent implements OnInit, OnDestroy {
+export class MessageAreaComponent implements OnChanges, OnDestroy {
   private userService = inject(UserService);
   private messageService = inject(MessageService);
 
-  @Input() setChatType!: BehaviorSubject<'private' | 'channel' | 'thread' | 'new'>;
-  @Input() setChatId!: BehaviorSubject<string | null>;
+  @Input() chatType: 'private' | 'channel' | 'thread' | 'new' = 'private';
+  @Input() chatId: string | null = null;
   @Input() activeUserId: string | null = null;
 
-  
-  public chatType$!: Observable<'private' | 'channel' | 'thread' | 'new'>;
-  private messagesSubscription: Subscription = new Subscription();
-
-  user: User | null = null;
+  chatPartner: User | null = null;
+  // ChannelData: Channel | null = null;
   messages: Message[] = [];
 
-  ngOnInit(): void {
-    this.chatType$ = this.setChatType.asObservable();
-    this.getChatData();
-    
-    this.messagesSubscription = combineLatest([this.setChatType, this.setChatId])
-      .pipe(switchMap(([chatType, chatId]) => this.messageService.getMessages(chatType, chatId, this.activeUserId)))
-      .subscribe((messages) => {
-        this.messages = messages;
-      });
-      
+  private messagesSubscription: Subscription | null = null;
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['chatType'] || changes['chatId'] || changes['activeUserId']) {
+      this.loadMessages();
+      this.loadChatData();
+    }
   }
 
   ngOnDestroy(): void {
@@ -48,44 +47,53 @@ export class MessageAreaComponent implements OnInit, OnDestroy {
     }
   }
 
-  getChatData() {
-    if (this.setChatType.value === 'private') {
-      this.userService
-      .getUser(this.setChatId.value)
-      .then((userData) => {
-        this.user = userData;
+  loadMessages(): void {
+    if (this.messagesSubscription) {
+      this.messagesSubscription.unsubscribe();
+    }
+
+    if (!this.chatType || !this.chatId || !this.activeUserId) {
+      this.messages = [];
+      return;
+    }
+
+    this.messagesSubscription = this.messageService
+      .getMessages(this.chatType, this.chatId, this.activeUserId)
+      .subscribe((messages) => {
+        this.messages = messages;
+      });
+  }
+
+  loadChatData(): void {
+    if (this.chatType === 'private') {
+      this.loadChatPartnerData();
+    } else {
+      this.chatPartner = null;
+    }
+
+    // if (this.chatType === 'channel') {
+    //   this.loadChannelData();
+    // } else {
+    //   this.ChannelData = null;
+    // }
+  }
+
+  loadChatPartnerData(): void {
+    this.userService
+      .getUser(this.chatId)
+      .then((chatPartnerData) => {
+        this.chatPartner = chatPartnerData;
       })
       .catch((error) => {
         console.error('Fehler beim Laden des Users:', error);
       });
-    }
-    if (this.setChatType.value === 'channel') {
-      //Fehlt noch
-      console.log('Channel-Chat-Daten werden geladen...');
-      
-    }
-    
   }
 
-  // Beispiel-Daten für eine Nachricht
+  // loadChannelData() {
+  //   console.log('Channeldaten werden geladen...');
+  // }
+
   testMessage(): void {
-    console.log('Testnachricht wird erstellt...');   
-
-    // const dummyMessage: Partial<Message> = {
-    //   mText: 'Na dann, beim nächsten Meeting organisiere ich gleich ein kleines Nickerchen – moderne Selbstfürsorge eben!',
-    //   mSenderId: 'sEg8GcSNNZ6YWhxRs4SE',
-    //   mReactions: ['🌻', '❤️'],
-    //   mUserId: 'Eg2jVLodTA9FI99IMJUK',
-    //   mThreadId: '',
-    //   mChannelId: '',      
-    // };
-
-    // this.messageService.createMessage(dummyMessage)
-    //   .then(docRef => {
-    //     console.log('Nachricht erstellt mit ID:', docRef.id);
-    //   })
-    //   .catch(error => {
-    //     console.error('Fehler beim Erstellen der Nachricht:', error);
-    //   });
+    console.log('Testnachricht wird erstellt...');
   }
 }

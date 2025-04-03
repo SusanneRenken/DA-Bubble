@@ -2,9 +2,14 @@ import { Injectable, inject } from '@angular/core';
 import {
   Firestore,
   collection,
-  query,
   where,
-  onSnapshot
+  orderBy,
+  query,
+  onSnapshot,
+  Query,
+  DocumentData,
+  QuerySnapshot,
+  Timestamp
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Message } from '../interfaces/message.interface';
@@ -46,65 +51,88 @@ export class MessageService {
         });
     }
   }
-
+  
   private getPrivateMessages(
     chatId: string | null,
     activeUserId: string | null
   ): Observable<Message[]> {
-    return new Observable<Message[]>((observer) => {
-      const messagesCollection = collection(this.firestore, 'messages');
-
-      const q1 = query(
-        messagesCollection,
-        where('mUserId', '==', activeUserId),
-        where('mSenderId', '==', chatId)
-      );
-      const q2 = query(
-        messagesCollection,
-        where('mUserId', '==', chatId),
-        where('mSenderId', '==', activeUserId)
-      );
-
-      let messages1: Message[] = [];
-      let messages2: Message[] = [];
-
-      const mergeMessages = (arr1: Message[], arr2: Message[]): Message[] => {
-        const merged = [...arr1];
-        arr2.forEach((msg) => {
-          if (!merged.find((m) => m.mId === msg.mId)) {
-            merged.push(msg);
-          }
-        });
-        return merged;
-      };
-
-      const unsubscribe1 = onSnapshot(q1, (snapshot) => {
-        messages1 = [];
-        snapshot.forEach((doc) => {
-          messages1.push(this.setNoteObject(doc.data(), doc.id));
-        });
-        observer.next(mergeMessages(messages1, messages2));
+    return new Observable<Message[]>(observer => {
+      const [q1, q2] = this.createPrivateMessageQueries(chatId, activeUserId);
+      let arr1: Message[] = [];
+      let arr2: Message[] = [];
+  
+      const unsub1 = onSnapshot(q1, snap => {
+        arr1 = this.mapDocsToMessages(snap);
+        observer.next(this.mergeAndSort(arr1, arr2));
       });
-
-      const unsubscribe2 = onSnapshot(q2, (snapshot) => {
-        messages2 = [];
-        snapshot.forEach((doc) => {
-          messages2.push(this.setNoteObject(doc.data(), doc.id));
-        });
-        observer.next(mergeMessages(messages1, messages2));
+      const unsub2 = onSnapshot(q2, snap => {
+        arr2 = this.mapDocsToMessages(snap);
+        observer.next(this.mergeAndSort(arr1, arr2));
       });
-
-      return () => {
-        unsubscribe1();
-        unsubscribe2();
-      };
+  
+      return () => { unsub1(); unsub2(); };
     });
   }
+
+  private createPrivateMessageQueries(
+    chatId: string | null,
+    activeUserId: string | null
+  ): [Query<DocumentData>, Query<DocumentData>] {
+    const col = collection(this.firestore, 'messages');
+  
+    const q1 = query(
+      col,
+      where('mUserId', '==', activeUserId),
+      where('mSenderId', '==', chatId),
+      orderBy('mTime', 'asc')
+    );
+    const q2 = query(
+      col,
+      where('mUserId', '==', chatId),
+      where('mSenderId', '==', activeUserId),
+      orderBy('mTime', 'asc')
+    );
+    return [q1, q2];
+  }
+  
+  private mapDocsToMessages(snapshot: QuerySnapshot<DocumentData>): Message[] {
+    return snapshot.docs.map(doc => this.setNoteObject(doc.data(), doc.id));
+  }
+  
+  private mergeAndSort(arr1: Message[], arr2: Message[]): Message[] {
+    const merged = [...arr1];
+    arr2.forEach(msg => {
+      if (!merged.find(m => m.mId === msg.mId)) {
+        merged.push(msg);
+      }
+    });
+    merged.sort((a, b) => this.getTimeValue(a) - this.getTimeValue(b));
+    return merged;
+  }
+  
+  private getTimeValue(msg: Message): number {
+    if (msg.mTime instanceof Timestamp) {
+      return msg.mTime.toDate().getTime();
+    } else if (msg.mTime instanceof Date) {
+      return msg.mTime.getTime();
+    }
+    return 0;
+  }
+
+
+
+
 
   private getChannelMessages(chatId: string | null): Observable<Message[]> {
     return new Observable<Message[]>((observer) => {
       const messagesCollection = collection(this.firestore, 'messages');
-      const q = query(messagesCollection, where('mChannelId', '==', chatId));
+
+      const q = query(
+        messagesCollection,
+        where('mChannelId', '==', chatId),
+        orderBy('mTime', 'asc')
+      );
+
       const unsubscribe = onSnapshot(q, (snapshot) => {
         const messages: Message[] = [];
         snapshot.forEach((doc) => {
@@ -119,7 +147,11 @@ export class MessageService {
   private getThreadMessages(chatId: string | null): Observable<Message[]> {
     return new Observable<Message[]>((observer) => {
       const messagesCollection = collection(this.firestore, 'messages');
-      const q = query(messagesCollection, where('mThreadId', '==', chatId));
+      const q = query(
+        messagesCollection,
+        where('mThreadId', '==', chatId),
+        orderBy('mTime', 'asc')
+      );
       const unsubscribe = onSnapshot(q, (snapshot) => {
         const messages: Message[] = [];
         snapshot.forEach((doc) => {

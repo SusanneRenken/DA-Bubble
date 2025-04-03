@@ -1,8 +1,8 @@
 <div class="message" [class.user-message]="message.mSenderId === activeUserId">
-  <img src="/assets/img/{{ user?.uUserImage }}.png" alt="" />
+  <img src="/assets/img/{{ senderData?.uUserImage }}" alt="" />
   <div>
     <div>
-      <h3>{{ user?.uName }}</h3>
+      <h3>{{ senderData?.uName }}</h3>
       <h5>{{ getTimeInHours(message.mTime) }} Uhr</h5>
     </div>
 
@@ -10,15 +10,17 @@
 
     <div>
       @if (message.mReactions && message.mReactions.length > 0) {
-      <span class="reaction-field">
-        @for (reaction of message.mReactions; track reaction) {
-            <div>{{reaction}} 3</div>
-        }
-        <img src="/assets/icons/add-reaction.svg" alt="" />
-      </span>
-      } @if (message.mThreadId  && chatType !== 'thread') {
-      <h4>2 Antworten</h4>
-      <h5>Letzte Antwort 14:56 Uhr</h5>
+        <span class="reaction-field">
+          @for (reaction of message.mReactions; track reaction) {
+            <div>{{ reaction }} 3</div>
+          }
+          <img src="/assets/icons/add-reaction.svg" alt="" />
+        </span>
+      } 
+
+      @if (message.mThreadId && chatType !== 'thread') {
+        <h4>2 Antworten</h4>
+        <h5>Letzte Antwort 14:56 Uhr</h5>
       }
     </div>
   </div>

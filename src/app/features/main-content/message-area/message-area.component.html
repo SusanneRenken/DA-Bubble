@@ -42,18 +42,20 @@
   </div>
 
   <div class="chatbox-messages">
+    @if (chatType === 'thread') {
     <div class="thread-separator">
       <p>2 Antworten</p>
       <span></span>
     </div>
-
+    } @for (message of messages; track message.mId; let i = $index) { @if
+    (shouldShowDateSeparator(i)) {
     <div class="date-separator">
       <span></span>
-      <p>Freitag, 27. März</p>
+      <p>{{ getDateString(message.mTime) }}</p>
       <span></span>
     </div>
+    }
 
-    @for (message of messages; track message) {
     <app-message
       [message]="message"
       [activeUserId]="activeUserId"

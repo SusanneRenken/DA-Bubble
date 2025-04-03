@@ -93,6 +93,52 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   //   console.log('Channeldaten werden geladen...');
   // }
 
+  shouldShowDateSeparator(index: number): boolean {
+    if (index === 0) {
+      return true;
+    }
+  
+    const current = this.messages[index];
+    const prev = this.messages[index - 1];
+  
+    if (!current || !prev) {
+      return false;
+    }
+  
+    const currentDate = this.extractDateOnly(current.mTime);
+    const prevDate = this.extractDateOnly(prev.mTime);
+  
+    return currentDate.getTime() !== prevDate.getTime();
+  }
+
+  extractDateOnly(mTime: any): Date {
+    let dateObj: Date;
+    
+    if (mTime && typeof mTime.toDate === 'function') {
+      dateObj = mTime.toDate();
+    } 
+    else if (mTime instanceof Date) {
+      dateObj = mTime;
+    } 
+    else {
+      dateObj = new Date(mTime);
+    }
+    
+    const d = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
+    return d;
+  }
+
+  getDateString(mTime: any): string {
+    const date = this.extractDateOnly(mTime);
+    
+    return date.toLocaleDateString('de-DE', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long'
+    });
+  }
+  
+
   testMessage(): void {
     console.log('Testnachricht wird erstellt...');
   }

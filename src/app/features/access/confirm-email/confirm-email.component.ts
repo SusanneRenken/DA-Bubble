@@ -34,7 +34,6 @@ export class ConfirmEmailComponent implements OnInit {
     this.authService.sendResetPasswordEmail(email)
       .then(() => {
         console.log('Mail is confirmed: ', this.confirmForm.value);
-        this.changeComponent('conPassword');
       })
       .catch(error => {
         console.error('Fehler beim Versenden der Reset-Email:', error);

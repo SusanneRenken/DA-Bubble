@@ -80,6 +80,11 @@ export class AuthentificationService {
   }
 
   sendResetPasswordEmail(email: string): Promise<void> {
+    const actionCodeSettings = {
+      url: 'http://localhost:4200/access',
+      handleCodeInApp: true,
+    };
+
     const usersCollection = collection(this.firestore, 'users');
     const q = query(usersCollection, where('uEmail', '==', email));
     return getDocs(q).then((querySnapshot) => {
@@ -88,7 +93,7 @@ export class AuthentificationService {
       }
       const userDoc = querySnapshot.docs[0];
       this.resetUser = userDoc.data() as UserInterface;
-      return sendPasswordResetEmail(this.auth, email);
+      return sendPasswordResetEmail(this.auth, email, actionCodeSettings);
     });
   }
 

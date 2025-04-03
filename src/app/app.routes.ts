@@ -3,7 +3,11 @@ import { AccessComponent } from './features/access/access.component';
 import { MainContentComponent } from './features/main-content/main-content.component';
 
 export const routes: Routes = [
-  { path: '', component: AccessComponent },
+  { path: '', redirectTo: 'access', pathMatch: 'full' },
+  { path: 'access', component: AccessComponent },
+
   { path: 'home', component: MainContentComponent },
   { path: 'home/:userId', component: MainContentComponent },
+
+  { path: '**', redirectTo: 'access' }
 ];

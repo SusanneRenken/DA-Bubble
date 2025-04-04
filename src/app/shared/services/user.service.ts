@@ -9,7 +9,10 @@ import { User } from '../interfaces/user.interface';
 export class UserService {
   private firestore = inject(Firestore);
 
-  getUser(userId: string): Promise<User> {
+  async getUser(userId: string | null): Promise<User> {
+    if (!userId) {
+      return Promise.reject(new Error('Invalid userId: null'));
+    }
     const userDocRef = doc(this.firestore, 'users', userId);
     return getDoc(userDocRef).then((docSnap) => {
       if (docSnap.exists()) {
@@ -19,7 +22,5 @@ export class UserService {
       }
     });
   }
-
-
 
 }

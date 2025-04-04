@@ -3,25 +3,89 @@
   <div class="content-container">
     <button class="toogleBar" (click)="toggleSection()">
       <div>
-          <span *ngIf="sectionVisible">Workspace-Menü schließen</span>
-          <span *ngIf="!sectionVisible">Workspace-Menü öffnen</span>
+        <span *ngIf="sectionVisible">Workspace-Menü schließen</span>
+        <span *ngIf="!sectionVisible">Workspace-Menü öffnen</span>
       </div>
       <div class="imageChange" *ngIf="sectionVisible">
-          <svg class="closeIcon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="2" y="2" width="16" height="16" rx="1" stroke="currentcolor" stroke-width="2"/>
-              <path d="M7.71436 3V19" stroke="currentcolor" stroke-width="2"/>
-              <path d="M13.4283 12.2856L11.4961 10.3535C11.3009 10.1582 11.3009 9.84164 11.4961 9.64638L13.4283 7.71422" stroke="currentcolor" stroke-width="2" stroke-linecap="round"/>
-          </svg>
+        <svg
+          class="closeIcon"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect
+            x="2"
+            y="2"
+            width="16"
+            height="16"
+            rx="1"
+            stroke="currentcolor"
+            stroke-width="2"
+          />
+          <path d="M7.71436 3V19" stroke="currentcolor" stroke-width="2" />
+          <path
+            d="M13.4283 12.2856L11.4961 10.3535C11.3009 10.1582 11.3009 9.84164 11.4961 9.64638L13.4283 7.71422"
+            stroke="currentcolor"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+        </svg>
       </div>
       <div class="imageChange" *ngIf="!sectionVisible">
-          <svg class="closeIcon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="2" y="2" width="16" height="16" rx="1" stroke="currentcolor" stroke-width="2.5"/>
-              <path d="M7.71436 3V19" stroke="currentcolor" stroke-width="2.5"/>
-              <path d="M11.143 12.2856L13.0752 10.3535C13.2704 10.1582 13.2704 9.84164 13.0752 9.64638L11.143 7.71422" stroke="currentcolor" stroke-width="2.5" stroke-linecap="round"/>
-          </svg>
+        <svg
+          class="closeIcon"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect
+            x="2"
+            y="2"
+            width="16"
+            height="16"
+            rx="1"
+            stroke="currentcolor"
+            stroke-width="2.5"
+          />
+          <path d="M7.71436 3V19" stroke="currentcolor" stroke-width="2.5" />
+          <path
+            d="M11.143 12.2856L13.0752 10.3535C13.2704 10.1582 13.2704 9.84164 13.0752 9.64638L11.143 7.71422"
+            stroke="currentcolor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+          />
+        </svg>
       </div>
     </button>
-    <app-contact-bar *ngIf="sectionVisible" [sectionVisible]="sectionVisible" (toggle)="toggleSection()"></app-contact-bar>
-    <app-message-area></app-message-area>
+
+    <app-contact-bar
+      *ngIf="sectionVisible"
+      [sectionVisible]="sectionVisible"
+      (toggle)="toggleSection()"
+    ></app-contact-bar>
+    
+    <!-- openChat-Funktion muss zu Alexander -->
+    <app-message-area
+      class="chat-message-area"
+      [chatType]="chatType"
+      [chatId]="chatId"
+      [activeUserId]="activeUserId"
+      (openChat)="handleOpenChat($event)"
+    >
+    </app-message-area>
+
+    @if (isThreadOpen) {
+    <app-message-area
+    class="thread-message-area"
+    [chatType]="'thread'"
+    [chatId]="threadId"
+    [activeUserId]="activeUserId"
+    >
+    </app-message-area>
+    } 
   </div>
 </section>

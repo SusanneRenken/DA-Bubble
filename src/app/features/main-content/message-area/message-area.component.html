@@ -1,16 +1,20 @@
 <section>
   <div class="chatbox-header">
-    @if((chatType$ | async) === 'private'){
+    @if(chatType === 'private'){
     <div class="private-header">
-      <img src="/assets/img/avatar-5.png" alt="" />
-      <h1 (click)="testMessage()">Sofia Müller</h1>
-      <div class="material-symbols">home</div>
+      <img src="/assets/img/{{ chatPartner?.uUserImage }}" alt="" />
+      <!-- Funktion muss zu Alexander -->
+      <h1 (click)="selectChannel('KV14uSorBJhrWW92IeDS')">{{ chatPartner?.uName }}</h1>
     </div>
-    } @else if((chatType$ | async) === 'channel'){
+    } 
+    
+    
+    @else if(chatType === 'channel'){
     <div class="channel-header">
       <a class="channel-name">
         <img src="/assets/icons/hashtag.svg" alt="arrow down" />
-        <h1>Entwicklerteam</h1>
+        <!-- Funktion muss zu Alexander -->
+        <h1 (click)="selectPrivateChat('sEg8GcSNNZ6YWhxRs4SE')">Entwicklerteam</h1>
         <img src="/assets/icons/keyboard-arrow-down.svg" alt="arrow down" />
       </a>
 
@@ -26,7 +30,11 @@
         </button>
       </div>
     </div>
-    } @else if((chatType$ | async) === 'thread'){
+    } 
+    
+    
+    
+    @else if(chatType === 'thread'){
     <div class="thread-header">
       <div>
         <h1>Thread</h1>
@@ -39,24 +47,29 @@
         <img src="/assets/icons/close-button.svg" alt="" />
       </button>
     </div>
-
     }
   </div>
 
   <div class="chatbox-messages">
+    @if (chatType === 'thread') {
     <div class="thread-separator">
       <p>2 Antworten</p>
       <span></span>
     </div>
-
+    } @for (message of messages; track message.mId; let i = $index) { @if
+    (shouldShowDateSeparator(i)) {
     <div class="date-separator">
       <span></span>
-      <p>Freitag, 27. März</p>
+      <p>{{ getDateString(message.mTime) }}</p>
       <span></span>
     </div>
+    }
 
-    @for (message of messages; track message) {
-    <app-message [message]="message" [chatType]="chatType$ | async"></app-message>
+    <app-message
+      [message]="message"
+      [activeUserId]="activeUserId"
+      [chatType]="chatType"
+    ></app-message>
     }
   </div>
 

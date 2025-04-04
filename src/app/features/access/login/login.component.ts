@@ -8,6 +8,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { AuthentificationService } from '../../../shared/services/authentification.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -19,19 +21,32 @@ export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
 
   constructor(
-    public componentSwitcher: ComponentSwitcherService
+    public componentSwitcher: ComponentSwitcherService,
+    private authService: AuthentificationService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     this.loginForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
-      password: new FormControl('', Validators.required),
+      password: new FormControl('', [Validators.required, Validators.minLength(6)]),
     });
   }
 
   onSubmit() {
     if (this.loginForm.valid) {
-      console.log('Login-Data: ', this.loginForm.value);
+      const { email, password } = this.loginForm.value;
+      this.authService.loginWithEmail(email, password)
+      .then(result => {
+        if (result) {
+          console.log('Login-Data: ', this.loginForm.value);
+          const uid = this.authService.currentUid;
+          this.router.navigate(['/home', uid]);
+        }
+      })
+      .catch(error => {
+        console.error('Login error:', error);
+      });
     }
   }
 

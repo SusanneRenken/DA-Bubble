@@ -36,14 +36,14 @@ export class ConfirmPasswordComponent implements OnInit {
   }
 
   onSubmit() {
-    if (!this.oobCode) {
-      console.error('Kein gültiger oobCode gefunden.');
-      return;
-    }
-    const { newPassword, conPassword } = this.newPassword.value;
-    if (newPassword === conPassword) {
-      this.authService
-        .confirmResetPassword(this.oobCode, newPassword)
+    if (this.newPassword.valid) {
+      if (!this.oobCode) {
+        console.error('Kein gültiger oobCode gefunden.');
+        return;
+      }
+      const { newPassword, conPassword } = this.newPassword.value;
+      if (newPassword === conPassword) {
+        this.authService.confirmResetPassword(this.oobCode, newPassword)
         .then(() => {
           console.log('Password is confirmed: ', this.newPassword.value);
           this.router.navigate(['/access']);
@@ -51,8 +51,8 @@ export class ConfirmPasswordComponent implements OnInit {
         })
         .catch((error) => {
           console.error('Error when resetting the password:', error);
-        }
-      );
+        });
+      }
     }
   }
 

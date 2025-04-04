@@ -27,23 +27,25 @@ export class CreateAccountComponent implements OnInit {
     this.registerForm = new FormGroup({
       regName: new FormControl('', Validators.required),
       regEmail: new FormControl('', [Validators.required, Validators.email]),
-      regPassword: new FormControl('', Validators.required),
+      regPassword: new FormControl('', [Validators.required, Validators.minLength(6)]),
       acceptPrivacy: new FormControl(false, Validators.requiredTrue),
     });
   }
 
   onSubmit() {
-    const { regEmail, regPassword, regName } = this.registerForm.value;
-    console.log('Create-Data: ', this.registerForm.value);
-    this.authService.registerWithEmail(regEmail, regPassword, regName)
+    if (this.registerForm.valid) {
+      const { regEmail, regPassword, regName } = this.registerForm.value;
+      this.authService.registerWithEmail(regEmail, regPassword, regName)
       .then(() => {
         console.log('Registration successful');
+        console.log('Create-Data: ', this.registerForm.value);
       })
       .catch((error) => {
         console.error('Error during registration', error);
       });
-    if (this.registerForm.valid) {
-      this.changeComponent('avatar');
+      if (this.registerForm.valid) {
+        this.changeComponent('avatar');
+      }
     }
   }
 

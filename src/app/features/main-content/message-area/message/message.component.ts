@@ -2,7 +2,7 @@ import { Component, inject, Input, OnInit } from '@angular/core';
 import { Message } from '../../../../shared/interfaces/message.interface';
 import { Timestamp } from 'firebase/firestore';
 import { UserService } from '../../../../shared/services/user.service';
-import { User } from '../../../../shared/interfaces/user.interface';
+import { UserInterface } from '../../../../shared/interfaces/user.interface';
 
 @Component({
   selector: 'app-message',
@@ -17,7 +17,7 @@ export class MessageComponent implements OnInit {
   @Input() message!: Message;
   @Input() activeUserId: string | null = null;
 
-  senderData: User | null = null;
+  senderData: UserInterface | null = null;
 
   ngOnInit(): void {
     this.getUserData();

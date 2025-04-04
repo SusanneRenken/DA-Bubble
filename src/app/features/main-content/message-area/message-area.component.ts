@@ -13,7 +13,7 @@ import { MessageService } from '../../../shared/services/message.service';
 import { Message } from '../../../shared/interfaces/message.interface';
 import { CommonModule } from '@angular/common';
 import { MessageComponent } from './message/message.component';
-import { User } from '../../../shared/interfaces/user.interface';
+import { UserInterface } from '../../../shared/interfaces/user.interface';
 import { UserService } from '../../../shared/services/user.service';
 
 @Component({
@@ -37,7 +37,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
     chatId: string 
   }>();
 
-  chatPartner: User | null = null;
+  chatPartner: UserInterface | null = null;
   // ChannelData: Channel | null = null;
   messages: Message[] = [];
 

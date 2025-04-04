@@ -1,0 +1,41 @@
+@import '../../../../styles.scss';
+
+:host {
+  position: relative;
+  @include dFlex($gap: 10px, $direction: column);
+}
+
+.arrow {
+  position: absolute;
+  top: 10px;
+  left: 0;
+}
+
+.img-contaier {
+  background-color: #797EF3;
+  border-radius: 50%;
+  padding: 40px;
+}
+
+.avatar-container {
+  display: flex;
+  gap: 12px;
+
+  > img {
+    width: 69px;
+    height: 69px;
+    cursor: pointer;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 5px solid transparent;
+    transition: border-color 0.3s ease;
+
+    &:hover {
+      border: 5px solid #e6e6e6;
+    }
+  }
+
+  > img.selected {
+    border: 5px solid #eceefe;
+  }
+}

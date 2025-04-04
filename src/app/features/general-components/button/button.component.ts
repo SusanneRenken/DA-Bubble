@@ -3,8 +3,13 @@ import { Component, Input } from '@angular/core';
 @Component({
   selector: 'app-button',
   imports: [],
-  template: `<button>{{ text }}</button>`,
-  styles: [`
+  template: `
+    <button [type]="type" [disabled]="disabled">
+      <ng-content></ng-content>
+    </button>
+  `,
+  styles: [
+    `
       button {
         padding: 12px 25px;
         border-radius: 25px;
@@ -13,5 +18,6 @@ import { Component, Input } from '@angular/core';
   ],
 })
 export class ButtonComponent {
-  @Input() text?: string;
+  @Input() type: 'button' | 'submit' | 'reset' = 'button';
+  @Input() disabled = false;
 }

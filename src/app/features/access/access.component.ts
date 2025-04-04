@@ -1,9 +1,7 @@
-import { Component } from '@angular/core';
-import { LoginComponent } from './login/login.component';
-import { CreateAccountComponent } from './create-account/create-account.component';
+import { Component, OnInit } from '@angular/core';
 import { NgComponentOutlet } from '@angular/common';
-import { ImprintComponent } from './imprint/imprint.component';
-import { PrivacyComponent } from './privacy/privacy.component';
+import { ComponentSwitcherService } from '../../shared/services/component-switcher.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-access',
@@ -11,25 +9,18 @@ import { PrivacyComponent } from './privacy/privacy.component';
   templateUrl: './access.component.html',
   styleUrl: './access.component.scss'
 })
-export class AccessComponent {
-  currentComponent = LoginComponent;
+export class AccessComponent implements OnInit {
 
-  setComponent(componentName: string): void {
-    switch(componentName) {
-      case 'login':
-        this.currentComponent = LoginComponent;
-        break;
-      case 'signin':
-        this.currentComponent = CreateAccountComponent;
-        break;
-      case 'imprit':
-        this.currentComponent = ImprintComponent;
-        break;
-      case 'privacy':
-        this.currentComponent = PrivacyComponent;
-        break;
-      default:
-        this.currentComponent = LoginComponent;
+  constructor(private route: ActivatedRoute, public componentSwitcher: ComponentSwitcherService) {}
+
+  ngOnInit(): void {
+    const mode = this.route.snapshot.queryParamMap.get('mode');
+    if (mode === 'reset') {
+      this.changeComponent('conPassword');
     }
+  }
+
+  changeComponent(componentName: string) {
+    this.componentSwitcher.setComponent(componentName);
   }
 }

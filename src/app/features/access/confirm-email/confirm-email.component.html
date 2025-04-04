@@ -13,37 +13,24 @@
   />
 </svg>
 
-<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-  <h1>Konto erstellen</h1>
+<form [formGroup]="confirmForm" (ngSubmit)="onSubmit()">
+  <h1>Passwort zurücksetzen</h1>
 
-  <p>
-    Mit deinem Namen und deiner E-Mail-Adresse hast du dein neues
-    DABubble-Konto.
-  </p>
-
-  <label for="name">
-    <input type="text" name="name" id="name" formControlName="regName"/>
-  </label>
+  <span>Bitte geben Sie Ihre E-Mail-Adresse ein.</span>
 
   <label for="email">
-    <input type="email" name="email" id="email" formControlName="regEmail"/>
+    <input
+      type="email"
+      name="email"
+      id="email"
+      formControlName="conEmail"
+      pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
+    />
   </label>
 
-  <label for="password">
-    <input type="password" name="password" id="password" formControlName="regPassword"/>
-  </label>
-
-  <div class="checkbox-container">
-    <label>
-      <input type="checkbox" formControlName="acceptPrivacy"/>
-    </label>
-
-    Ich stimme deiner
-    <span>Datenschutzerklärung</span>
-    zu.
-  </div>
+  <p>Wir senden Ihnen eine E-Mail, über die Sie Ihr Passwort ändern können.</p>
 
   <div>
-    <app-button type="submit" [disabled]="registerForm.invalid">Weiter</app-button>
+    <app-button type="submit" [disabled]="confirmForm.invalid">E-Mail senden</app-button>
   </div>
 </form>

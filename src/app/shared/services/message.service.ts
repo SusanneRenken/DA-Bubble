@@ -13,6 +13,7 @@ import {
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Message } from '../interfaces/message.interface';
+import { addDoc, serverTimestamp } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root',
@@ -38,12 +39,13 @@ export class MessageService {
     chatId: string | null,
     activeUserId: string | null
   ): Observable<Message[]> {
+    
     switch (chatType) {
-      case 'private':
+      case 'private':     
         return this.getPrivateMessages(chatId, activeUserId);
-      case 'channel':
+      case 'channel': 
         return this.getChannelMessages(chatId);
-      case 'thread':
+      case 'thread': 
         return this.getThreadMessages(chatId);
       default:
         return new Observable<Message[]>((observer) => {
@@ -121,11 +123,10 @@ export class MessageService {
 
 
 
-
-
   private getChannelMessages(chatId: string | null): Observable<Message[]> {
     return new Observable<Message[]>((observer) => {
       const messagesCollection = collection(this.firestore, 'messages');
+      
 
       const q = query(
         messagesCollection,
@@ -140,6 +141,8 @@ export class MessageService {
         });
         observer.next(messages);
       });
+
+
       return () => unsubscribe && unsubscribe();
     });
   }

@@ -68,11 +68,13 @@
       (toggle)="toggleSection()"
     ></app-contact-bar>
     
+    <!-- openChat-Funktion muss zu Alexander -->
     <app-message-area
       class="chat-message-area"
       [chatType]="chatType"
       [chatId]="chatId"
       [activeUserId]="activeUserId"
+      (openChat)="handleOpenChat($event)"
     >
     </app-message-area>
 

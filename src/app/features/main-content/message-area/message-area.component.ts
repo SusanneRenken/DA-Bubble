@@ -1,9 +1,11 @@
 import {
   Component,
+  EventEmitter,
   inject,
   Input,
   OnChanges,
   OnDestroy,
+  Output,
   SimpleChanges,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
@@ -27,6 +29,13 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   @Input() chatType: 'private' | 'channel' | 'thread' | 'new' = 'private';
   @Input() chatId: string | null = null;
   @Input() activeUserId: string | null = null;
+
+
+  // muss zu Alexander
+  @Output() openChat = new EventEmitter<{ 
+    chatType: 'private' | 'channel'; 
+    chatId: string 
+  }>();
 
   chatPartner: User | null = null;
   // ChannelData: Channel | null = null;
@@ -141,5 +150,32 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
 
   testMessage(): void {
     console.log('Testnachricht wird erstellt...');
+    // const testMessage: Message = {
+    //   mText: "Wenn wir das nochmal machen, kaufen wir bitte einen Spritzschutz! Oder wir basteln Noah ’nen Ganzkörperanzug. Alles für den Geschmack!",
+    //   mReactions: ["😜", "🛡️"],
+    //   mTime: "Donnerstag 08:00",
+    //   mSenderId: "8nmFp28ZO3TOeDohgGQSqR0niUj1", // Bisasam
+    //   mUserId: "",
+    //   mChannelId: "KV14uSorBJhrWW92IeDS",
+    //   mThreadId: ""
+    // };
+    // this.messageService.createMessage(testMessage);
   }
+
+  // muss zu Alexander
+  selectPrivateChat(userId: string) {
+    this.openChat.emit({
+      chatType: 'private',
+      chatId: userId
+    });
+  }
+
+  // muss zu Alexander
+  selectChannel(channelId: string) {
+    this.openChat.emit({
+      chatType: 'channel',
+      chatId: channelId
+    });
+  }
+
 }

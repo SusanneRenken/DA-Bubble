@@ -24,9 +24,11 @@ export class MainContentComponent {
 
   activeUserId: string | null = null;
 
-  chatType: 'private' | 'channel' | 'thread' | 'new' = 'private';
+  chatType: 'private' | 'channel' | 'thread' | 'new' = 'channel';
   // muss später getauscht werden:
-  chatId: string | null = 'sEg8GcSNNZ6YWhxRs4SE';
+  chatId: string | null = 'KV14uSorBJhrWW92IeDS';
+  // chatId: string | null = 'sEg8GcSNNZ6YWhxRs4SE';
+
   // chatId: string | null = null;
   threadId: string | null = null;
   isThreadOpen: boolean = false;
@@ -44,16 +46,26 @@ export class MainContentComponent {
     this.sectionVisible = !this.sectionVisible;
   }
 
+  handleOpenChat(eventData: { chatType: 'private' | 'channel'; chatId: string }) {
+    if (eventData.chatType === 'private') {
+      this.openPrivateChat(eventData.chatId);
+    } else if (eventData.chatType === 'channel') {
+      this.openChannel(eventData.chatId);
+    }
+  }
+
   openPrivateChat(userId: string) {
     this.chatType = 'private';
     this.chatId = userId;
     this.isThreadOpen = false;
+    this.threadId = '';
   }
 
   openChannel(channelId: string) {
     this.chatType = 'channel';
     this.chatId = channelId;
     this.isThreadOpen = false;
+    this.threadId = '';
   }
 
   openThread(threadId: string) {

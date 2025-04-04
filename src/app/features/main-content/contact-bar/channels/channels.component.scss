@@ -1,11 +1,10 @@
 @import '../../../../../styles.scss';
 main{
-    width: 310px;
+    width: 300px;
     margin: 0 auto;
 }
 header{
     @include flexBox('', space-between, center, '');
-    margin-top: 25px;
     height: 46px;
     width: 100%;
 }
@@ -15,24 +14,38 @@ header{
     width: 30px;
     background-color: white;
     border: none;
-    
-    img{
-        height: 24px;
-    }
+    cursor: pointer;
+}
+.showChannelsIcon{
+    height: 24px;
+    width: 24px;
 }
 .channelHeadShow{
     all: unset;
     @include flexBox('', left, center, 15);
     width: 180px;
-    height: 40px;
+    height: 40px;   
+    cursor: pointer;
 }
 .workSpaceText{
     @include flexBox('', left, center, 10);
     @include fontStyle(20px, black, 700);
-    img{
-        height: 24px;
-        width: 24px;
-    }
+}
+.workSpaceIcon, .addIcon, .hashtagIcon{
+    height: 24px;
+    width: 24px;
+}
+
+.channelHeadShow:hover .workSpaceIcon,
+.channelHeadShow:hover .showChannelsIcon,
+.channelHeadShow:hover .channelText,
+.addButton:hover .addIcon,
+.addChannel:hover span,
+.everyChannel:hover span,
+.everyChannel:hover .hashtagIcon
+{
+    color: #535AF1;
+    cursor: pointer;
 }
 .addButton{
     @include flexBox('', center, center, '');
@@ -40,9 +53,9 @@ header{
     width: 30px;
     border: none;
     background-color: white;
-    img{
-        height: 24px;
-        width: 24px;
+    border-radius: 50%;
+    &:hover{
+        background-color: #ECEEFE;
     }
 }
 section{
@@ -56,13 +69,40 @@ section{
     margin-left: 32px;
     background-color: white;
     border: none;
-    img{
-        height: 24px;
-        width: 24px;
-        border: 1px solid black;
-        border-radius: 50%;
-    }
+    cursor: pointer;
     span{
         @include fontStyle(18px, black, 400);
     }
+}
+.everyChannel{
+    @include flexBox('', left, center, 15);
+    height: 35px;
+    margin-left: 25px;
+    width: 275px;
+    padding: 0 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    span{
+        @include fontStyle(18px, black, 700);
+    }
+    &:hover{
+        background-color: #ECEEFE;
+    }
+}
+.tagImage{
+    @include flexBox('', center, center, '');
+}
+.newChannels{
+    @include flexBox(column, '', '', 25);
+    margin-top: 25px;
+}
+.addIconChannel{
+    height: 20px;
+    width: 20px;
+    border: 1px solid black;
+    border-radius: 50%;
+}
+.addChannel:hover .addIconChannel{
+    color: #535AF1;
+    border-color: #535AF1;
 }

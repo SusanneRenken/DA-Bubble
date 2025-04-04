@@ -1,18 +1,19 @@
 main{
     width: 900px;
-    background-color: white;
     position: relative;
-    height: 70px;
-    padding: 17.5px 45px;
-    border-radius: 62px;
+    height: 100%;
+    border-radius: 42px;
     border: none;
     z-index: 1;
+}
+:host {
+  height: 100%;
 }
 .searchButton{
     position: absolute;
     border: none;
     right: 45px;
-    top: 35px;
+    top: 17.5px;
     background-color: white;
     z-index: 3;
     cursor: pointer;
@@ -22,16 +23,15 @@ main{
         background-color: white;
     }
 }
-
 input{
     position: absolute;
-    height: 70px;
+    height: 100%;
     left: 0;
     top: 0px;
     font-size: 24px;
     width: 900px;
     padding: 17.5px 45px;
-    border-radius: 62px;
+    border-radius: 42px;
     background-color: white;
     border: none;
     z-index: 2;

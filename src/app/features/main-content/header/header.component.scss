@@ -1,9 +1,10 @@
 @import '../../../../styles.scss';
 header{
-    @include centerFlex(flex, center, space-between);
+    @include flexBox('', space-between, center, '');
     padding-inline: 25px;
     height: 100%;
 }
 img{
-    width: 330px;
+    height: 70px;
 }
+ 

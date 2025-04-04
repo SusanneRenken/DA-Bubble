@@ -1,30 +1,32 @@
 <section>
   <div class="chatbox-header">
-    <!-- <div class="private-header">
-      <img class="avatar-small" src="/assets/img/avatar-5.png" alt="" />
-      <h2>Sofia Müller</h2>
-    </div> -->
-
-    <!-- <div class="channel-header">
-
+    @if((chatType$ | async) === 'private'){
+    <div class="private-header">
+      <img src="/assets/img/avatar-5.png" alt="" />
+      <h1 (click)="testMessage()">Sofia Müller</h1>
+      <div class="material-symbols">home</div>
+    </div>
+    } @else if((chatType$ | async) === 'channel'){
+    <div class="channel-header">
       <a class="channel-name">
-        <span>#</span>
-        <h2>Entwicklerteam</h2>
-        <img src="assets/icons/keyboard-arrow-down.svg" alt="arrow down" />
+        <img src="/assets/icons/hashtag.svg" alt="arrow down" />
+        <h1>Entwicklerteam</h1>
+        <img src="/assets/icons/keyboard-arrow-down.svg" alt="arrow down" />
       </a>
 
       <div class="channel-members">
         <div>
-          <img src="assets/img/avatar-1.png" alt="" />
-          <img src="assets/img/avatar-2.png" alt="" />
-          <img src="assets/img/avatar-3.png" alt="" />
+          <img src="/assets/img/avatar-1.png" alt="" />
+          <img src="/assets/img/avatar-2.png" alt="" />
+          <img src="/assets/img/avatar-3.png" alt="" />
           <span>3</span>
         </div>
-        <img src="assets/icons/add-members-button.svg" alt="">
+        <button class="icon-button">
+          <img src="/assets/icons/add-members-button.svg" alt="" />
+        </button>
       </div>
-
-    </div> -->
-
+    </div>
+    } @else if((chatType$ | async) === 'thread'){
     <div class="thread-header">
       <div>
         <h1>Thread</h1>
@@ -33,8 +35,47 @@
           <span>Entwicklerteam</span>
         </a>
       </div>
+      <button class="icon-button">
+        <img src="/assets/icons/close-button.svg" alt="" />
+      </button>
+    </div>
 
-      <img src="assets/icons/close-button.svg" alt="" />
+    }
+  </div>
+
+  <div class="chatbox-messages">
+    <div class="thread-separator">
+      <p>2 Antworten</p>
+      <span></span>
+    </div>
+
+    <div class="date-separator">
+      <span></span>
+      <p>Freitag, 27. März</p>
+      <span></span>
+    </div>
+
+    @for (message of messages; track message) {
+    <app-message [message]="message" [chatType]="chatType$ | async"></app-message>
+    }
+  </div>
+
+  <div class="chatbox-textfield thread-margin">
+    <textarea type="text" placeholder="Nachricht an" rows="2"></textarea>
+
+    <div class="textfield-buttons">
+      <div>
+        <button class="icon-button">
+          <img src="/assets/icons/emoji-button.svg" alt="" />
+        </button>
+
+        <button class="icon-button">
+          <img src="/assets/icons/at-button.svg" alt="" />
+        </button>
+      </div>
+      <button class="icon-button">
+        <img src="/assets/icons/send-button.svg" alt="" />
+      </button>
     </div>
   </div>
 </section>

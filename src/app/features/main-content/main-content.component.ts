@@ -13,5 +13,9 @@ import { MessageAreaComponent } from './message-area/message-area.component';
 })
 
 export class MainContentComponent {
+  sectionVisible = true;
 
+  toggleSection() {
+    this.sectionVisible = !this.sectionVisible;
+  }
 }

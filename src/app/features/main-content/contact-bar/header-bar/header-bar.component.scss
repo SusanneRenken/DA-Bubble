@@ -23,9 +23,18 @@ section{
     border-radius: 50%;
     background-color: white;
     border: none;
-    cursor: pointer;
-    img{
-        height: 24px;
-        width: 24px;        
-    }
+    cursor: pointer;    
+    position: relative;
+    
 }
+.icon{
+    width: 24px;
+    height: 24px;
+    color: black;
+    transition: color 0.3s ease;
+}
+.squareImage:hover .icon{
+    color: blue;
+}
+
+  

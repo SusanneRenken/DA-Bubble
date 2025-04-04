@@ -9,5 +9,9 @@ import { Component } from '@angular/core';
   styleUrl: './direct-message.component.scss'
 })
 export class DirectMessageComponent {
+  showMessages = false;
 
+  showAllMessages(){
+    this.showMessages = !this.showMessages
+  }
 }

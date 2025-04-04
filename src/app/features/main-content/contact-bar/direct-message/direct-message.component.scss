@@ -1,8 +1,39 @@
 @import '../../../../../styles.scss';
 
 main{
-    width: 310px;
+    width: 300px;
+    margin: 0 auto;
 }
-header{
-    @include flexBox('', space-between, center, '');
+.directMessageButton{
+    @include flexBox('', left, center, 15);
+    width: 260px;
+    background-color: white;
+    border: none;
+    cursor: pointer;
+}
+.directMessageButton:hover .directMessage,
+.directMessageButton:hover .accountCircle,
+.directMessageButton:hover .showMessagesIcon
+{
+    color: #535AF1;
+}
+.directMessage{
+    @include flexBox('', space-between, center, 10);
+    @include fontStyle(20px, black, 700);
+    img{
+        height: 24px;
+        width: 24px;
+        border-radius: 50%;
+        
+    }
+}
+.keyDownUser{
+    @include flexBox('', center, center, '');
+    width: 32px;
+    height: 32px;
+}
+.showMessagesIcon{
+    color: black;
+    height: 24px;
+    width: 24px;
 }

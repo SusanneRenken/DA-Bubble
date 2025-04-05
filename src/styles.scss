@@ -211,8 +211,4 @@ h5 {
   font-size: 24px;
   border-radius: 50%;
   @include flexBox(row, center, center, 0);
-  &:hover{
-    color: #535AF1;
-    background-color: #8384a0;
-  }
 }

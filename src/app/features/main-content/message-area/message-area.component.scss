@@ -44,10 +44,10 @@ section {
 .private-header {
   height: 100%;
   @include flexBox(row, initial, center, 16);
-  img{
+  img {
     width: 50px;
-  height: 50px;
-  border-radius: 50%;
+    height: 50px;
+    border-radius: 50%;
   }
 }
 
@@ -71,8 +71,12 @@ section {
         border: 2px solid #ffffff;
         border-radius: 50%;
       }
+      div{
+        margin-left: 12px;
+        margin-bottom: 12px;
+      }
       span {
-        margin-left: 20px;
+        margin-left: 12px;
         @include fontStyle(200, #000000, 600);
       }
     }
@@ -133,7 +137,42 @@ section {
   }
 }
 
-app-message{
+.empty-private-chat {
+  height: 100%;
+  @include flexBox(column, flex-end, initial, 24);
+  div {
+    @include flexBox(row, initial, flex-end, 16);
+    img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+    }
+  }
+  p{
+    color: #686868;
+    font-size: 20px;
+    span{
+      color:#535AF1;
+    }
+  }
+}
+
+.empty-channel-chat{
+  height: 100%;
+  @include flexBox(column, flex-end, initial, 8);
+  div {
+    @include flexBox(row, initial, center, 16);
+  }
+  p{
+    color: #686868;
+    font-size: 20px;
+    span{
+      color:#535AF1;
+    }
+  }
+}
+
+app-message {
   width: 100%;
 }
 
@@ -155,6 +194,11 @@ textarea {
   margin: 40px 20px;
 }
 
+.tag{width: 32px;
+  height: 32px;
+  font-size: 32px;
+}
+
 .icon-button {
   cursor: pointer;
   width: 40px;
@@ -164,4 +208,3 @@ textarea {
   color: #686868;
   @include flexBox(row, center, center, 0);
 }
-

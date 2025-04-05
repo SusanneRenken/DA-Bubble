@@ -42,9 +42,6 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   channelData: Channel | null = null;
   channelMembers: UserInterface[] = [];
 
-  loading = false;
-  private loadingCount = 0;
-
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['chatType'] || changes['chatId'] || changes['activeUserId']) {
       this.loadMessages();

@@ -11,18 +11,20 @@
     } @else if(chatType === 'channel'){
     <div class="channel-header">
       <a class="channel-name">
-        <img src="/assets/icons/hashtag.svg" alt="arrow down" />
+        <div class="material-symbols tag">tag</div>
         <!-- Funktion muss zu Alexander -->
         <h1 (click)="selectPrivateChat('sEg8GcSNNZ6YWhxRs4SE')">
           {{ channelData?.cName }}
         </h1>
-        <img src="/assets/icons/keyboard-arrow-down.svg" alt="arrow down" />
+        <div class="material-symbols tag">keyboard_arrow_down</div>
       </a>
 
       <div class="channel-members">
         <div>
           @for (member of channelMembers.slice(0,3); track member) {
           <img src="/assets/img/{{ member.uUserImage }}" alt="" />
+          } @if (channelMembers.length > 3) {
+          <div>...</div>
           }
           <span>{{ channelMembers.length }}</span>
         </div>
@@ -53,21 +55,43 @@
       <p>2 Antworten</p>
       <span></span>
     </div>
-    } @for (message of messages; track message.mId; let i = $index) { @if
-    (shouldShowDateSeparator(i)) {
+    } 
+    
+    @if (messages && messages.length === 0) { 
+        
+        @if(chatType === 'private'){
+            <div class="empty-private-chat">
+                <div>
+                    <img src="/assets/img/{{ chatPartner?.uUserImage }}" alt="" />
+                    <h1>{{ chatPartner?.uName }}</h1>
+                </div>
+                <p>Diese Unterhaltung findet nur Zwichen <span>&#64;{{ chatPartner?.uName }}</span> und dir statt</p>
+            </div>
+        } @else if(chatType === 'channel'){
+            <div class="empty-channel-chat">
+                <div>
+                    <div class="material-symbols tag">tag</div>
+                    <h1>{{ channelData?.cName }}</h1>
+                </div>
+                <p>Du hast diesen Channel heute erstellt. Das ist der Anfang des Channels <span>&#64;{{ channelData?.cName }}.</span></p>
+            </div>
+        } 
+
+    } @else{ @for (message of messages; track message.mId; let i = $index) {
+    @if (shouldShowDateSeparator(i)) {
     <div class="date-separator">
       <span></span>
       <p>{{ getDateString(message.mTime) }}</p>
       <span></span>
     </div>
-    }
+    } @if (message.mSenderId === activeUserId) { }
 
     <app-message
       [message]="message"
       [activeUserId]="activeUserId"
       [chatType]="chatType"
     ></app-message>
-    }
+    } }
   </div>
 
   <div class="chatbox-textfield thread-margin">

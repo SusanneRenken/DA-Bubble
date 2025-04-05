@@ -66,7 +66,9 @@ export class AuthentificationService {
     return signInWithEmailAndPassword(this.auth, email, password).then(
       (result) => {
         this.currentUid = result.user.uid;
-        return result;
+        const userRef = collection(this.firestore, 'users');
+        const userDocRef = doc(userRef, this.currentUid);
+        return updateDoc(userDocRef, { uStatus: true }).then(() => result);
       }
     );
   }
@@ -75,7 +77,16 @@ export class AuthentificationService {
     const provider = new GoogleAuthProvider();
     return signInWithPopup(this.auth, provider).then((result) => {
       this.currentUid = result.user.uid;
-      return result;
+      const userData: UserInterface = {
+        uId: this.currentUid,
+        uName: result.user.displayName || '',
+        uEmail: result.user.email || '',
+        uUserImage: result.user.photoURL || '',
+        uStatus: true,
+      };
+      const userRef = collection(this.firestore, 'users');
+      const userDocRef = doc(userRef, result.user.uid);
+      return setDoc(userDocRef, userData, { merge: true }).then(() => result);
     });
   }
 

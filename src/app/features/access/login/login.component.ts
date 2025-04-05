@@ -50,6 +50,19 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  onLoginWithGoogle() {
+    this.authService.loginWithGoogle()
+    .then(result => {
+      if (result) {
+        const uid = this.authService.currentUid;
+        this.router.navigate(['/home', uid]);
+      }
+    })
+    .catch(error => {
+      console.error('Error during Google login:', error);
+    });
+  }
+
   changeComponent(componentName: string) {
     this.componentSwitcher.setComponent(componentName);
   }

@@ -23,4 +23,25 @@ export class UserService {
     });
   }
 
+  async getFilteredUsers(userIds: string[]): Promise<UserInterface[]> {
+    if (!userIds || userIds.length === 0) {
+      return [];
+    }
+
+    const results: UserInterface[] = [];
+
+    for (const id of userIds) {
+      const docRef = doc(this.firestore, 'users', id);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        const userData = docSnap.data() as UserInterface;
+        results.push(userData);
+      } else {
+        console.warn(`User not found for ID: ${id}`);
+      }
+    }
+
+    return results;
+  }
+
 }

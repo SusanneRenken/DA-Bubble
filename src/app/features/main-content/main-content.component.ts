@@ -47,23 +47,8 @@ export class MainContentComponent {
   }
 
   handleOpenChat(eventData: { chatType: 'private' | 'channel'; chatId: string }) {
-    if (eventData.chatType === 'private') {
-      this.openPrivateChat(eventData.chatId);
-    } else if (eventData.chatType === 'channel') {
-      this.openChannel(eventData.chatId);
-    }
-  }
-
-  openPrivateChat(userId: string) {
-    this.chatType = 'private';
-    this.chatId = userId;
-    this.isThreadOpen = false;
-    this.threadId = '';
-  }
-
-  openChannel(channelId: string) {
-    this.chatType = 'channel';
-    this.chatId = channelId;
+    this.chatType = eventData.chatType;
+    this.chatId = eventData.chatId;
     this.isThreadOpen = false;
     this.threadId = '';
   }

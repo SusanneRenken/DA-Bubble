@@ -15,6 +15,8 @@ import { CommonModule } from '@angular/common';
 import { MessageComponent } from './message/message.component';
 import { UserInterface } from '../../../shared/interfaces/user.interface';
 import { UserService } from '../../../shared/services/user.service';
+import { Channel } from '../../../shared/interfaces/channel.interface';
+import { ChannelService } from '../../../shared/services/channel.service';
 
 @Component({
   selector: 'app-message-area',
@@ -24,24 +26,24 @@ import { UserService } from '../../../shared/services/user.service';
 })
 export class MessageAreaComponent implements OnChanges, OnDestroy {
   private userService = inject(UserService);
+  private channelService = inject(ChannelService);
   private messageService = inject(MessageService);
+
+  private messagesSubscription: Subscription | null = null;
 
   @Input() chatType: 'private' | 'channel' | 'thread' | 'new' = 'private';
   @Input() chatId: string | null = null;
   @Input() activeUserId: string | null = null;
 
-
-  // muss zu Alexander
-  @Output() openChat = new EventEmitter<{ 
-    chatType: 'private' | 'channel'; 
-    chatId: string 
-  }>();
-
-  chatPartner: UserInterface | null = null;
-  // ChannelData: Channel | null = null;
   messages: Message[] = [];
 
-  private messagesSubscription: Subscription | null = null;
+  chatPartner: UserInterface | null = null;
+
+  channelData: Channel | null = null;
+  channelMembers: UserInterface[] = [];
+
+  loading = false;
+  private loadingCount = 0;
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['chatType'] || changes['chatId'] || changes['activeUserId']) {
@@ -80,11 +82,12 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
       this.chatPartner = null;
     }
 
-    // if (this.chatType === 'channel') {
-    //   this.loadChannelData();
-    // } else {
-    //   this.ChannelData = null;
-    // }
+    if (this.chatType === 'channel') {
+      this.loadChannelData();
+    } else {
+      this.channelData = null;
+      this.channelMembers = [];
+    }
   }
 
   loadChatPartnerData(): void {
@@ -98,9 +101,41 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
       });
   }
 
-  // loadChannelData() {
-  //   console.log('Channeldaten werden geladen...');
-  // }
+  //Es kann sein dass ich channelData mit subscribe() laden muss
+  loadChannelData() {
+    this.channelService
+      .getChannel(this.chatId)
+      .then((channelData) => {
+        this.channelData = channelData;  
+        this.loadChannelMembers();
+      })
+      .catch((error) => {
+        console.error('Fehler beim Laden des Channels:', error);
+      });
+  }
+
+  loadChannelMembers() {
+    if (!this.channelData || !this.channelData.cUserIds) {
+      this.channelMembers = [];      
+      return;
+    }
+  
+    const userIds = this.channelData.cUserIds;
+    if (!Array.isArray(userIds) || userIds.length === 0) {
+      this.channelMembers = [];
+      return;
+    }
+  
+    this.userService
+      .getFilteredUsers(userIds)
+      .then((users) => {
+        this.channelMembers = users;
+      })
+      .catch((error) => {
+        console.error('Fehler beim Laden der Channel-Mitglieder:', error);
+      });
+  }
+  
 
   shouldShowDateSeparator(index: number): boolean {
     if (index === 0) {
@@ -161,6 +196,13 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
     // };
     // this.messageService.createMessage(testMessage);
   }
+
+
+  // muss zu Alexander
+  @Output() openChat = new EventEmitter<{ 
+    chatType: 'private' | 'channel'; 
+    chatId: string 
+  }>();
 
   // muss zu Alexander
   selectPrivateChat(userId: string) {

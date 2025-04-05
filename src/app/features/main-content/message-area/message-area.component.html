@@ -4,37 +4,34 @@
     <div class="private-header">
       <img src="/assets/img/{{ chatPartner?.uUserImage }}" alt="" />
       <!-- Funktion muss zu Alexander -->
-      <h1 (click)="selectChannel('KV14uSorBJhrWW92IeDS')">{{ chatPartner?.uName }}</h1>
+      <h1 (click)="selectChannel('KV14uSorBJhrWW92IeDS')">
+        {{ chatPartner?.uName }}
+      </h1>
     </div>
-    } 
-    
-    
-    @else if(chatType === 'channel'){
+    } @else if(chatType === 'channel'){
     <div class="channel-header">
       <a class="channel-name">
         <img src="/assets/icons/hashtag.svg" alt="arrow down" />
         <!-- Funktion muss zu Alexander -->
-        <h1 (click)="selectPrivateChat('sEg8GcSNNZ6YWhxRs4SE')">Entwicklerteam</h1>
+        <h1 (click)="selectPrivateChat('sEg8GcSNNZ6YWhxRs4SE')">
+          {{ channelData?.cName }}
+        </h1>
         <img src="/assets/icons/keyboard-arrow-down.svg" alt="arrow down" />
       </a>
 
       <div class="channel-members">
         <div>
-          <img src="/assets/img/avatar-1.png" alt="" />
-          <img src="/assets/img/avatar-2.png" alt="" />
-          <img src="/assets/img/avatar-3.png" alt="" />
-          <span>3</span>
+          @for (member of channelMembers.slice(0,3); track member) {
+          <img src="/assets/img/{{ member.uUserImage }}" alt="" />
+          }
+          <span>{{ channelMembers.length }}</span>
         </div>
         <button class="icon-button">
           <img src="/assets/icons/add-members-button.svg" alt="" />
         </button>
       </div>
     </div>
-    } 
-    
-    
-    
-    @else if(chatType === 'thread'){
+    } @else if(chatType === 'thread'){
     <div class="thread-header">
       <div>
         <h1>Thread</h1>

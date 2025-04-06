@@ -48,19 +48,28 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   channelMembers: UserInterface[] = [];
 
   newMessageText: string = '';
+  isLoading: boolean = true;
 
   ngAfterViewInit(): void {
-    this.scrollToBottom();
+    setTimeout(() => {
+      this.isLoading = false;
+      setTimeout(() => {
+        this.scrollToBottom();          
+        }, 500);
+    }, 500);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['chatType'] || changes['chatId'] || changes['activeUserId']) {
+      this.isLoading = true;
       this.loadMessages();
       this.loadChatData();
       setTimeout(() => {
-        this.scrollToBottom();
-      }, 100);
-      
+        this.isLoading = false;
+        setTimeout(() => {
+          this.scrollToBottom();          
+          }, 500);
+      }, 500);    
     }
   }
 

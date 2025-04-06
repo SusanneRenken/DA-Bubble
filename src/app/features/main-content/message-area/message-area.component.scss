@@ -1,5 +1,12 @@
 @import "../../../../styles.scss";
 
+.loading-screen{  
+  height: 100%;
+  width: 100%;
+  @include flexBox(column, center, center, 0);  
+}
+
+
 section {
   height: 100%;
   width: 100%;
@@ -22,7 +29,7 @@ section {
     min-height: 0;
     padding: 20px 35px;
     overflow-y: auto;
-    @include flexBox(column-reverse, initial, flex-start, 20);
+    @include flexBox(column, initial, flex-start, 20);
   }
 
   .chatbox-textfield {
@@ -192,6 +199,26 @@ textarea {
 .thread-margin {
   width: calc(100% - 40px);
   margin: 40px 20px;
+}
+
+.rotating-icon {
+  animation: slowRotate 1.5s linear infinite;
+}
+
+@keyframes slowRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.renew-icon{
+  width: 80px;
+  height: 80px;
+  color: #444df2;
+  font-size: 80px;
 }
 
 .tag-icon{width: 32px;

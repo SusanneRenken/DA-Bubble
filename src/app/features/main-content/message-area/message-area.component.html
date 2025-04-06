@@ -49,7 +49,7 @@
     }
   </div>
 
-  <div class="chatbox-messages">
+  <div class="chatbox-messages" #scrollContainer>
     @if (chatType === 'thread') {
     <div class="thread-separator">
       <p>2 Antworten</p>
@@ -98,7 +98,7 @@
   <div class="chatbox-textfield thread-margin">
 
 
-    <textarea type="text" [placeholder]="getPlaceholder()" rows="2"></textarea>
+    <textarea type="text" [placeholder]="getPlaceholder()" [(ngModel)]="newMessageText" rows="2"></textarea>
 
     <div class="textfield-buttons">
 
@@ -114,7 +114,7 @@
 
 
       <button class="icon-button">
-        <div class="material-symbols send-icon">send</div>
+        <div class="material-symbols send-icon" (click)="sendMessage()">send</div>
       </button>
 
 

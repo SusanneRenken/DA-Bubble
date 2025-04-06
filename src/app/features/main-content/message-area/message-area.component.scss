@@ -22,7 +22,7 @@ section {
     min-height: 0;
     padding: 20px 35px;
     overflow-y: auto;
-    @include flexBox(column, initial, flex-start, 20);
+    @include flexBox(column-reverse, initial, flex-start, 20);
   }
 
   .chatbox-textfield {
@@ -200,8 +200,15 @@ textarea {
 }
 
 .send-icon {
+  width: 30px;
+  height: 30px;
+  color: #797EF3;
+  font-size: 30px;  
   font-variation-settings: 
-    'FILL' 1, 
+    'FILL' 1;
+  &:hover {
+    color: #444df2;
+  }
 }
 
 .icon-button {

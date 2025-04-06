@@ -166,13 +166,13 @@ export class MessageService {
     });
   }
 
-  // Beispiel-Daten für eine Nachricht
-  // createMessage(message: Partial<Message>): Promise<any> {
-  //   const messagesCollection = collection(this.firestore, 'messages');
-  //   const newMessage = {
-  //     ...message,
-  //     mTime: serverTimestamp(),
-  //   };
-  //   return addDoc(messagesCollection, newMessage);
-  // }
+
+  createMessage(message: Partial<Message>): Promise<any> {
+    const messagesCollection = collection(this.firestore, 'messages');
+    const newMessage = {
+      ...message,
+      mTime: serverTimestamp(),
+    };
+    return addDoc(messagesCollection, newMessage);
+  }
 }

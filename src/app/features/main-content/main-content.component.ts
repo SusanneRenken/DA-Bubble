@@ -24,8 +24,8 @@ export class MainContentComponent {
 
   chatType: 'private' | 'channel' | 'thread' | 'new' = 'channel';
   // muss später getauscht werden:
-  // chatId: string | null = 'KV14uSorBJhrWW92IeDS'; //ENTWICKLER
-  chatId: string | null = 'DtSpiTL7dwcl9qL3msMi'; //TEST
+  chatId: string | null = 'KV14uSorBJhrWW92IeDS'; //ENTWICKLER
+  // chatId: string | null = ''; //TEST
   // chatId: string | null = 'sEg8GcSNNZ6YWhxRs4SE'; //NOAH
   // chatId: string | null = '8nmFp28ZO3TOeDohgGQSqR0niUj1'; //BISASAM
 

@@ -1,5 +1,6 @@
 import {
   Component,
+  ElementRef,
   EventEmitter,
   inject,
   Input,
@@ -7,6 +8,7 @@ import {
   OnDestroy,
   Output,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MessageService } from '../../../shared/services/message.service';
@@ -17,10 +19,11 @@ import { UserInterface } from '../../../shared/interfaces/user.interface';
 import { UserService } from '../../../shared/services/user.service';
 import { Channel } from '../../../shared/interfaces/channel.interface';
 import { ChannelService } from '../../../shared/services/channel.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-message-area',
-  imports: [CommonModule, MessageComponent],
+  imports: [CommonModule, MessageComponent, FormsModule],
   templateUrl: './message-area.component.html',
   styleUrls: ['./message-area.component.scss'],
 })
@@ -35,6 +38,8 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   @Input() chatId: string | null = null;
   @Input() activeUserId: string | null = null;
 
+  @ViewChild('scrollContainer') private scrollContainer!: ElementRef<HTMLDivElement>;
+
   messages: Message[] = [];
 
   chatPartner: UserInterface | null = null;
@@ -42,10 +47,20 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   channelData: Channel | null = null;
   channelMembers: UserInterface[] = [];
 
+  newMessageText: string = '';
+
+  ngAfterViewInit(): void {
+    this.scrollToBottom();
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['chatType'] || changes['chatId'] || changes['activeUserId']) {
       this.loadMessages();
       this.loadChatData();
+      setTimeout(() => {
+        this.scrollToBottom();
+      }, 100);
+      
     }
   }
 
@@ -53,6 +68,12 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
     if (this.messagesSubscription) {
       this.messagesSubscription.unsubscribe();
     }
+  }
+
+  scrollToBottom() {
+    if (!this.scrollContainer) return;
+    this.scrollContainer.nativeElement.scrollTop =
+      this.scrollContainer.nativeElement.scrollHeight;
   }
 
   loadMessages(): void {
@@ -183,10 +204,12 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   getPlaceholder(): string {
     const chatType = this.chatType;
     switch (chatType) {
-      case 'private':        
+      case 'private':
         return `Nachricht an ${this.chatPartner?.uName || 'unbekannter User'}`;
       case 'channel':
-        return `Nachricht an #${this.channelData?.cName || 'unbekannter Kanal'}`;
+        return `Nachricht an #${
+          this.channelData?.cName || 'unbekannter Kanal'
+        }`;
       case 'thread':
         return 'Antworten...';
       case 'new':
@@ -195,18 +218,22 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
     }
   }
 
-  testMessage(): void {
-    console.log('Testnachricht wird erstellt...');
-    // const testMessage: Message = {
-    //   mText: "Wenn wir das nochmal machen, kaufen wir bitte einen Spritzschutz! Oder wir basteln Noah ’nen Ganzkörperanzug. Alles für den Geschmack!",
-    //   mReactions: ["😜", "🛡️"],
-    //   mTime: "Donnerstag 08:00",
-    //   mSenderId: "8nmFp28ZO3TOeDohgGQSqR0niUj1", // Bisasam
-    //   mUserId: "",
-    //   mChannelId: "KV14uSorBJhrWW92IeDS",
-    //   mThreadId: ""
-    // };
-    // this.messageService.createMessage(testMessage);
+  sendMessage(): void {
+    console.log('Nachricht gesendet...');
+    const newMessage: Message = {
+      mText: this.newMessageText,
+      mReactions: ['😜', '🛡️'],
+      mTime: '',
+      mSenderId: this.activeUserId,
+      mUserId: this.chatType === 'private' ? this.chatId : '',
+      mChannelId: this.chatType === 'channel' ? this.chatId : '',
+      mThreadId: this.chatType === 'thread' ? this.chatId : '',
+    };
+    this.messageService.createMessage(newMessage);
+    this.newMessageText = '';
+    setTimeout(() => {
+      this.scrollToBottom();
+    }, 0);
   }
 
   // muss zu Alexander

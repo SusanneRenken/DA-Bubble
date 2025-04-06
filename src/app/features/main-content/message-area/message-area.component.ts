@@ -103,7 +103,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
     this.channelService
       .getChannel(this.chatId)
       .then((channelData) => {
-        this.channelData = channelData;  
+        this.channelData = channelData;
         this.loadChannelMembers();
       })
       .catch((error) => {
@@ -113,16 +113,16 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
 
   loadChannelMembers() {
     if (!this.channelData || !this.channelData.cUserIds) {
-      this.channelMembers = [];      
+      this.channelMembers = [];
       return;
     }
-  
+
     const userIds = this.channelData.cUserIds;
     if (!Array.isArray(userIds) || userIds.length === 0) {
       this.channelMembers = [];
       return;
     }
-  
+
     this.userService
       .getFilteredUsers(userIds)
       .then((users) => {
@@ -132,53 +132,68 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
         console.error('Fehler beim Laden der Channel-Mitglieder:', error);
       });
   }
-  
 
   shouldShowDateSeparator(index: number): boolean {
     if (index === 0) {
       return true;
     }
-  
+
     const current = this.messages[index];
     const prev = this.messages[index - 1];
-  
+
     if (!current || !prev) {
       return false;
     }
-  
+
     const currentDate = this.extractDateOnly(current.mTime);
     const prevDate = this.extractDateOnly(prev.mTime);
-  
+
     return currentDate.getTime() !== prevDate.getTime();
   }
 
   extractDateOnly(mTime: any): Date {
     let dateObj: Date;
-    
+
     if (mTime && typeof mTime.toDate === 'function') {
       dateObj = mTime.toDate();
-    } 
-    else if (mTime instanceof Date) {
+    } else if (mTime instanceof Date) {
       dateObj = mTime;
-    } 
-    else {
+    } else {
       dateObj = new Date(mTime);
     }
-    
-    const d = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
+
+    const d = new Date(
+      dateObj.getFullYear(),
+      dateObj.getMonth(),
+      dateObj.getDate()
+    );
     return d;
   }
 
   getDateString(mTime: any): string {
     const date = this.extractDateOnly(mTime);
-    
+
     return date.toLocaleDateString('de-DE', {
       weekday: 'long',
       day: 'numeric',
-      month: 'long'
+      month: 'long',
     });
   }
-  
+
+  getPlaceholder(): string {
+    const chatType = this.chatType;
+    switch (chatType) {
+      case 'private':        
+        return `Nachricht an ${this.chatPartner?.uName || 'unbekannter User'}`;
+      case 'channel':
+        return `Nachricht an #${this.channelData?.cName || 'unbekannter Kanal'}`;
+      case 'thread':
+        return 'Antworten...';
+      case 'new':
+      default:
+        return 'Starte eine neue Nachricht';
+    }
+  }
 
   testMessage(): void {
     console.log('Testnachricht wird erstellt...');
@@ -194,18 +209,17 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
     // this.messageService.createMessage(testMessage);
   }
 
-
   // muss zu Alexander
-  @Output() openChat = new EventEmitter<{ 
-    chatType: 'private' | 'channel'; 
-    chatId: string 
+  @Output() openChat = new EventEmitter<{
+    chatType: 'private' | 'channel';
+    chatId: string;
   }>();
 
   // muss zu Alexander
   selectPrivateChat(userId: string) {
     this.openChat.emit({
       chatType: 'private',
-      chatId: userId
+      chatId: userId,
     });
   }
 
@@ -213,8 +227,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   selectChannel(channelId: string) {
     this.openChat.emit({
       chatType: 'channel',
-      chatId: channelId
+      chatId: channelId,
     });
   }
-
 }

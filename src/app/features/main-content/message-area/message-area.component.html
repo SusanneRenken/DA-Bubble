@@ -11,12 +11,12 @@
     } @else if(chatType === 'channel'){
     <div class="channel-header">
       <a class="channel-name">
-        <div class="material-symbols tag">tag</div>
+        <div class="material-symbols tag-icon">tag</div>
         <!-- Funktion muss zu Alexander -->
         <h1 (click)="selectPrivateChat('sEg8GcSNNZ6YWhxRs4SE')">
           {{ channelData?.cName }}
         </h1>
-        <div class="material-symbols tag">keyboard_arrow_down</div>
+        <div class="material-symbols tag-icon">keyboard_arrow_down</div>
       </a>
 
       <div class="channel-members">
@@ -70,7 +70,7 @@
         } @else if(chatType === 'channel'){
             <div class="empty-channel-chat">
                 <div>
-                    <div class="material-symbols tag">tag</div>
+                    <div class="material-symbols tag-icon">tag</div>
                     <h1>{{ channelData?.cName }}</h1>
                 </div>
                 <p>Du hast diesen Channel heute erstellt. Das ist der Anfang des Channels <span>&#64;{{ channelData?.cName }}.</span></p>
@@ -94,22 +94,35 @@
     } }
   </div>
 
+
   <div class="chatbox-textfield thread-margin">
-    <textarea type="text" placeholder="Nachricht an" rows="2"></textarea>
+
+
+    <textarea type="text" [placeholder]="getPlaceholder()" rows="2"></textarea>
 
     <div class="textfield-buttons">
+
       <div>
         <button class="icon-button">
-          <img src="/assets/icons/emoji-button.svg" alt="" />
+            <div class="material-symbols">sentiment_satisfied</div>
         </button>
 
         <button class="icon-button">
-          <img src="/assets/icons/at-button.svg" alt="" />
+            <div class="material-symbols">alternate_email</div>
         </button>
       </div>
+
+
       <button class="icon-button">
-        <img src="/assets/icons/send-button.svg" alt="" />
+        <div class="material-symbols send-icon">send</div>
       </button>
+
+
     </div>
+
+
   </div>
+
+
+
 </section>

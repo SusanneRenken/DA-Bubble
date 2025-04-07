@@ -231,10 +231,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
     console.log('Nachricht gesendet...');
     const newMessage: Message = {
       mText: this.newMessageText,
-      mReactions: [
-        { reaction: "😜", userId: "Eg2jVLodTA9FI99IMJUK", userName: "Sofia Müller" },
-        { reaction: "🛡️", userId: "sEg8GcSNNZ6YWhxRs4SE", userName: "Noah Braun" }
-      ],
+      mReactions: [],
       mTime: '',
       mSenderId: this.activeUserId,
       mUserId: this.chatType === 'private' ? this.chatId : '',

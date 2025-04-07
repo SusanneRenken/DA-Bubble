@@ -75,5 +75,5 @@
             <span>Channel hinzufügen</span>
         </button>
     </section>
-    <app-add-channel *ngIf="showAddChannel" (close)="toggleAddChannel()"></app-add-channel>
+    <app-add-channel [activeUserId]="activeUserId" *ngIf="showAddChannel" (close)="toggleAddChannel()"></app-add-channel>
 </main>

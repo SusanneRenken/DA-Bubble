@@ -1,6 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild, Input } from '@angular/core';
 import { ProfilComponent } from '../../profil/profil.component';
+import { ActivatedRoute } from '@angular/router';
+import { Firestore, collection, collectionData } from '@angular/fire/firestore';
+import { User } from '../../../../shared/interfaces/user.interface';
+import { map } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-user-name',
@@ -12,11 +17,36 @@ import { ProfilComponent } from '../../profil/profil.component';
 export class UserNameComponent {
   isLogOutVisible: boolean = false;
   showProfil: boolean = false;
+  @Input() activeUserId!: string | null;
+
+  userName: string = '';
+  userEmail: string = '';
 
   @ViewChild('logOutBox') logOutBox?: ElementRef;
   @ViewChild('toggleBtn') toggleBtn?: ElementRef;
   @ViewChild('profilWrapper') profilWrapper?: ElementRef;
 
+  constructor(
+    private route: ActivatedRoute,
+    private firestore: Firestore
+  ) {}
+
+  ngOnInit(): void {
+    const userId = this.route.snapshot.paramMap.get('activeUserId');
+    if (!userId) return;
+
+    const usersCollection = collection(this.firestore, 'users');
+    collectionData(usersCollection, { idField: 'uId' })
+      .pipe(
+        map((users: any[]) => users.find(user => user.uId === userId))
+      )
+      .subscribe(user => {
+        if (user) {
+          this.userName = user.uName;
+          this.userEmail = user.uEmail;
+        }
+      });
+  }
 
   toggleLogOut() {
     this.isLogOutVisible = !this.isLogOutVisible;
@@ -28,7 +58,7 @@ export class UserNameComponent {
     const clickedInsideLogOut = this.logOutBox?.nativeElement?.contains(event.target);
     const clickedToggleBtn = this.toggleBtn?.nativeElement?.contains(event.target);
     const clickedInsideProfil = this.profilWrapper?.nativeElement?.contains(event.target);
-  
+
     if (!clickedInsideLogOut && !clickedToggleBtn && !clickedInsideProfil) {
       this.isLogOutVisible = false;
     }
@@ -38,3 +68,4 @@ export class UserNameComponent {
     this.showProfil = true;
   }
 }
+

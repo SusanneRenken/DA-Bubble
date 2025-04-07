@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { AddChannelComponent } from './add-channel/add-channel.component';
-import { inject, Component} from '@angular/core';
+import { inject, Component, Input} from '@angular/core';
 import { Firestore, collectionData, collection} from '@angular/fire/firestore';
 import { map } from 'rxjs/operators';
 
@@ -15,6 +15,7 @@ import { map } from 'rxjs/operators';
 export class ChannelsComponent{
   showAddChannel = false;
   showChannels = false;
+  @Input() activeUserId!: string | null;
   private firestore = inject(Firestore);
 
   channels$ = collectionData(

@@ -6,6 +6,7 @@ import { ContactBarComponent } from './contact-bar/contact-bar.component';
 import { MessageAreaComponent } from './message-area/message-area.component';
 import { BehaviorSubject } from 'rxjs';
 import { FlatESLint } from 'eslint/use-at-your-own-risk';
+import { ChannelLeaveComponent } from './channel-leave/channel-leave.component';
 
 @Component({
   selector: 'app-main-content',
@@ -15,6 +16,7 @@ import { FlatESLint } from 'eslint/use-at-your-own-risk';
     HeaderComponent,
     ContactBarComponent,
     MessageAreaComponent,
+    ChannelLeaveComponent
   ],
   templateUrl: './main-content.component.html',
   styleUrls: ['./main-content.component.scss'],

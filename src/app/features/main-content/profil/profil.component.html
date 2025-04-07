@@ -17,7 +17,7 @@
         <img src="/assets/img/avatar-1.png">
         <div *ngIf="!showEditProfil" class="nameActive">
             <div class="nameEdit">
-                <span>Marcel Test</span>
+                <span>{{ userName }}</span>
                 <a *ngIf="!showButton" (click)="onEditClick()">Bearbeiten</a>
             </div>
             <div class="status" *ngIf="isActive">
@@ -34,14 +34,14 @@
                 <img src="/assets/icons/account_circle.svg">
                 <span>Vollständiger Name</span>
             </div>
-            <input placeholder="Marcel Test" type="text">
+            <input [(ngModel)]="editedUserName" [placeholder]="userName" type="text">
         </div>
         <div *ngIf="!showEditProfil" class="mailAdress">
             <div>
                 <img src="/assets/icons/mail.svg">
                 <span>E-Mail-Adresse</span>
             </div>
-            <span>Marceltest&#64;gmail.com</span>
+            <span>{{ userEmail }}</span>
         </div>
         <div *ngIf="showButton" class="messageArea">
             <button class="messageButton">
@@ -51,7 +51,7 @@
         </div>
         <div class="editSaveButtons" *ngIf="showEditProfil" >
             <button (click)="closeProfil()" class="editButton stopButton">Abbrechen</button>
-            <button class="editButton saveButton">Speichern</button>
+            <button (click)="changeUserName(); closeProfil()" class="editButton saveButton">Speichern</button>
         </div>
     </section>
 </main>

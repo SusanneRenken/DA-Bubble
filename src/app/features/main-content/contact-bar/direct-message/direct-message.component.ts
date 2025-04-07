@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Firestore, collectionData, collection } from '@angular/fire/firestore';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { User } from '../../../../shared/interfaces/user.interface';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-direct-message',
@@ -16,30 +17,31 @@ export class DirectMessageComponent implements OnInit {
   showMessages = false;
   activeUsers$!: Observable<any[]>;
   inactiveUsers$!: Observable<any[]>;
+  @Input() activeUserId!: string | null;
+  activeUser?: User;
 
-  constructor(private firestore: Firestore) {}
+  constructor(private firestore: Firestore, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    const usersCollection = collection(this.firestore, 'users');
+    if (this.activeUserId) {
+      this.loadUsers();
+    }
+  }
 
-    const users$ = collectionData(usersCollection, { idField: 'uID' }).pipe(
-      map((users: any[]) =>
-        users.map(
-          (user) =>
-            ({
-              ...user,
-              uStatus: String(user.uStatus),
-            } as User)
-        )
-      )
+  loadUsers(): void {
+    const usersCollection = collection(this.firestore, 'users');
+    const users$ = collectionData(usersCollection, { idField: 'uId' }).pipe(
+      map((users: any[]) => users.map(user => user as User))
     );
     this.activeUsers$ = users$.pipe(
-      map((users: User[]) => users.filter((user) => user.uStatus === 'true'))
+      map(users => users.filter(user => user.uId === this.activeUserId))
     );
-
     this.inactiveUsers$ = users$.pipe(
-      map((users: User[]) => users.filter((user) => user.uStatus === 'false'))
+      map(users => users.filter(user => user.uId !== this.activeUserId))
     );
+    users$.subscribe(users => {
+      this.activeUser = users.find(user => user.uId === this.activeUserId);
+    });
   }
 
   showAllMessages() {

@@ -4,7 +4,7 @@ export interface UserInterface {
   uEmail: string;
   uUserImage: string;
   uStatus: boolean;
-=======
+}
 export interface User {
     uId?: string; 
     uName: string; 
@@ -12,5 +12,5 @@ export interface User {
     uPassword?: string;
     uStatus: string; 
     uUserImage: string;
->>>>>>> 021d7d0 (Change main-content 15)
+
 }

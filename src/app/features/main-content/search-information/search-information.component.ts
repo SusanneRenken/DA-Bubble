@@ -132,7 +132,4 @@ export class SearchInformationComponent {
     });
   }
 
-  private debugLog(users: any[], messages: Message[], channels: any[]) {
-    console.log('show Messages', messages);
-  }
 }

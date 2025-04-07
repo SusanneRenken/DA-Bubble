@@ -1,5 +1,5 @@
 <section>
-  <app-header></app-header>
+  <app-header [activeUserId]="activeUserId"></app-header>
   <div class="content-container">
     <button class="toogleBar" (click)="toggleSection()">
       <div>
@@ -66,6 +66,7 @@
       *ngIf="sectionVisible"
       [sectionVisible]="sectionVisible"
       (toggle)="toggleSection()"
+      [activeUserId]="activeUserId"
     ></app-contact-bar>
     
     <!-- openChat-Funktion muss zu Alexander -->
@@ -89,3 +90,4 @@
     } 
   </div>
 </section>
+<app-channel-leave></app-channel-leave>

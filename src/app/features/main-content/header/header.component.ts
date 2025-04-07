@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { SearchBarComponent } from './search-bar/search-bar.component';
 import { UserNameComponent } from './user-name/user-name.component';
 
@@ -11,5 +11,5 @@ import { UserNameComponent } from './user-name/user-name.component';
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
-
+  @Input() activeUserId!: string | null;
 }

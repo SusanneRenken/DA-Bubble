@@ -1,6 +1,6 @@
 <main>
     <div class="avatar">
-        <span>Marcel Test</span>
+        <span>{{ userName }}</span>
         <img src="/assets/img/avatar-1.png">
     </div>
     <button class="openLogOut" (click)="toggleLogOut()" #toggleBtn>
@@ -45,6 +45,6 @@
     </div>
 </section>
 <div #profilWrapper>
-    <app-profil #profilRef (close)="showProfil = false" size="small" [showButton]="false" *ngIf="showProfil"></app-profil>
+    <app-profil  [activeUserId]="activeUserId" [userName]="userName" [userEmail]="userEmail" #profilRef (close)="showProfil = false" size="small" [showButton]="false" *ngIf="showProfil"></app-profil>
 </div>
   

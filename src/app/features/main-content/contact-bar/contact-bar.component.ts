@@ -13,6 +13,7 @@ import { ChannelsComponent } from './channels/channels.component';
 })
 export class ContactBarComponent {
   @Input() sectionVisible: boolean = true;
+  @Input() activeUserId!: string | null;
   @Output() toggle = new EventEmitter<void>();
 
   toggleSection() {

@@ -1,0 +1,40 @@
+<main (click)="closeWindow()">
+    <section (click)="$event.stopPropagation()">
+        <header>
+            <div>
+                <img src="/assets/icons/hashtag.svg">
+                <h1>Entwickler</h1>
+            </div>
+            <button (click)="closeWindow()" class="closeChannelLeave">
+                <img src="/assets/icons/close-button.svg">
+            </button>
+        </header>
+        <div class="nameBox">
+            <div class="boxEdit">
+                <h3>Channel-Name</h3>
+                <a href="">Bearbeiten</a>
+            </div>
+            <div class="channelHashtagName">
+                <img src="/assets/icons/hashtag.svg">
+                <span>Entwickler</span>
+            </div>
+        </div>
+        <div class="descriptionBox">
+            <div class="descriptionText">
+                <div class="boxEdit">
+                    <h3>Beschreibung</h3>
+                    <a href="">Bearbeiten</a>
+                </div>
+                <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam magnam, eius vel ea, sequi minus doloremque sunt maiores reprehenderit dignissimos perspiciatis corporis consequuntur, sed perferendis voluptatibus libero. Dolorum, provident deleniti?</span>
+            </div>
+            <div class="xLine"></div>
+            <div class="userCreator">
+                <h3>Erstellt von</h3>
+                <span>Noah Braun</span>
+            </div>
+        </div>
+        <div class="channelLeaveButton">
+            <button>Channel verlassen</button>
+        </div>
+    </section>
+</main>

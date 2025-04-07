@@ -45,15 +45,13 @@
   
   .reaction-field {
     @include flexBox(row, initial, center, 10);
+    flex-wrap: wrap;
     div {
+      cursor: pointer;
       height: 34px;
       padding: 5px 10px;
       border: 1px solid #adb0d9;
       border-radius: 20px;
     }
-    img{
-      width: 24px;
-      height: 24px;
-      border-radius: 0px;
-    }
+    
   }

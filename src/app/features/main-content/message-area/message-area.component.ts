@@ -231,7 +231,10 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
     console.log('Nachricht gesendet...');
     const newMessage: Message = {
       mText: this.newMessageText,
-      mReactions: ['😜', '🛡️'],
+      mReactions: [
+        { reaction: "😜", userId: "Eg2jVLodTA9FI99IMJUK", userName: "Sofia Müller" },
+        { reaction: "🛡️", userId: "sEg8GcSNNZ6YWhxRs4SE", userName: "Noah Braun" }
+      ],
       mTime: '',
       mSenderId: this.activeUserId,
       mUserId: this.chatType === 'private' ? this.chatId : '',
@@ -244,6 +247,34 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
       this.scrollToBottom();
     }, 0);
   }
+
+  // testMessage(): void {
+  //   console.log('Testnachricht wird erstellt...');
+  //   const testMessage: Message = {
+  //     mId: '3rxhuNGtA0tluXvBJZ3J',
+  //     mText: "",
+  //     mReactions: [
+  //       { reaction: "🥳", userId: "Eg2jVLodTA9FI99IMJUK", userName: "Sofia Müller" },
+  //       { reaction: "💚", userId: "Eg2jVLodTA9FI99IMJUK", userName: "Sofia Müller" },
+  //       { reaction: "🎉", userId: "8nmFp28ZO3TOeDohgGQSqR0niUj1", userName: "Bisasam" },
+  //       { reaction: "🎉", userId: "Eg2jVLodTA9FI99IMJUK", userName: "Sofia Müller" },
+  //       { reaction: "🍿", userId: "Eg2jVLodTA9FI99IMJUK", userName: "Sofia Müller" },
+  //       { reaction: "🎞️", userId: "Eg2jVLodTA9FI99IMJUK", userName: "Sofia Müller" },
+  //       { reaction: "☀️", userId: "8nmFp28ZO3TOeDohgGQSqR0niUj1", userName: "Bisasam" },
+  //     ],
+  //     mTime: "",
+  //     mSenderId: "",
+  //     mUserId: "",
+  //     mChannelId: "",
+  //     mThreadId: ""
+  //   };
+  //   this.messageService.editMessage(testMessage);
+  // }
+
+  // sofia:string = "Eg2jVLodTA9FI99IMJUK Sofia Müller";
+  // noah:string = "sEg8GcSNNZ6YWhxRs4SE Noah Braun";
+  // bisasam:string = "8nmFp28ZO3TOeDohgGQSqR0niUj1 Bisasam";
+
 
   // muss zu Alexander
   @Output() openChat = new EventEmitter<{

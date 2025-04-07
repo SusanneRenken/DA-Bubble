@@ -1,6 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { UserInterface } from '../interfaces/user.interface';
 import {
+  deleteDoc,
   doc,
   Firestore,
   getDocs,
@@ -15,6 +16,7 @@ import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
   sendPasswordResetEmail,
+  signInAnonymously,
   signInWithEmailAndPassword,
   signInWithPopup,
   UserCredential,
@@ -90,6 +92,22 @@ export class AuthentificationService {
     });
   }
 
+  loginAsGuest(): Promise<void | UserCredential> {
+    return signInAnonymously(this.auth).then((result) => {
+      this.currentUid = result.user.uid;
+      const guestData: UserInterface = {
+        uId: this.currentUid,
+        uName: 'Guest',
+        uEmail: '',
+        uUserImage: 'default-guest.png',
+        uStatus: false,
+      };
+      const userRef = collection(this.firestore, 'users');
+      const userDocRef = doc(userRef, this.currentUid);
+      return setDoc(userDocRef, guestData, { merge: true }).then(() => result);
+    });
+  }
+
   sendResetPasswordEmail(email: string): Promise<void> {
     const actionCodeSettings = {
       url: 'http://localhost:4200/access',
@@ -115,8 +133,22 @@ export class AuthentificationService {
   }
 
   logout(): Promise<void> {
-    return this.auth.signOut().then(() => {
+    const uid = this.currentUid;
+    const currentUser = this.auth.currentUser;
+    let deletePromise: Promise<any>;
+    if (currentUser && currentUser.isAnonymous && uid) {
+      const userRef = collection(this.firestore, 'users');
+      const userDocRef = doc(userRef, uid);
+      deletePromise = deleteDoc(userDocRef)
+      .then(() => {
+        return currentUser.delete();
+      });
+    } else {
+      deletePromise = Promise.resolve();
+    }
+    return deletePromise.then(() => {
       this.currentUid = null;
+      return this.auth.signOut();
     });
   }
 }

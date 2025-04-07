@@ -28,6 +28,6 @@
   <button type="button" (click)="onLoginWithGoogle()">Anmelden mit Google</button>
   <div class="btn-container">
     <app-button type="submit" [disabled]="loginForm.invalid">Anmelden</app-button>
-    <app-button>Gäste-Login</app-button>
+    <app-button (clicked)="onLoginAsGuest()">Gäste-Login</app-button>
   </div>
 </form>

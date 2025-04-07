@@ -1,10 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-button',
   imports: [],
   template: `
-    <button [type]="type" [disabled]="disabled">
+    <button [type]="type" [disabled]="disabled" (click)="handleClick()">
       <ng-content></ng-content>
     </button>
   `,
@@ -20,4 +20,9 @@ import { Component, Input } from '@angular/core';
 export class ButtonComponent {
   @Input() type: 'button' | 'submit' | 'reset' = 'button';
   @Input() disabled = false;
+  @Output() clicked = new EventEmitter<void>();
+
+  handleClick(): void {
+    this.clicked.emit();
+  }
 }

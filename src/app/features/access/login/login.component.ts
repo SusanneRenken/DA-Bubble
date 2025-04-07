@@ -58,9 +58,18 @@ export class LoginComponent implements OnInit {
         this.router.navigate(['/home', uid]);
       }
     })
-    .catch(error => {
-      console.error('Error during Google login:', error);
-    });
+    .catch(error => console.error('Error during Google login:', error));
+  }
+
+  onLoginAsGuest(): void {
+    this.authService.loginAsGuest()
+    .then(result => {
+      if (result) {
+        const uid = this.authService.currentUid;
+        this.router.navigate(['/home', uid]);
+      }
+    })
+    .catch(error => console.error('Guest login error:', error));
   }
 
   changeComponent(componentName: string) {

@@ -1,14 +1,18 @@
-
 @if (isLoading) {
- <div class="loading-screen">
-    <div class="material-symbols renew-icon rotating-icon">autorenew</div>
- </div>
+<div class="loading-screen">
+  <div class="material-symbols renew-icon rotating-icon">autorenew</div>
+</div>
 }@else {
- <section>
+<section>
   <div class="chatbox-header">
     @if(chatType === 'private'){
     <div class="private-header">
-      <img src="/assets/img/{{ chatPartner?.uUserImage }}" alt="" />
+        <div>
+            <img src="/assets/img/{{ chatPartner?.uUserImage }}" alt="" />
+            <span [ngClass]="chatPartner?.uStatus ? 'online' : 'offline'"></span>
+
+        </div>
+      
       <!-- Funktion muss zu Alexander -->
       <h1 (click)="selectChannel('KV14uSorBJhrWW92IeDS')">
         {{ chatPartner?.uName }}
@@ -61,29 +65,29 @@
       <p>2 Antworten</p>
       <span></span>
     </div>
-    } 
-    
-    @if (messages && messages.length === 0) { 
-        
-        @if(chatType === 'private'){
-            <div class="empty-private-chat">
-                <div>
-                    <img src="/assets/img/{{ chatPartner?.uUserImage }}" alt="" />
-                    <h1>{{ chatPartner?.uName }}</h1>
-                </div>
-                <p>Diese Unterhaltung findet nur Zwichen <span>&#64;{{ chatPartner?.uName }}</span> und dir statt</p>
-            </div>
-        } @else if(chatType === 'channel'){
-            <div class="empty-channel-chat">
-                <div>
-                    <div class="material-symbols tag-icon">tag</div>
-                    <h1>{{ channelData?.cName }}</h1>
-                </div>
-                <p>Du hast diesen Channel heute erstellt. Das ist der Anfang des Channels <span>&#64;{{ channelData?.cName }}.</span></p>
-            </div>
-        } 
-
-    } @else{ @for (message of messages; track message.mId; let i = $index) {
+    } @if (messages && messages.length === 0) { @if(chatType === 'private'){
+    <div class="empty-private-chat">
+      <div>
+        <img src="/assets/img/{{ chatPartner?.uUserImage }}" alt="" />
+        <h1>{{ chatPartner?.uName }}</h1>
+      </div>
+      <p>
+        Diese Unterhaltung findet nur Zwichen
+        <span>&#64;{{ chatPartner?.uName }}</span> und dir statt
+      </p>
+    </div>
+    } @else if(chatType === 'channel'){
+    <div class="empty-channel-chat">
+      <div>
+        <div class="material-symbols tag-icon">tag</div>
+        <h1>{{ channelData?.cName }}</h1>
+      </div>
+      <p>
+        Du hast diesen Channel heute erstellt. Das ist der Anfang des Channels
+        <span>&#64;{{ channelData?.cName }}.</span>
+      </p>
+    </div>
+    } } @else{ @for (message of messages; track message.mId; let i = $index) {
     @if (shouldShowDateSeparator(i)) {
     <div class="date-separator">
       <span></span>
@@ -100,35 +104,32 @@
     } }
   </div>
 
-
   <div class="chatbox-textfield thread-margin">
-
-
-    <textarea type="text" [placeholder]="getPlaceholder()" [(ngModel)]="newMessageText" rows="2"></textarea>
+    <textarea
+      type="text"
+      [placeholder]="getPlaceholder()"
+      [(ngModel)]="newMessageText"
+      #messageInput
+      rows="2"
+    ></textarea>
 
     <div class="textfield-buttons">
-
       <div>
         <button class="icon-button">
-            <div class="material-symbols">sentiment_satisfied</div>
+          <div class="material-symbols">sentiment_satisfied</div>
         </button>
 
         <button class="icon-button">
-            <div class="material-symbols">alternate_email</div>
+          <div class="material-symbols">alternate_email</div>
         </button>
       </div>
 
-
       <button class="icon-button">
-        <div class="material-symbols send-icon" (click)="sendMessage()">send</div>
+        <div class="material-symbols send-icon" (click)="sendMessage()">
+          send
+        </div>
       </button>
-
-
     </div>
-
-
   </div>
-
 </section>
 }
-

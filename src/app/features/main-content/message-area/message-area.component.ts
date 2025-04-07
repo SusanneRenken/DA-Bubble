@@ -39,6 +39,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   @Input() activeUserId: string | null = null;
 
   @ViewChild('scrollContainer') private scrollContainer!: ElementRef<HTMLDivElement>;
+  @ViewChild('messageInput') private messageInputRef!: ElementRef<HTMLTextAreaElement>;
 
   messages: Message[] = [];
 
@@ -54,7 +55,8 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
     setTimeout(() => {
       this.isLoading = false;
       setTimeout(() => {
-        this.scrollToBottom();          
+        this.scrollToBottom();
+      this.focusMessageInput();        
         }, 500);
     }, 500);
   }
@@ -67,7 +69,8 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
       setTimeout(() => {
         this.isLoading = false;
         setTimeout(() => {
-          this.scrollToBottom();          
+          this.scrollToBottom();
+          this.focusMessageInput();      
           }, 500);
       }, 500);    
     }
@@ -83,6 +86,12 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
     if (!this.scrollContainer) return;
     this.scrollContainer.nativeElement.scrollTop =
       this.scrollContainer.nativeElement.scrollHeight;
+  }
+
+  private focusMessageInput(): void {
+    if (this.messageInputRef && this.messageInputRef.nativeElement) {
+      this.messageInputRef.nativeElement.focus();
+    }
   }
 
   loadMessages(): void {

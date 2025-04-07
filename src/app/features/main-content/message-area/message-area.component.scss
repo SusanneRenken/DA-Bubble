@@ -1,11 +1,10 @@
 @import "../../../../styles.scss";
 
-.loading-screen{  
+.loading-screen {
   height: 100%;
   width: 100%;
-  @include flexBox(column, center, center, 0);  
+  @include flexBox(column, center, center, 0);
 }
-
 
 section {
   height: 100%;
@@ -57,11 +56,34 @@ section {
 .private-header {
   height: 100%;
   @include flexBox(row, initial, center, 16);
-  img {
+  div {
+    position: relative;
     width: 50px;
     height: 50px;
     border-radius: 50%;
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+    }
+    span{
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 14px;
+      height: 14px;
+      border: 2px solid #ffffff;
+      border-radius: 50%;
+    }
   }
+}
+
+.offline{  
+  background-color: #686868;
+}
+
+.online{  
+  background-color: #92C83E;
 }
 
 .channel-header {
@@ -84,7 +106,7 @@ section {
         border: 2px solid #ffffff;
         border-radius: 50%;
       }
-      div{
+      div {
         margin-left: 12px;
         margin-bottom: 12px;
       }
@@ -162,26 +184,26 @@ section {
       border-radius: 50%;
     }
   }
-  p{
+  p {
     color: #686868;
     font-size: 20px;
-    span{
-      color:#535AF1;
+    span {
+      color: #535af1;
     }
   }
 }
 
-.empty-channel-chat{
+.empty-channel-chat {
   height: 100%;
   @include flexBox(column, flex-end, initial, 8);
   div {
     @include flexBox(row, initial, center, 16);
   }
-  p{
+  p {
     color: #686868;
     font-size: 20px;
-    span{
-      color:#535AF1;
+    span {
+      color: #535af1;
     }
   }
 }
@@ -221,14 +243,15 @@ textarea {
   }
 }
 
-.renew-icon{
+.renew-icon {
   width: 80px;
   height: 80px;
   color: #444df2;
   font-size: 80px;
 }
 
-.tag-icon{width: 32px;
+.tag-icon {
+  width: 32px;
   height: 32px;
   font-size: 32px;
 }
@@ -236,10 +259,9 @@ textarea {
 .send-icon {
   width: 30px;
   height: 30px;
-  color: #797EF3;
-  font-size: 30px;  
-  font-variation-settings: 
-    'FILL' 1;
+  color: #797ef3;
+  font-size: 30px;
+  font-variation-settings: "FILL" 1;
   &:hover {
     color: #444df2;
   }

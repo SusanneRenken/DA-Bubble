@@ -1,0 +1,53 @@
+<main>
+    <section>
+        <div>
+            <h1>Gefundene Nutzer</h1>
+            <ng-container *ngIf="!showContact; else noUsersFound">
+                <div class="userPhoto" *ngFor="let user of users">
+                  <img [src]="'/assets/img/' + user.uUserImage" alt="{{ user.uName }}">
+                  <span>{{ user.uName }}</span>
+                </div>
+            </ng-container>
+            <ng-template #noUsersFound>
+              <span>Keine Nutzer gefunden!</span>
+            </ng-template>
+        </div>
+        <div>
+            <h1>Gefundene Channels und Nutzer in Channels</h1>
+            <ng-container *ngIf="!showChannels; else noChannelFound">
+                <div class="everyInfo" *ngFor="let channel of channels">
+                    <h3># {{ channel.cName }}</h3>
+                </div>
+            </ng-container>
+            <ng-template #noChannelFound>
+                <span>keine Channels in Nutzer gefunden !</span>
+            </ng-template>
+        </div>
+        <div>
+            <h1>Gefundene Nachrichten in Channels</h1>
+            <ng-container *ngIf="!showMatchedMessages ; else noMessagesFound">
+                <div class="everyInfo" *ngFor="let msg of matchedMessages">
+                    <p><strong>#{{ msg.channelName }}</strong>: {{ msg.mText }}</p>
+                </div>
+            </ng-container>
+            <ng-template #noMessagesFound>    
+                <span>keine Nachrichten in Channels gefunden !</span>
+            </ng-template>
+            
+        </div>
+        <div>
+            <h1>Gefundene private Nachrichten</h1>
+            <div class="everyInfo">
+                
+            </div>
+            <span>keine private Nachrichten gefunden !</span>
+        </div>
+        <div>
+            <h1>Gefundene Nachrichten in Threads</h1>
+            <div class="everyInfo"> 
+                
+            </div>
+            <span>keine Nachrichten in Threads gefunden !</span>
+        </div>
+    </section>
+</main>

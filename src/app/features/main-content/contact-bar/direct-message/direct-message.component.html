@@ -27,6 +27,24 @@
             <span>Direktnachrichten</span>
         </div>
     </button>
-    <section>
+    <section *ngIf="!showMessages">
+        <div class="directUser" *ngFor="let user of activeUsers$ | async">
+            <div class="activeGreenPoint">
+                <img class="userImage" [src]="'/assets/img/' + user.uUserImage">
+                <img class="greenPoint" src="/assets/icons/online-green.svg">
+            </div>
+            
+            <span>{{ user.uName }} (Du)</span>
+        </div>
+      
+        <div class="directUser" *ngFor="let user of inactiveUsers$ | async">
+            <div class="activeGreenPoint">
+                <img class="userImage"  [src]="'/assets/img/' + user.uUserImage">
+                <img class="greenPoint" src="/assets/icons/online-green.svg">
+                <img class="greenPoint" src="/assets/icons/online-grey.svg">
+            </div>
+           
+          <span>{{ user.uName }}</span>
+        </div>
     </section>
 </main>

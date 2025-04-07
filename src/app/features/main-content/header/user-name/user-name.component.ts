@@ -27,7 +27,7 @@ export class UserNameComponent {
   onDocumentClick(event: MouseEvent) {
     const clickedInsideLogOut = this.logOutBox?.nativeElement?.contains(event.target);
     const clickedToggleBtn = this.toggleBtn?.nativeElement?.contains(event.target);
-    const clickedInsideProfil = this.profilWrapper?.nativeElement?.contains(event.target); // ✔️
+    const clickedInsideProfil = this.profilWrapper?.nativeElement?.contains(event.target);
   
     if (!clickedInsideLogOut && !clickedToggleBtn && !clickedInsideProfil) {
       this.isLogOutVisible = false;

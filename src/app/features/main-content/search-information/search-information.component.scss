@@ -1,0 +1,34 @@
+@import '../../../../styles.scss';
+main{
+    position: absolute;
+    top: 90%;
+    left: 10%;
+    z-index: 40;
+    background-color: white;
+    height: 500px;
+    width: 80%;
+    border-radius: 30px;
+    padding: 40px;
+    box-shadow: 4px 4px 7px 4px rgba(0, 0, 0, 0.2);
+
+
+}
+section{
+    @include flexBox(column, center, left, 30);
+    overflow-y: auto;
+}
+.userPhoto{
+    @include flexBox('', left, center, 8);
+    margin-top: 8px;
+    img{
+        height: 40px;
+        width: 40px;
+        border-radius: 50%;
+    }
+    span{
+        @include fontStyle(20px, black, 500);
+    }
+}
+.everyInfo{
+    @include flexBox(column, center, left, 4);
+}

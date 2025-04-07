@@ -37,3 +37,35 @@ main{
     height: 24px;
     width: 24px;
 }
+section{
+    @include flexBox(column, center, left, 13);
+    margin-top: 25px;
+    width: 300px;
+}
+.directUser{
+    @include flexBox('', left, center, 15);
+    height: 60px;
+    width: 260px;
+    margin-left: 44px;
+    img{
+       
+    }
+}
+.greenPoint{
+    height: 14px;
+    width: 14px;
+    border-radius: 50%;
+    position: absolute;
+    border: 2px solid white;
+    top: 32px;
+    left: 38px;
+}
+.userImage{
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+}
+.activeGreenPoint{
+    position: relative;
+    height: 100%;
+}

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { AddChannelComponent } from './add-channel/add-channel.component';
 import { inject, Component} from '@angular/core';
-import { Firestore, collectionData, collection, query, orderBy } from '@angular/fire/firestore';
+import { Firestore, collectionData, collection} from '@angular/fire/firestore';
 import { map } from 'rxjs/operators';
 
 

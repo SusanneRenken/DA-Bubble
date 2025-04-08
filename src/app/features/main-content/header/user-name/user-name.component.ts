@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, HostListener, ViewChild, Input } from '@angular/core';
-import { ProfilComponent } from '../../profil/profil.component';
+import { ProfilComponent } from '../../../general-components/profil/profil.component';
 import { ActivatedRoute } from '@angular/router';
 import { Firestore, collection, collectionData } from '@angular/fire/firestore';
 import { User } from '../../../../shared/interfaces/user.interface';

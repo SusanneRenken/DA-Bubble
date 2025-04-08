@@ -1,12 +1,10 @@
 import {
   Component,
   ElementRef,
-  EventEmitter,
   inject,
   Input,
   OnChanges,
   OnDestroy,
-  Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -21,10 +19,11 @@ import { Channel } from '../../../shared/interfaces/channel.interface';
 import { ChannelService } from '../../../shared/services/channel.service';
 import { FormsModule } from '@angular/forms';
 import { ChannelLeaveComponent } from '../../general-components/channel-leave/channel-leave.component';
+import { ProfilComponent } from '../../general-components/profil/profil.component';
 
 @Component({
   selector: 'app-message-area',
-  imports: [CommonModule, MessageComponent, FormsModule, ChannelLeaveComponent],
+  imports: [CommonModule, MessageComponent, FormsModule, ChannelLeaveComponent, ProfilComponent],
   templateUrl: './message-area.component.html',
   styleUrls: ['./message-area.component.scss'],
 })
@@ -53,6 +52,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   newMessageText: string = '';
   isLoading: boolean = true;
   isEditChannelOpen: boolean = false;
+  isProfilOpen: boolean = false;
 
   ngAfterViewInit(): void {
     setTimeout(() => {
@@ -284,17 +284,12 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   // noah:string = "sEg8GcSNNZ6YWhxRs4SE Noah Braun";
   // bisasam:string = "8nmFp28ZO3TOeDohgGQSqR0niUj1 Bisasam";
 
-
-
-  openProfil(userId: any): void {
-    console.log('Profil wird geöffnet...');    
-  }
-
-
   toggleEdit(): void {
     this.isEditChannelOpen = !this.isEditChannelOpen;
   }
 
-
+  toggleProfile(): void {
+    this.isProfilOpen = !this.isProfilOpen;
+  }
 
 }

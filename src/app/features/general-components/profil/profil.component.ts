@@ -16,9 +16,9 @@ export class ProfilComponent{
   isActive: boolean = true;
   showEditProfil: boolean = false;
   @Input() showButton: boolean = false;
-  @Input() userName: string = '';
-  @Input() userEmail: string = '';
-  @Input() userImage: string = '';
+  @Input() userName: any;
+  @Input() userEmail: any;
+  @Input() userImage: any;
   @Input() activeUserId!: string | null;
   editedUserName: string = '';
   @Input() size: 'small' | 'middle'  | 'big' = 'small';

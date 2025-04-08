@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Channel } from '../../../shared/interfaces/channel.interface';
 
 @Component({
   selector: 'app-channel-leave',
@@ -9,9 +10,11 @@ import { Component, EventEmitter, Output } from '@angular/core';
   styleUrl: './channel-leave.component.scss',
 })
 export class ChannelLeaveComponent {
+  @Input() channelData: Channel | null = null;
   @Output() close = new EventEmitter<void>();
 
   closeWindow() {
     this.close.emit();
   }
+
 }

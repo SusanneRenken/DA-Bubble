@@ -20,10 +20,11 @@ import { UserService } from '../../../shared/services/user.service';
 import { Channel } from '../../../shared/interfaces/channel.interface';
 import { ChannelService } from '../../../shared/services/channel.service';
 import { FormsModule } from '@angular/forms';
+import { ChannelLeaveComponent } from '../../general-components/channel-leave/channel-leave.component';
 
 @Component({
   selector: 'app-message-area',
-  imports: [CommonModule, MessageComponent, FormsModule],
+  imports: [CommonModule, MessageComponent, FormsModule, ChannelLeaveComponent],
   templateUrl: './message-area.component.html',
   styleUrls: ['./message-area.component.scss'],
 })
@@ -38,6 +39,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   @Input() chatId: string | null = null;
   @Input() activeUserId: string | null = null;
 
+
   @ViewChild('scrollContainer') private scrollContainer!: ElementRef<HTMLDivElement>;
   @ViewChild('messageInput') private messageInputRef!: ElementRef<HTMLTextAreaElement>;
 
@@ -50,6 +52,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
 
   newMessageText: string = '';
   isLoading: boolean = true;
+  isEditChannelOpen: boolean = false;
 
   ngAfterViewInit(): void {
     setTimeout(() => {
@@ -282,25 +285,16 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   // bisasam:string = "8nmFp28ZO3TOeDohgGQSqR0niUj1 Bisasam";
 
 
-  // muss zu Alexander
-  @Output() openChat = new EventEmitter<{
-    chatType: 'private' | 'channel';
-    chatId: string;
-  }>();
 
-  // muss zu Alexander
-  selectPrivateChat(userId: string) {
-    this.openChat.emit({
-      chatType: 'private',
-      chatId: userId,
-    });
+  openProfil(userId: any): void {
+    console.log('Profil wird geöffnet...');    
   }
 
-  // muss zu Alexander
-  selectChannel(channelId: string) {
-    this.openChat.emit({
-      chatType: 'channel',
-      chatId: channelId,
-    });
+
+  toggleEdit(): void {
+    this.isEditChannelOpen = !this.isEditChannelOpen;
   }
+
+
+
 }

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { AddChannelComponent } from './add-channel/add-channel.component';
-import { inject, Component, Input} from '@angular/core';
+import { inject, Component, Input, EventEmitter, Output} from '@angular/core';
 import { Firestore, collectionData, collection} from '@angular/fire/firestore';
 import { map } from 'rxjs/operators';
 
@@ -16,6 +16,7 @@ export class ChannelsComponent{
   showAddChannel = false;
   showChannels = false;
   @Input() activeUserId!: string | null;
+  @Output() openChat = new EventEmitter<{ chatType: 'private' | 'channel'; chatId: string }>();
   private firestore = inject(Firestore);
 
   channels$ = collectionData(
@@ -40,7 +41,12 @@ export class ChannelsComponent{
     this.showChannels = !this.showChannels
   }
 
-  clickChannel(channelId: string){
-    console.log('Zeig mir channelId', channelId);
+  selectChannel(channelId: string): void {
+    this.openChat.emit({
+      chatType: 'channel',
+      chatId: channelId
+    });
   }
+
+
 }

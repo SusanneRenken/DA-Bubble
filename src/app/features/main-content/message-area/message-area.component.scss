@@ -92,6 +92,7 @@ section {
   @include flexBox(row, space-between, center, 0);
 
   .channel-name {
+    cursor: pointer;
     @include flexBox(row, initial, center, 10);
   }
 

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Firestore, collectionData, collection } from '@angular/fire/firestore';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
@@ -18,6 +18,7 @@ export class DirectMessageComponent implements OnInit {
   activeUsers$!: Observable<any[]>;
   inactiveUsers$!: Observable<any[]>;
   @Input() activeUserId!: string | null;
+  @Output() openChat = new EventEmitter<{ chatType: 'private' | 'channel'; chatId: string }>();
   activeUser?: User;
 
   constructor(private firestore: Firestore, private route: ActivatedRoute) {}
@@ -48,7 +49,10 @@ export class DirectMessageComponent implements OnInit {
     this.showMessages = !this.showMessages;
   }
 
-  userClick(whichUser: string, userId: string) {
-    console.log('WhichUser', whichUser, userId);
+  selectPrivateChat(userId: string) {
+    this.openChat.emit({
+      chatType: 'private',
+      chatId: userId,
+    });
   }
 }

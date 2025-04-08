@@ -7,25 +7,22 @@
   <div class="chatbox-header">
     @if(chatType === 'private'){
     <div class="private-header">
-        <div>
-            <img src="/assets/img/{{ chatPartner?.uUserImage }}" alt="" />
-            <span [ngClass]="chatPartner?.uStatus ? 'online' : 'offline'"></span>
+      <div>
+        <img src="/assets/img/{{ chatPartner?.uUserImage }}" alt="" />
+        <span [ngClass]="chatPartner?.uStatus ? 'online' : 'offline'"></span>
+      </div>
 
-        </div>
-      
-      <!-- Funktion muss zu Alexander -->
-      <h1 (click)="selectChannel('KV14uSorBJhrWW92IeDS')">
+      <!-- Funktion kommt von Alexander -->
+      <h1 (click)="openProfil(chatPartner?.uId)">
         {{ chatPartner?.uName }}
       </h1>
     </div>
     } @else if(chatType === 'channel'){
     <div class="channel-header">
-      <a class="channel-name">
+      <a class="channel-name" (click)="toggleEdit()">
         <div class="material-symbols tag-icon">tag</div>
-        <!-- Funktion muss zu Alexander -->
-        <h1 (click)="selectPrivateChat('sEg8GcSNNZ6YWhxRs4SE')">
-          {{ channelData?.cName }}
-        </h1>
+        <!-- Funktion kommt von Alexander -->
+        <h1>{{ channelData?.cName }}</h1>
         <div class="material-symbols tag-icon">keyboard_arrow_down</div>
       </a>
 
@@ -131,5 +128,12 @@
       </button>
     </div>
   </div>
+
+  @if (isEditChannelOpen) {
+  <app-channel-leave
+    [channelData]="channelData"
+    (close)="toggleEdit()"
+  ></app-channel-leave>
+  }
 </section>
 }

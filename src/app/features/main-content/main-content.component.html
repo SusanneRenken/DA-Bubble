@@ -69,17 +69,16 @@
     <app-contact-bar
       *ngIf="sectionVisible"
       [sectionVisible]="sectionVisible"
-      (toggle)="toggleSection()"
       [activeUserId]="activeUserId"
+      (toggle)="toggleSection()"
+      (openChat)="handleOpenChat($event)"
     ></app-contact-bar>
     
-    <!-- openChat-Funktion muss zu Alexander -->
     <app-message-area
       class="chat-message-area"
       [chatType]="chatType"
       [chatId]="chatId"
-      [activeUserId]="activeUserId"
-      (openChat)="handleOpenChat($event)"
+      [activeUserId]="activeUserId" 
     >
     </app-message-area>
 
@@ -92,6 +91,7 @@
     >
     </app-message-area>
     }
+
   </div>
 </section>
 

@@ -28,14 +28,16 @@
         </div>
     </button>
     <section *ngIf="!showMessages">
-        <button (click)="userClick('aktiveUser', user.uId)" class="directUser" *ngFor="let user of activeUsers$ | async">
+
+        <button (click)="selectPrivateChat(user.uId)" class="directUser" *ngFor="let user of activeUsers$ | async">
             <div class="activeGreenPoint">
                 <img class="userImage" [src]="'/assets/img/' + user.uUserImage">
                 <img class="greenPoint" src="/assets/icons/online-green.svg">
             </div>
             <span>{{ user.uName }} (Du)</span>
         </button>
-        <button (click)="userClick('otherUser', user.uId)" class="directUser" *ngFor="let user of inactiveUsers$ | async">
+
+        <button (click)="selectPrivateChat(user.uId)" class="directUser" *ngFor="let user of inactiveUsers$ | async">
             <div class="activeGreenPoint">
                 <img class="userImage"  [src]="'/assets/img/' + user.uUserImage">
                 <img class="greenPoint" src="/assets/icons/online-green.svg">
@@ -43,5 +45,6 @@
             </div>
           <span>{{ user.uName }}</span>
         </button>
+
     </section>
 </main>

@@ -1,8 +1,18 @@
+@if (isLoading) {
+<div class="loading-screen">
+  <div class="material-symbols renew-icon rotating-icon">autorenew</div>
+</div>
+}@else {
 <section>
   <div class="chatbox-header">
     @if(chatType === 'private'){
     <div class="private-header">
-      <img src="/assets/img/{{ chatPartner?.uUserImage }}" alt="" />
+        <div>
+            <img src="/assets/img/{{ chatPartner?.uUserImage }}" alt="" />
+            <span [ngClass]="chatPartner?.uStatus ? 'online' : 'offline'"></span>
+
+        </div>
+      
       <!-- Funktion muss zu Alexander -->
       <h1 (click)="selectChannel('KV14uSorBJhrWW92IeDS')">
         {{ chatPartner?.uName }}
@@ -11,18 +21,20 @@
     } @else if(chatType === 'channel'){
     <div class="channel-header">
       <a class="channel-name">
-        <img src="/assets/icons/hashtag.svg" alt="arrow down" />
+        <div class="material-symbols tag-icon">tag</div>
         <!-- Funktion muss zu Alexander -->
         <h1 (click)="selectPrivateChat('sEg8GcSNNZ6YWhxRs4SE')">
           {{ channelData?.cName }}
         </h1>
-        <img src="/assets/icons/keyboard-arrow-down.svg" alt="arrow down" />
+        <div class="material-symbols tag-icon">keyboard_arrow_down</div>
       </a>
 
       <div class="channel-members">
         <div>
           @for (member of channelMembers.slice(0,3); track member) {
           <img src="/assets/img/{{ member.uUserImage }}" alt="" />
+          } @if (channelMembers.length > 3) {
+          <div>...</div>
           }
           <span>{{ channelMembers.length }}</span>
         </div>
@@ -47,45 +59,77 @@
     }
   </div>
 
-  <div class="chatbox-messages">
+  <div class="chatbox-messages" #scrollContainer>
     @if (chatType === 'thread') {
     <div class="thread-separator">
       <p>2 Antworten</p>
       <span></span>
     </div>
-    } @for (message of messages; track message.mId; let i = $index) { @if
-    (shouldShowDateSeparator(i)) {
+    } @if (messages && messages.length === 0) { @if(chatType === 'private'){
+    <div class="empty-private-chat">
+      <div>
+        <img src="/assets/img/{{ chatPartner?.uUserImage }}" alt="" />
+        <h1>{{ chatPartner?.uName }}</h1>
+      </div>
+      <p>
+        Diese Unterhaltung findet nur Zwichen
+        <span>&#64;{{ chatPartner?.uName }}</span> und dir statt
+      </p>
+    </div>
+    } @else if(chatType === 'channel'){
+    <div class="empty-channel-chat">
+      <div>
+        <div class="material-symbols tag-icon">tag</div>
+        <h1>{{ channelData?.cName }}</h1>
+      </div>
+      <p>
+        Du hast diesen Channel heute erstellt. Das ist der Anfang des Channels
+        <span>&#64;{{ channelData?.cName }}.</span>
+      </p>
+    </div>
+    } } @else{ @for (message of messages; track message.mId; let i = $index) {
+    @if (shouldShowDateSeparator(i)) {
     <div class="date-separator">
       <span></span>
       <p>{{ getDateString(message.mTime) }}</p>
       <span></span>
     </div>
-    }
+    } @if (message.mSenderId === activeUserId) { }
 
     <app-message
       [message]="message"
       [activeUserId]="activeUserId"
       [chatType]="chatType"
     ></app-message>
-    }
+    } }
   </div>
 
   <div class="chatbox-textfield thread-margin">
-    <textarea type="text" placeholder="Nachricht an" rows="2"></textarea>
+    <textarea
+      type="text"
+      [placeholder]="getPlaceholder()"
+      [(ngModel)]="newMessageText"
+      #messageInput
+      rows="2"
+    ></textarea>
 
     <div class="textfield-buttons">
       <div>
-        <button class="icon-button">
-          <img src="/assets/icons/emoji-button.svg" alt="" />
+        <button class="icon-button blue-hover">
+          <div class="material-symbols textfield-icon">sentiment_satisfied</div>
         </button>
 
-        <button class="icon-button">
-          <img src="/assets/icons/at-button.svg" alt="" />
+        <button class="icon-button blue-hover">
+          <div class="material-symbols textfield-icon">alternate_email</div>
         </button>
       </div>
+
       <button class="icon-button">
-        <img src="/assets/icons/send-button.svg" alt="" />
+        <div class="material-symbols send-icon" (click)="sendMessage()">
+          send
+        </div>
       </button>
     </div>
   </div>
 </section>
+}

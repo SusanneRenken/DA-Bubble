@@ -3,6 +3,7 @@
   margin: 0;
   font-size: 18px;
   box-sizing: border-box;
+  scroll-behavior: smooth;
 }
 
 html,
@@ -200,7 +201,7 @@ h5 {
 @font-face {
   font-family: 'MaterialSymbols';
   font-style: normal;
-  src: url('/assets/font/MaterialSymbolsOutlined.woff2') format('woff');
+  src: url('/assets/font/MaterialSymbolsRounded.woff2') format('woff');
 }
 
 .material-symbols{
@@ -211,8 +212,4 @@ h5 {
   font-size: 24px;
   border-radius: 50%;
   @include flexBox(row, center, center, 0);
-  &:hover{
-    color: #535AF1;
-    background-color: #8384a0;
-  }
 }

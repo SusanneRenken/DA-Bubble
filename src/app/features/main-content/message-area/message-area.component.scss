@@ -1,5 +1,11 @@
 @import "../../../../styles.scss";
 
+.loading-screen {
+  height: 100%;
+  width: 100%;
+  @include flexBox(column, center, center, 0);
+}
+
 section {
   height: 100%;
   width: 100%;
@@ -7,9 +13,10 @@ section {
   background-color: #ffffff;
   border-radius: 30px;
   @include flexBox(column, initial, initial, 0);
+
   .chatbox-header {
     width: 100%;
-    height: 104px;
+    height: 96px;
     padding: 32px 40px;
     border-top-left-radius: 30px;
     border-top-right-radius: 30px;
@@ -20,8 +27,13 @@ section {
   .chatbox-messages {
     flex: 1 1 0;
     min-height: 0;
-    padding: 20px 35px;
+    padding-block: 20px;
     overflow-y: auto;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    -ms-overflow-style: none;
+    scrollbar-width: none;
     @include flexBox(column, initial, flex-start, 20);
   }
 
@@ -44,11 +56,34 @@ section {
 .private-header {
   height: 100%;
   @include flexBox(row, initial, center, 16);
-  img{
+  div {
+    position: relative;
     width: 50px;
-  height: 50px;
-  border-radius: 50%;
+    height: 50px;
+    border-radius: 50%;
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+    }
+    span{
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 14px;
+      height: 14px;
+      border: 2px solid #ffffff;
+      border-radius: 50%;
+    }
   }
+}
+
+.offline{  
+  background-color: #686868;
+}
+
+.online{  
+  background-color: #92C83E;
 }
 
 .channel-header {
@@ -71,8 +106,12 @@ section {
         border: 2px solid #ffffff;
         border-radius: 50%;
       }
+      div {
+        margin-left: 12px;
+        margin-bottom: 12px;
+      }
       span {
-        margin-left: 20px;
+        margin-left: 12px;
         @include fontStyle(200, #000000, 600);
       }
     }
@@ -100,6 +139,7 @@ section {
 
 .date-separator {
   width: 100%;
+  padding-inline: 36px;
   display: flex;
   align-items: center;
   span {
@@ -133,7 +173,42 @@ section {
   }
 }
 
-app-message{
+.empty-private-chat {
+  height: 100%;
+  @include flexBox(column, flex-end, initial, 24);
+  div {
+    @include flexBox(row, initial, flex-end, 16);
+    img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+    }
+  }
+  p {
+    color: #686868;
+    font-size: 20px;
+    span {
+      color: #535af1;
+    }
+  }
+}
+
+.empty-channel-chat {
+  height: 100%;
+  @include flexBox(column, flex-end, initial, 8);
+  div {
+    @include flexBox(row, initial, center, 16);
+  }
+  p {
+    color: #686868;
+    font-size: 20px;
+    span {
+      color: #535af1;
+    }
+  }
+}
+
+app-message {
   width: 100%;
 }
 
@@ -146,7 +221,7 @@ textarea {
 .textfield-buttons {
   @include flexBox(row, space-between, center, 0);
   div {
-    @include flexBox(row, initial, initial, 5);
+    @include flexBox(row, center, center, 5);
   }
 }
 
@@ -155,13 +230,60 @@ textarea {
   margin: 40px 20px;
 }
 
+.rotating-icon {
+  animation: slowRotate 1.5s linear infinite;
+}
+
+@keyframes slowRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.renew-icon {
+  width: 80px;
+  height: 80px;
+  color: #444df2;
+  font-size: 80px;
+}
+
+.tag-icon {
+  width: 32px;
+  height: 32px;
+  font-size: 32px;
+}
+
+.textfield-icon{
+  color: #686868;
+  &:hover {
+    color: #535AF1;
+  }
+}
+
+.send-icon {
+  width: 30px;
+  height: 30px;
+  color: #797ef3;
+  font-size: 30px;
+  font-variation-settings: "FILL" 1;
+  &:hover {
+    color: #444df2;
+  }
+}
+
 .icon-button {
   cursor: pointer;
   width: 40px;
   height: 40px;
+  background-color: #ffffff;
   border: none;
   border-radius: 50px;
-  color: #686868;
   @include flexBox(row, center, center, 0);
 }
 
+.blue-hover:hover{
+  background-color: #ECEEFE;
+}

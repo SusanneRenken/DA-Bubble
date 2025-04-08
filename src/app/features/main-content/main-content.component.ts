@@ -4,8 +4,6 @@ import { ActivatedRoute } from '@angular/router';
 import { HeaderComponent } from './header/header.component';
 import { ContactBarComponent } from './contact-bar/contact-bar.component';
 import { MessageAreaComponent } from './message-area/message-area.component';
-import { BehaviorSubject } from 'rxjs';
-import { FlatESLint } from 'eslint/use-at-your-own-risk';
 
 
 @Component({
@@ -27,8 +25,10 @@ export class MainContentComponent {
 
   chatType: 'private' | 'channel' | 'thread' | 'new' = 'channel';
   // muss später getauscht werden:
-  chatId: string | null = 'KV14uSorBJhrWW92IeDS';
-  // chatId: string | null = 'sEg8GcSNNZ6YWhxRs4SE';
+  chatId: string | null = 'KV14uSorBJhrWW92IeDS'; //ENTWICKLER
+  // chatId: string | null = 'SsuHUPJxACsAfBVbJPn6'; //TEST
+  // chatId: string | null = 'sEg8GcSNNZ6YWhxRs4SE'; //NOAH
+  // chatId: string | null = '8nmFp28ZO3TOeDohgGQSqR0niUj1'; //BISASAM
 
   // chatId: string | null = null;
   threadId: string | null = null;
@@ -37,7 +37,7 @@ export class MainContentComponent {
   sectionVisible = true;
 
   ngOnInit(): void {
-    this.activeUserId = this.route.snapshot.paramMap.get('activeUserId');
+    this.activeUserId = this.route.snapshot.paramMap.get('activeUserId');    
 
     // muss später aktiviert werden:
     // this.chatId = this.activeUserId;

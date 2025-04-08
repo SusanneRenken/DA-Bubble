@@ -13,7 +13,7 @@ import {
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Message } from '../interfaces/message.interface';
-import { addDoc, serverTimestamp } from 'firebase/firestore';
+import { addDoc, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root',
@@ -166,13 +166,25 @@ export class MessageService {
     });
   }
 
-  // Beispiel-Daten für eine Nachricht
-  // createMessage(message: Partial<Message>): Promise<any> {
-  //   const messagesCollection = collection(this.firestore, 'messages');
-  //   const newMessage = {
-  //     ...message,
-  //     mTime: serverTimestamp(),
-  //   };
-  //   return addDoc(messagesCollection, newMessage);
-  // }
+  createMessage(message: Partial<Message>): Promise<any> {
+    const messagesCollection = collection(this.firestore, 'messages');
+    const newMessage = {
+      ...message,
+      mTime: serverTimestamp(),
+    };
+    return addDoc(messagesCollection, newMessage);
+  }
+
+  editMessage(message: Partial<Message>): Promise<any>{
+    if (!message.mId) {
+      return Promise.reject(new Error('Message ID fehlt.'));
+    }
+    const messagesCollection = collection(this.firestore, 'messages');
+    const messageRef = doc(messagesCollection, message.mId || '');
+    return updateDoc(messageRef, {
+      mReactions: message.mReactions,
+    });
+  }
+
+
 }

@@ -9,12 +9,19 @@
     <div class="message-text">{{ message.mText }}</div>
 
     <div>
-      @if (message.mReactions && message.mReactions.length > 0) {
+      @if (groupedReactions && groupedReactions.length > 0) {
         <span class="reaction-field">
-          @for (reaction of message.mReactions; track reaction) {
-            <div>{{ reaction }} 1</div>
+          @for (reaction of groupedReactions.slice(0,shownReactionNumber); track reaction) {
+            <div>{{ reaction.reaction }} {{ reaction.count }}</div>
           }
-          <img src="/assets/icons/add-reaction.svg" alt="" />
+          @if (groupedReactions.length > shownReactionNumber) {
+            <div (click)="setShownReactionNumber()">+{{groupedReactions.length - shownReactionNumber}} weitere</div>           
+          }
+          <!-- Hier muss später die 2 durch eine 7 ersetzt werden -->
+          @if (groupedReactions.length === shownReactionNumber && shownReactionNumber > 2) {
+            <div (click)="setShownReactionNumber()">Weniger anzeigen</div>           
+          }
+          <span class="material-symbols">add_reaction</span>
         </span>
       } 
 

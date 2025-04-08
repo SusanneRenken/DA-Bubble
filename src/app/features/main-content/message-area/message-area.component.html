@@ -7,7 +7,7 @@
   <div class="chatbox-header">
     @if(chatType === 'private'){
     <div class="private-header">
-      <div>
+      <div class="user-img-status">
         <img src="/assets/img/{{ chatPartner?.uUserImage }}" alt="" />
         <span [ngClass]="chatPartner?.uStatus ? 'online' : 'offline'"></span>
       </div>
@@ -140,6 +140,7 @@
     [userImage]="chatPartner?.uUserImage"
     [userName]="chatPartner?.uName"
     [userEmail]="chatPartner?.uEmail"
+    [userStatus]="chatPartner?.uStatus"
     #profilRef
     size="big"
     [showButton]="true"

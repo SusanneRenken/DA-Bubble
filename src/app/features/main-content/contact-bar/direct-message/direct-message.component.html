@@ -1,3 +1,5 @@
+
+
 <main>
     <button class="directMessageButton" (click)="showAllMessages()">
         <div class="keyDownUser">
@@ -30,6 +32,10 @@
     <section *ngIf="!showMessages">
 
         <button (click)="selectPrivateChat(user.uId)" class="directUser" *ngFor="let user of activeUsers$ | async">
+            <!-- <div class="user-img-status">
+    <img src="/assets/img/{{ chatPartner?.uUserImage }}" alt="" />
+    <span [ngClass]="chatPartner?.uStatus ? 'online' : 'offline'"></span>
+  </div> -->
             <div class="activeGreenPoint">
                 <img class="userImage" [src]="'/assets/img/' + user.uUserImage">
                 <img class="greenPoint" src="/assets/icons/online-green.svg">

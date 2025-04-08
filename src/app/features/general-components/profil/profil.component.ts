@@ -19,6 +19,7 @@ export class ProfilComponent{
   @Input() userName: any;
   @Input() userEmail: any;
   @Input() userImage: any;
+  @Input() userStatus: any;
   @Input() activeUserId!: string | null;
   editedUserName: string = '';
   @Input() size: 'small' | 'middle'  | 'big' = 'small';

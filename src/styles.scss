@@ -41,6 +41,35 @@ h5 {
   font-weight: 400;
 }
 
+.user-img-status {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+  }
+  span {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 14px;
+    height: 14px;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+  }
+}
+
+.offline {
+  background-color: #686868;
+}
+
+.online {
+  background-color: #92c83e;
+}
+
 @mixin fontStyle($size, $fontColor, $fontWeight) {
   font-size: $size;
   color: $fontColor;

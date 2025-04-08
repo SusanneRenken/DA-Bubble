@@ -2,6 +2,7 @@
     <section>
         <div>
             <h1>Gefundene Nutzer</h1>
+            
             <ng-container *ngIf="!showContact; else noUsersFound">
                 <div class="userPhoto" *ngFor="let user of users">
                   <img [src]="'/assets/img/' + user.uUserImage" alt="{{ user.uName }}">
@@ -27,7 +28,7 @@
             <h1>Gefundene Nachrichten in Channels</h1>
             <ng-container *ngIf="!showMatchedMessages ; else noMessagesFound">
                 <div class="everyInfo" *ngFor="let msg of matchedMessages">
-                    <p><strong>#{{ msg.channelName }}</strong>: {{ msg.mText }}</p>
+                    <h3><strong>#{{ msg.channelName }}</strong>: {{ msg.mText }}</h3>
                 </div>
             </ng-container>
             <ng-template #noMessagesFound>    
@@ -37,10 +38,8 @@
         </div>
         <div>
             <h1>Gefundene private Nachrichten</h1>
-            <div class="everyInfo">
-                
-            </div>
-            <span>keine private Nachrichten gefunden !</span>
+           
+
         </div>
         <div>
             <h1>Gefundene Nachrichten in Threads</h1>

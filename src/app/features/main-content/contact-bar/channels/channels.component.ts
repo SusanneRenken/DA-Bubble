@@ -39,4 +39,8 @@ export class ChannelsComponent{
   showAllChannels(){
     this.showChannels = !this.showChannels
   }
+
+  clickChannel(channelId: string){
+    console.log('Zeig mir channelId', channelId);
+  }
 }

@@ -12,7 +12,7 @@ import { ChannelsComponent } from './channels/channels.component';
   styleUrl: './contact-bar.component.scss'
 })
 export class ContactBarComponent {
-  @Input() sectionVisible: boolean = true;
+  @Input() sectionVisible?: boolean = true;
   @Input() activeUserId!: string | null;
   @Output() toggle = new EventEmitter<void>();
 

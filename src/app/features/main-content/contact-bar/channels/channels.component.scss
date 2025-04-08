@@ -82,6 +82,8 @@ section{
     padding: 0 20px;
     border-radius: 20px;
     cursor: pointer;
+    background-color: white;
+    border: none;
     span{
         @include fontStyle(18px, black, 700);
     }

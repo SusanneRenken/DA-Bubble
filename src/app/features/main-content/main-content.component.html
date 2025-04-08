@@ -3,8 +3,12 @@
   <div class="content-container">
     <button class="toogleBar" (click)="toggleSection()">
       <div>
-        <span *ngIf="sectionVisible">Workspace-Menü schließen</span>
-        <span *ngIf="!sectionVisible">Workspace-Menü öffnen</span>
+        @if (sectionVisible) {
+          <span>Workspace-Menü schließen</span>
+        }
+        @else {
+          <span>Workspace-Menü öffnen</span>
+        }
       </div>
       <div class="imageChange" *ngIf="sectionVisible">
         <svg
@@ -90,4 +94,4 @@
     } 
   </div>
 </section>
-<app-channel-leave></app-channel-leave>
+

@@ -47,4 +47,8 @@ export class DirectMessageComponent implements OnInit {
   showAllMessages() {
     this.showMessages = !this.showMessages;
   }
+
+  userClick(whichUser: string, userId: string) {
+    console.log('WhichUser', whichUser, userId);
+  }
 }

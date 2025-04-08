@@ -19,10 +19,12 @@ export class SearchInformationComponent {
   showMatchedMessages: boolean = true;
   showContact: boolean = true;
   showChannels: boolean = true;
+  showThreadMessages: boolean = true;
 
   channels: any[] = [];
   users: { uName: string; uUserImage: string }[] = [];
   matchedMessages: { mText: string; channelName: string }[] = [];
+  directMessages: { mText: string; channelName: string }[] = [];
 
 
   constructor(private firestore: Firestore) {}
@@ -42,6 +44,8 @@ export class SearchInformationComponent {
     const matchedUser = this.findUserByName(users, searchText);
     const filteredChannels = this.filterChannelsByUserOrName( channels, matchedUser, searchText );
     const enrichedChannels = this.enrichChannelsWithUserNames( filteredChannels, users );
+   
+
     this.channels = enrichedChannels;
     this.showChannels = this.channels.length === 0;
   }
@@ -80,10 +84,21 @@ export class SearchInformationComponent {
     searchText: string
   ): { mText: string; channelName: string }[] {
     return messages
-      .filter(
-        (message) =>
-          !!message.mText && message.mText.toLowerCase().includes(searchText)
-      )
+      .filter((message) => {
+        const hasValidText =
+          !!message.mText && message.mText.toLowerCase().includes(searchText);
+  
+        const hasValidChannelId =
+          typeof message.mChannelId === 'string' &&
+          message.mChannelId.trim().length > 0;
+  
+        const isNotThread = !message.mThreadId;
+        const isNotDirectMessage = !message.mUserId;
+  
+        return (
+          hasValidText && hasValidChannelId && isNotThread && isNotDirectMessage
+        );
+      })
       .map((message) => {
         const channel = channels.find((c) => c.cId === message.mChannelId);
         return {
@@ -91,8 +106,31 @@ export class SearchInformationComponent {
           channelName: channel?.cName || '',
         };
       });
-      
   }
+
+  private getMatchedDirectMessages(
+    messages: Message[],
+    users: User[],
+    searchText: string
+  ): { mText: string; userName: string }[] {
+    return messages
+      .filter((message) =>
+        !!message.mText &&
+        message.mText.toLowerCase().includes(searchText) &&
+        typeof message.mUserId === 'string' &&
+        message.mUserId.trim().length > 0 // 🔍 mUserId muss gesetzt sein
+      )
+      .map((message) => {
+        const user = users.find((u) => u.uId === message.mUserId);
+        return {
+          mText: message.mText,
+          userName: user?.uName || 'Unbekannt',
+        };
+      });
+  }
+  
+  
+  
 
   private findUserByName(users: User[], searchText: string): User | undefined {
     return users.find((user) => user.uName.toLowerCase().includes(searchText));

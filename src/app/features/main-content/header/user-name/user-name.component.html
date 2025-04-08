@@ -1,7 +1,7 @@
 <main>
     <div class="avatar">
         <span>{{ userName }}</span>
-        <img src="/assets/img/avatar-1.png">
+        <img [src]="'/assets/img/' + userImage">
     </div>
     <button class="openLogOut" (click)="toggleLogOut()" #toggleBtn>
         <svg class="arrowDown" width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -45,6 +45,6 @@
     </div>
 </section>
 <div #profilWrapper>
-    <app-profil  [activeUserId]="activeUserId" [userName]="userName" [userEmail]="userEmail" #profilRef (close)="showProfil = false" size="small" [showButton]="false" *ngIf="showProfil"></app-profil>
+    <app-profil  [activeUserId]="activeUserId" [userImage]="userImage" [userName]="userName" [userEmail]="userEmail" #profilRef (close)="showProfil = false" size="small" [showButton]="false" *ngIf="showProfil"></app-profil>
 </div>
   

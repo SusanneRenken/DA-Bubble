@@ -21,6 +21,7 @@ export class UserNameComponent {
 
   userName: string = '';
   userEmail: string = '';
+  userImage: string = '';
 
   @ViewChild('logOutBox') logOutBox?: ElementRef;
   @ViewChild('toggleBtn') toggleBtn?: ElementRef;
@@ -44,8 +45,9 @@ export class UserNameComponent {
         if (user) {
           this.userName = user.uName;
           this.userEmail = user.uEmail;
+          this.userImage = user.uUserImage;
         }
-      });
+      });    
   }
 
   toggleLogOut() {

@@ -24,7 +24,6 @@ main{
         height: 24px;
         width: 24px;
         border-radius: 50%;
-        
     }
 }
 .keyDownUser{
@@ -40,16 +39,22 @@ main{
 section{
     @include flexBox(column, center, left, 13);
     margin-top: 25px;
-    width: 300px;
+    width: 270px;
+    padding-left: 32px;
+    
 }
 .directUser{
     @include flexBox('', left, center, 15);
     height: 60px;
-    width: 260px;
-    margin-left: 44px;
-    img{
-       
-    }
+    width: 270px;
+    padding-left: 16px;
+    border-radius: 30px;
+    background-color: white;
+    border: none;
+    cursor: pointer;
+    &:hover{
+        background-color: #ECEEFE;
+    }    
 }
 .greenPoint{
     height: 14px;
@@ -57,7 +62,7 @@ section{
     border-radius: 50%;
     position: absolute;
     border: 2px solid white;
-    top: 32px;
+    top: 38px;
     left: 38px;
 }
 .userImage{
@@ -66,6 +71,7 @@ section{
     border-radius: 50%;
 }
 .activeGreenPoint{
+    @include flexBox('', center, center, '');    
     position: relative;
     height: 100%;
 }

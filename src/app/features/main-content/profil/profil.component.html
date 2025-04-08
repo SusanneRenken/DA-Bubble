@@ -14,7 +14,7 @@
                 </svg>
             </button>
         </header>
-        <img src="/assets/img/avatar-1.png">
+        <img [src]="'/assets/img/' + userImage">
         <div *ngIf="!showEditProfil" class="nameActive">
             <div class="nameEdit">
                 <span>{{ userName }}</span>

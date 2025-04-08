@@ -221,7 +221,7 @@ textarea {
 .textfield-buttons {
   @include flexBox(row, space-between, center, 0);
   div {
-    @include flexBox(row, initial, initial, 5);
+    @include flexBox(row, center, center, 5);
   }
 }
 
@@ -256,6 +256,13 @@ textarea {
   font-size: 32px;
 }
 
+.textfield-icon{
+  color: #686868;
+  &:hover {
+    color: #535AF1;
+  }
+}
+
 .send-icon {
   width: 30px;
   height: 30px;
@@ -271,8 +278,12 @@ textarea {
   cursor: pointer;
   width: 40px;
   height: 40px;
+  background-color: #ffffff;
   border: none;
   border-radius: 50px;
-  color: #686868;
   @include flexBox(row, center, center, 0);
+}
+
+.blue-hover:hover{
+  background-color: #ECEEFE;
 }

@@ -9,10 +9,11 @@ import { ComponentSwitcherService } from '../../../shared/services/component-swi
 import { ButtonComponent } from '../../general-components/button/button.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthentificationService } from '../../../shared/services/authentification.service';
+import { CustomInputComponent } from '../../general-components/custom-input/custom-input.component';
 
 @Component({
   selector: 'app-confirm-password',
-  imports: [ButtonComponent, ReactiveFormsModule],
+  imports: [ButtonComponent, ReactiveFormsModule, CustomInputComponent],
   templateUrl: './confirm-password.component.html',
   styleUrl: './confirm-password.component.scss',
 })
@@ -54,6 +55,11 @@ export class ConfirmPasswordComponent implements OnInit {
         });
       }
     }
+  }
+
+  goBackToEmailConfirm() {
+    this.router.navigate(['/access']);
+    this.changeComponent('conMail');
   }
 
   changeComponent(componentName: string) {

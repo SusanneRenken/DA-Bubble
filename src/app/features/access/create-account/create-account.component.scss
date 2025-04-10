@@ -1,17 +1,23 @@
-@import '../../../../styles.scss';
+@use "../../../shared/scss/mixins" as mixin;
+@use "../../../shared/scss/variables" as vari;
 
 :host {
   position: relative;
 }
 
 .arrow {
-  position: absolute;
-  top: 10px;
-  left: 0;
+  @include mixin.arrow(
+    $bg-color: vari.$input-background,
+    $icon-color: vari.$purple
+  );
 }
 
 form {
-  @include dFlex($gap: 40px, $direction: column);
+  @include mixin.dFlex($gap: 40px, $direction: column);
+
+  > h1 {
+    @include mixin.accHead(vari.$dark-blue);
+  }
 
   > p {
     text-align: center;
@@ -19,11 +25,18 @@ form {
 }
 
 .checkbox-container {
+  width: 100%;
+  padding-left: 10px;
   display: flex;
   gap: 5px;
 
   > span {
     cursor: pointer;
-    color: #2796BF;
+    color: vari.$light-blue;
   }
+}
+
+.btn-container {
+  width: 100%;
+  @include mixin.dFlex($justify: flex-end);
 }

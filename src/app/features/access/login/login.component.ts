@@ -10,10 +10,11 @@ import {
 import { CommonModule } from '@angular/common';
 import { AuthentificationService } from '../../../shared/services/authentification.service';
 import { Router } from '@angular/router';
+import { CustomInputComponent } from '../../general-components/custom-input/custom-input.component';
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, ButtonComponent, ReactiveFormsModule],
+  imports: [CommonModule, ButtonComponent, ReactiveFormsModule, CustomInputComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
@@ -28,7 +29,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginForm = new FormGroup({
-      email: new FormControl('', [Validators.required, Validators.email]),
+      email: new FormControl('', [Validators.required, Validators.email, Validators.pattern('[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}')]),
       password: new FormControl('', [Validators.required, Validators.minLength(6)]),
     });
   }

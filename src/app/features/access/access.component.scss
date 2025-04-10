@@ -1,9 +1,9 @@
+@use '../../shared/scss/mixins' as mixin;
+
 :host {
   width: 100vw;
   height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  @include mixin.dFlex();
   position: relative;
 }
 
@@ -16,10 +16,7 @@
 }
 
 .sign-in-container {
-  display: flex;
-  align-items: flex-end;
-  flex-direction: column;
-  gap: 20px;
+  @include mixin.dFlex($align: flex-end, $gap: 20px, $direction: column);
   position: absolute;
   top: 0;
   right: 0;

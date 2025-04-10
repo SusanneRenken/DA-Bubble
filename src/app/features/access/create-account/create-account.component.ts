@@ -8,10 +8,11 @@ import {
   Validators,
 } from '@angular/forms';
 import { AuthentificationService } from '../../../shared/services/authentification.service';
+import { CustomInputComponent } from '../../general-components/custom-input/custom-input.component';
 
 @Component({
   selector: 'app-create-account',
-  imports: [ButtonComponent, ReactiveFormsModule],
+  imports: [ButtonComponent, ReactiveFormsModule, CustomInputComponent],
   templateUrl: './create-account.component.html',
   styleUrl: './create-account.component.scss',
 })
@@ -39,13 +40,11 @@ export class CreateAccountComponent implements OnInit {
       .then(() => {
         console.log('Registration successful');
         console.log('Create-Data: ', this.registerForm.value);
+        this.changeComponent('avatar');
       })
       .catch((error) => {
         console.error('Error during registration', error);
       });
-      if (this.registerForm.valid) {
-        this.changeComponent('avatar');
-      }
     }
   }
 

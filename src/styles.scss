@@ -52,16 +52,6 @@ h5 {
   align-items: $align;
   gap: $gap + px;
 }
-@mixin dFlex($justify: center, $align: center, $gap: 0px, $direction: null) {
-  display: flex;
-  justify-content: $justify;
-  align-items: $align;
-  gap: $gap;
-
-  @if $direction !=null {
-    flex-direction: $direction;
-  }
-}
 
 @font-face {
   font-display: swap;

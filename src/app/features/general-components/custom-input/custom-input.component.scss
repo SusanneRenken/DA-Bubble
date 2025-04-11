@@ -8,9 +8,9 @@
 label {
   @include mixin.dFlex($gap: 18px);
   width: 100%;
-  background-color: vari.$input-background;
+  background-color: vari.$sky-grey;
   padding: 18px 32px;
-  border: 1px solid vari.$input-background;
+  border: 1px solid vari.$sky-grey;
   border-radius: 100px;
   transition: border-color 0.2s ease-in-out;
   --icon-color: #686868;

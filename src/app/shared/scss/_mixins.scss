@@ -32,3 +32,9 @@
   font-size: 46px;
   font-weight: 700;
 }
+
+@mixin btnColor($bg-color, $bor-color, $text-color) {
+  background-color: $bg-color;
+  border-color: $bor-color;
+  color: $text-color;
+}

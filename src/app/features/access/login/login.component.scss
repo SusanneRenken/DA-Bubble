@@ -20,7 +20,7 @@ form {
 
     &:hover {
       color: vari.$dark-blue;
-      background-color: vari.$input-background;
+      background-color: vari.$sky-grey;
       border-radius: 30px;
     }
   }
@@ -35,7 +35,7 @@ form {
     position: relative;
     z-index: 5;
     padding: 0 15px;
-    background-color: #ffffff;
+    background-color: vari.$white;
   }
 
   &::before {

@@ -6,10 +6,7 @@
 }
 
 .arrow {
-  @include mixin.arrow(
-    $bg-color: vari.$input-background,
-    $icon-color: vari.$purple
-  );
+  @include mixin.arrow($bg-color: vari.$sky-grey, $icon-color: vari.$purple);
 }
 
 form {

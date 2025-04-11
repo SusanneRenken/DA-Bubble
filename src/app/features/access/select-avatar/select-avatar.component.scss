@@ -8,7 +8,7 @@
 
 .arrow {
   @include mixin.arrow(
-    $bg-color: vari.$input-background,
+    $bg-color: vari.$sky-grey,
     $icon-color: vari.$purple
   );
 }
@@ -53,7 +53,7 @@ span {
   }
 
   > img.selected {
-    border: 5px solid vari.$input-background;
+    border: 5px solid vari.$sky-grey;
   }
 }
 

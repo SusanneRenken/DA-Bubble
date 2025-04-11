@@ -17,9 +17,11 @@ export class ContactBarComponent {
   @Output() toggle = new EventEmitter<void>();
   @Output() openChat = new EventEmitter<{ chatType: 'private' | 'channel'; chatId: string }>();
 
+  
   toggleSection() {
     this.toggle.emit();
   }
+
 
   onChatOpen(eventData: { chatType: 'private' | 'channel'; chatId: string }): void {
     this.openChat.emit(eventData);

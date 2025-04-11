@@ -13,21 +13,24 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './direct-message.component.html',
   styleUrl: './direct-message.component.scss',
 })
+
 export class DirectMessageComponent implements OnInit {
   showMessages = false;
+  activeUser?: User;
   activeUsers$!: Observable<any[]>;
   inactiveUsers$!: Observable<any[]>;
   @Input() activeUserId!: string | null;
   @Output() openChat = new EventEmitter<{ chatType: 'private' | 'channel'; chatId: string }>();
-  activeUser?: User;
-
+  
   constructor(private firestore: Firestore, private route: ActivatedRoute) {}
+
 
   ngOnInit(): void {
     if (this.activeUserId) {
       this.loadUsers();
     }
   }
+
 
   loadUsers(): void {
     const usersCollection = collection(this.firestore, 'users');
@@ -45,10 +48,12 @@ export class DirectMessageComponent implements OnInit {
     });
   }
 
+
   showAllMessages() {
     this.showMessages = !this.showMessages;
   }
 
+  
   selectPrivateChat(userId: string) {
     this.openChat.emit({
       chatType: 'private',

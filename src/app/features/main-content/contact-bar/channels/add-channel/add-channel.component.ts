@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, EventEmitter, HostListener, Output, inject, NgZone, OnInit, Input} from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Output, inject, NgZone, OnInit, Input } from '@angular/core';
 import { Firestore, collection, doc, setDoc, serverTimestamp } from '@angular/fire/firestore';
-
 
 @Component({
   selector: 'app-add-channel',
@@ -44,30 +43,34 @@ export class AddChannelComponent implements OnInit {
     this.close.emit();
   }
 
+
+  private buildChannelData( name: string, description: string, userId: string, id: string ) {
+    return {
+      cName: name,
+      cDescription: description,
+      cId: id,
+      createdAt: serverTimestamp(),
+      cCreatedByUser: userId,
+      cUserIds: {
+        0: userId,
+      },
+    };
+  }
+
+
   async createChannel(name: string, description: string): Promise<void> {
-    if (!name || !this.activeUserId) return; // Pflichtfelder prüfen
-  
+    if (!name || !this.activeUserId) return;
     const channelsCollectionRef = collection(this.firestore, 'channels');
     const newDocRef = doc(channelsCollectionRef);
     const newId = newDocRef.id;
-  
-    const channelData = {
-      cName: name,
-      cDescription: description,
-      cId: newId,
-      createdAt: serverTimestamp(),          
-      cCreatedByUser: this.activeUserId,      
-      cUserIds: {                           
-        0: this.activeUserId
-      }
-    };
-  
+    const channelData = this.buildChannelData(
+      name,
+      description,
+      this.activeUserId,
+      newId
+    );
     this.ngZone.run(() => {
-      setDoc(newDocRef, channelData)
-        .then(() => this.close.emit())
-        
+      setDoc(newDocRef, channelData).then(() => this.close.emit());
     });
   }
-  
-  
 }

@@ -1,6 +1,6 @@
 import { CommonModule} from '@angular/common';
-import { Component, Input, Output, EventEmitter, ElementRef, ViewChild, inject, OnInit} from '@angular/core';
-import { Firestore, doc, updateDoc } from '@angular/fire/firestore';
+import { Component, Input, Output, EventEmitter, ElementRef, ViewChild, inject} from '@angular/core';
+import { Firestore, doc, updateDoc} from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -12,26 +12,32 @@ import { FormsModule } from '@angular/forms';
 })
 
 export class ProfilComponent{
+
   firestore = inject(Firestore);
   isActive: boolean = true;
   showEditProfil: boolean = false;
+  editedUserName: string = '';
   @Input() showButton: boolean = false;
   @Input() userName: any;
   @Input() userEmail: any;
   @Input() userImage: any;
   @Input() userStatus: any;
   @Input() activeUserId!: string | null;
-  editedUserName: string = '';
   @Input() size: 'small' | 'middle'  | 'big' = 'small';
   @Output() close = new EventEmitter<void>();
   @ViewChild('profilWrapper') profilWrapper?: ElementRef;
 
+  
+  ngOnInit(): void {
+    this.isActive = this.userStatus === true || this.userStatus === 'true';
+  }
 
 
   closeProfil() {
     this.close.emit();
   }
 
+  
   changeUserName() {
     if (!this.activeUserId || !this.editedUserName.trim()) return;
     const userRef = doc(this.firestore, 'users', this.activeUserId);

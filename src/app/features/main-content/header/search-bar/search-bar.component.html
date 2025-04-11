@@ -1,9 +1,9 @@
 <main>
-    <input (keyup)="onKey($event)" type="text" placeholder="Devespace durchsuchen">
+    <input (keyup)="onKey($event)" [value]="searchValue" type="text" placeholder="Devespace durchsuchen">
     <div class="searchButton">
         <img src="/assets/icons/search.svg">
     </div>
-    <app-search-information [searchText]="searchValue"  *ngIf="showInformation"></app-search-information>
+    <app-search-information (close)="closeSearchInfo()" [searchText]="searchValue"  *ngIf="showInformation"></app-search-information>
 </main>
 
 

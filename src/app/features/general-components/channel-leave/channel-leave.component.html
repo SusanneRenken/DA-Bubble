@@ -6,35 +6,75 @@
                 <h1>{{ channelData?.cName}}</h1>
             </div>
             <button (click)="closeWindow()" class="closeChannelLeave">
-                <img src="/assets/icons/close-button.svg">
+                <div class="material-symbols closeIcon">close</div>
             </button>
         </header>
-        <div class="nameBox">
-            <div class="boxEdit">
-                <h3>Channel-Name</h3>
-                <a href="">Bearbeiten</a>
-            </div>
-            <div class="channelHashtagName">
-                <img src="/assets/icons/hashtag.svg">
-                <span>Entwickler</span>
-            </div>
-        </div>
-        <div class="descriptionBox">
-            <div class="descriptionText">
+        @if (editMode) {
+            <div [ngClass]="{ 'fade-in': hasInteractedName && isVisibleName, 'fade-out': hasInteractedName && !isVisibleName }" class="nameBox">
                 <div class="boxEdit">
-                    <h3>Beschreibung</h3>
-                    <a href="">Bearbeiten</a>
+                    <h3>Channel-Name</h3>
+                    <button (click)="toggleEdit()">Bearbeiten</button>
                 </div>
-                <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam magnam, eius vel ea, sequi minus doloremque sunt maiores reprehenderit dignissimos perspiciatis corporis consequuntur, sed perferendis voluptatibus libero. Dolorum, provident deleniti?</span>
+                <div class="channelHashtagName">
+                    <img src="/assets/icons/hashtag.svg">
+                    <span>{{ channelData?.cName}}</span>
+                </div>
             </div>
-            <div class="xLine"></div>
-            <div class="userCreator">
-                <h3>Erstellt von</h3>
-                <span>Noah Braun</span>
+        }
+        @else{
+            <div [ngClass]="{ 'fade-in': hasInteractedName && isVisibleName, 'fade-out': hasInteractedName && !isVisibleName }"  class="nameSaveBox">
+                <div class="saveBox">
+                    <h3>Channel-Name</h3>
+                    <button (click)="saveNewName()">Speichern</button>
+                </div>
+                <div class="editChannelName" >
+                    <img src="/assets/icons/hashtag.svg">
+                    <input [(ngModel)]="editedChannelName" [placeholder]="editedChannelName"/>
+                </div>
             </div>
-        </div>
+        }
+        @if (editDescription) {
+            <div [ngClass]="{ 'fade-in': hasInteracted && isVisible, 'fade-out': hasInteracted && !isVisible }" class="descriptionBox">
+                <div class="descriptionText">
+                    <div class="boxEdit">
+                        <h3>Beschreibung</h3>
+                        <button (click)="toggleDescription()">Bearbeiten</button>
+                    </div>
+                    <div class="descriptionBoxText">{{ channelData?.cDescription}}</div>
+                </div>
+                <div class="creatorXLine">
+                    <div class="xLine"></div>
+                    <div class="userCreator">
+                        <h3>Erstellt von</h3>
+                        <span>{{ createdByUserName }}</span>
+                    </div>
+                </div>
+            </div>
+        }
+        @else {
+            <div [ngClass]="{ 'fade-in': hasInteracted && isVisible, 'fade-out': hasInteracted && !isVisible }" class="descriptionSaveOutBox">
+                <div class="descriptionSaveBox">
+                    <div class="descriptionText">
+                        <div class="saveBox">
+                            <h3>Beschreibung</h3>
+                            <button (click)="toggleDescription(); saveDescription()">Speichern</button>
+                        </div>
+                        <div class="inputDescription">
+                            <textarea [(ngModel)]="editedDescription" placeholder="Dein Text hier" type="text"></textarea>
+                        </div>
+                    </div>
+                    <div class="xLineSave"></div>
+                    <div class="creatorBox">
+                        <div class="userCreator">
+                            <h3>Erstellt von</h3>
+                            <span>{{ createdByUserName }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
         <div class="channelLeaveButton">
-            <button>Channel verlassen</button>
+            <button (click)="closeWindow()">Channel verlassen</button>
         </div>
     </section>
 </main>

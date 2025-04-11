@@ -49,9 +49,6 @@ header{
     @include flexBox("", space-between, center, "");
     height: 40px;
     width: 100%;
-    span{
-        @include fontStyle(24px, black, 700);
-    }
 }
 .closeProfil{
     @include flexBox("", center, center, "");
@@ -116,10 +113,6 @@ header{
             width: 30px;
             height: 30px;
         }
-        span{
-            @include fontStyle(20px, black, 700);
-            margin: 0;
-        }
     }
     span{
         @include fontStyle(18px, #1381FF, 400);
@@ -146,6 +139,10 @@ header{
     &:hover{
         opacity: 0.8;
     }
+    img{
+        height: 24px;
+        width: 24px;
+    }
 }
 .editSaveButtons{
     @include flexBox('', center, center, 10);
@@ -157,10 +154,6 @@ header{
     img{
         width: 30px;
         height: 30px;
-    }
-    span{
-        @include fontStyle(20px, black, 700);
-        margin: 0;
     }
 }
 .editInput{

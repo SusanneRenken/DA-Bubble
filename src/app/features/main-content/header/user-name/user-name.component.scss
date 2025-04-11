@@ -18,6 +18,9 @@ main {
     width: 70px;
   }
 }
+.arrowDownHeight{
+  font-size: 30px;
+}
 .openLogOut {
   border: none;
   padding-inline: 0;
@@ -51,7 +54,7 @@ section {
   z-index: 50;
 }
 .logOut {
-  @include flexBox("", "", center, "");
+  @include flexBox("", center, center, "");
   flex-direction: column;
   height: 180px;
   width: 260px;
@@ -66,7 +69,7 @@ section {
   button {
     all: unset;
     @include fontStyle(24px, black, 600);
-    @include flexBox("", center, center, "");
+    @include flexBox("", center, center, 15);
     background-color: white;
     width: 220px;
     height: 50px;
@@ -76,6 +79,9 @@ section {
     &:hover {
       background-color: #eceefe;
       color: #535af1;
+    }
+    span{
+      width: 80px;
     }
   }
 }

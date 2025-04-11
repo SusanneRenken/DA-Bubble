@@ -9,7 +9,6 @@ section{
 }
 .logoText{
     @include flexBox('', left, center, 15);
-    @include fontStyle(24px, black, 700);
     width: 250px;
     img{
         height: 60px;
@@ -24,7 +23,6 @@ section{
     border: none;
     cursor: pointer;    
     position: relative;
-    
 }
 .icon{
     width: 24px;

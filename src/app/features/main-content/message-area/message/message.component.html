@@ -1,6 +1,10 @@
-<div class="message" [class.user-message]="message.mSenderId === activeUserId">
+<section [class.row-reverse]="message.mSenderId === activeUserId">
   <img src="/assets/img/{{ senderData?.uUserImage }}" alt="" />
-  <div>
+
+  <div
+    class="message"
+    [class.user-message]="message.mSenderId === activeUserId"
+  >
     <div>
       <h3>{{ senderData?.uName }}</h3>
       <h5>{{ getTimeInHours(message.mTime) }} Uhr</h5>
@@ -10,25 +14,39 @@
 
     <div>
       @if (groupedReactions && groupedReactions.length > 0) {
-        <span class="reaction-field">
-          @for (reaction of groupedReactions.slice(0,shownReactionNumber); track reaction) {
-            <div>{{ reaction.reaction }} {{ reaction.count }}</div>
-          }
-          @if (groupedReactions.length > shownReactionNumber) {
-            <div (click)="setShownReactionNumber()">+{{groupedReactions.length - shownReactionNumber}} weitere</div>           
-          }
-          <!-- Hier muss später die 2 durch eine 7 ersetzt werden -->
-          @if (groupedReactions.length === shownReactionNumber && shownReactionNumber > 2) {
-            <div (click)="setShownReactionNumber()">Weniger anzeigen</div>           
-          }
-          <span class="material-symbols">add_reaction</span>
-        </span>
-      } 
-
-      @if (message.mThreadId && chatType !== 'thread') {
-        <h4>2 Antworten</h4>
-        <h5>Letzte Antwort 14:56 Uhr</h5>
+      <span class="reaction-field">
+        @for (reaction of groupedReactions.slice(0,shownReactionNumber); track
+        reaction) {
+        <div>{{ reaction.reaction }} {{ reaction.count }}</div>
+        } @if (groupedReactions.length > shownReactionNumber) {
+        <div (click)="setShownReactionNumber()">
+          +{{ groupedReactions.length - shownReactionNumber }} weitere
+        </div>
+        }
+        <!-- Hier muss später die 2 durch eine 7 ersetzt werden -->
+        @if (groupedReactions.length === shownReactionNumber &&
+        shownReactionNumber > 2) {
+        <div (click)="setShownReactionNumber()">Weniger anzeigen</div>
+        }
+        <span class="material-symbols">add_reaction</span>
+      </span>
+      } @if (message.mThreadId && chatType !== 'thread') {
+      <h4>2 Antworten</h4>
+      <h5>Letzte Antwort 14:56 Uhr</h5>
       }
     </div>
   </div>
-</div>
+
+  <div class="message-actions" [class.user-message-actions]="message.mSenderId === activeUserId">
+    <span>💚</span>
+    <span>☀️</span>
+    <div class="material-symbols action-btn">sentiment_satisfied</div>
+    <div class="material-symbols action-btn">comment</div>
+    <div
+      class="material-symbols action-btn"
+      [class.d-none]="message.mSenderId != activeUserId"
+    >
+      more_vert
+    </div>
+  </div>
+</section>

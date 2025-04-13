@@ -1,6 +1,7 @@
 @import "../../../../../styles.scss";
 
-.message {
+section {
+  position: relative;
   width: 100%;
   padding: 10px 136px 10px 46px;
   @include flexBox(row, initial, initial, 20);
@@ -9,12 +10,36 @@
     height: 70px;
     border-radius: 50%;
   }
-  div {
-    @include flexBox(column, initial, initial, 8);
-    div {
-      @include flexBox(row, initial, center, 20);
+  &:hover {
+    background-color: #eceefe;
+    .message-text {
+      color: #000000;
+      background-color: #ffffff;
+    }
+    .message-actions {
+      display: flex;
     }
   }
+}
+
+.row-reverse {
+  padding: 10px 46px 10px 136px;
+  flex-direction: row-reverse;
+  &:hover {
+    .message-text {
+      color: #ffffff;
+      background-color: #797ef3;
+    }
+  }
+}
+
+.message {
+  @include flexBox(column, initial, initial, 8);
+
+  div {
+    @include flexBox(row, initial, center, 20);
+  }
+
   .message-text {
     width: fit-content;
     padding: 15px;
@@ -24,35 +49,19 @@
     white-space: pre-wrap;
     font-size: 18px;
   }
-  &:hover {
-    background-color: #eceefe;
-    .message-text {
-      color: #000000;
-      background-color: #ffffff;
-    }
-  }
 }
 
 .user-message {
-  padding: 10px 46px 10px 136px;
-  flex-direction: row-reverse;
   div {
-    div {
-      @include flexBox(row, flex-end, center, 20);
-      &:first-child {
-        @include flexBox(row-reverse, flex-start, center, 20);
-      }
+    @include flexBox(row, flex-end, center, 20);
+    &:first-child {
+      @include flexBox(row-reverse, flex-start, center, 20);
     }
   }
+
   .message-text {
     color: #ffffff;
     background-color: #797ef3;
-  }
-  &:hover {
-    .message-text {
-      color: #ffffff;
-      background-color: #797ef3;
-    }
   }
 }
 
@@ -70,4 +79,37 @@
       border: 1px solid #444df2;
     }
   }
+}
+
+.message-actions{
+  position: absolute;
+  right: 46px;
+  top: -18px;
+  padding: 4px 16px 4px 20px;
+  background-color: #ffffff;
+  border: 1px solid #adb0d9;
+  border-radius: 25px 25px 0px 25px;
+  @include flexBox(row, initial, center, 5);
+  display: none;
+  span{
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    @include flexBox(initial, center, center, 0);
+  }
+  .action-btn{
+    width: 40px;
+    height: 40px;
+  }
+
+}
+
+.user-message-actions{
+  right: initial;
+  left: 46px;
+}
+
+.d-none{
+  display: none;
 }

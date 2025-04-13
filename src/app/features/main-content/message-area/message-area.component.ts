@@ -65,6 +65,10 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   isProfilOpen: boolean = false;
   isChannelMemberOpen: boolean = false;
 
+  foundUsers: UserInterface[] = [];
+  foundChannels: Channel[] = [];
+  displaySuggestions: boolean = false;
+
   ngAfterViewInit(): void {
     setTimeout(() => {
       this.isLoading = false;
@@ -105,6 +109,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   private focusMessageInput(): void {
     if (this.messageInputRef && this.messageInputRef.nativeElement) {
       this.messageInputRef.nativeElement.focus();
+      this.messageInputRef.nativeElement.value = '';
     }
   }
 
@@ -180,7 +185,6 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
       .getFilteredUsers(userIds)
       .then((users) => {
         this.channelMembers = users;
-        console.log('Channel-Mitglieder:', this.channelMembers);
       })
       .catch((error) => {
         console.error('Fehler beim Laden der Channel-Mitglieder:', error);
@@ -269,33 +273,6 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
     }, 0);
   }
 
-  // testMessage(): void {
-  //   console.log('Testnachricht wird erstellt...');
-  //   const testMessage: Message = {
-  //     mId: '3rxhuNGtA0tluXvBJZ3J',
-  //     mText: "",
-  //     mReactions: [
-  //       { reaction: "🥳", userId: "Eg2jVLodTA9FI99IMJUK", userName: "Sofia Müller" },
-  //       { reaction: "💚", userId: "Eg2jVLodTA9FI99IMJUK", userName: "Sofia Müller" },
-  //       { reaction: "🎉", userId: "8nmFp28ZO3TOeDohgGQSqR0niUj1", userName: "Bisasam" },
-  //       { reaction: "🎉", userId: "Eg2jVLodTA9FI99IMJUK", userName: "Sofia Müller" },
-  //       { reaction: "🍿", userId: "Eg2jVLodTA9FI99IMJUK", userName: "Sofia Müller" },
-  //       { reaction: "🎞️", userId: "Eg2jVLodTA9FI99IMJUK", userName: "Sofia Müller" },
-  //       { reaction: "☀️", userId: "8nmFp28ZO3TOeDohgGQSqR0niUj1", userName: "Bisasam" },
-  //     ],
-  //     mTime: "",
-  //     mSenderId: "",
-  //     mUserId: "",
-  //     mChannelId: "",
-  //     mThreadId: ""
-  //   };
-  //   this.messageService.editMessage(testMessage);
-  // }
-
-  // sofia:string = "Eg2jVLodTA9FI99IMJUK Sofia Müller";
-  // noah:string = "sEg8GcSNNZ6YWhxRs4SE Noah Braun";
-  // bisasam:string = "8nmFp28ZO3TOeDohgGQSqR0niUj1 Bisasam";
-
   toggleEdit(): void {
     this.isEditChannelOpen = !this.isEditChannelOpen;
   }
@@ -306,5 +283,71 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
 
   toggleChannelMembers(): void {
     this.isChannelMemberOpen = !this.isChannelMemberOpen;
+  }
+
+  onTextChange(event: Event): void {
+    const txtArea = event.target as HTMLTextAreaElement;
+    if (!txtArea) return;
+
+    const message = txtArea.value;
+    const caretPos = txtArea.selectionStart || 0;
+
+    const atPos = message.lastIndexOf('@');
+    const hashPos = message.lastIndexOf('#');
+    const mentionPos = Math.max(atPos, hashPos);
+
+    if (mentionPos !== -1 && mentionPos < caretPos) {
+      const mentionText = message.slice(mentionPos + 1, caretPos);
+
+      if (mentionText.includes(' ')) {
+        this.displaySuggestions = false;
+        this.foundUsers = [];
+        this.foundChannels = [];
+        return;
+      }
+
+      if (message[mentionPos] === '@') {
+        this.searchUsers(mentionText);
+      } else if (message[mentionPos] === '#') {
+        this.searchChannels(mentionText);
+      }
+    } else {
+      this.displaySuggestions = false;
+      this.foundUsers = [];
+      this.foundChannels = [];
+    }
+  }
+
+  searchUsers(input: string): void {
+    this.userService
+      .getAllUsers()
+      .then((allUsers) => {
+        this.foundUsers = allUsers.filter((user) =>
+          user.uName.toLowerCase().includes(input.toLowerCase())
+        );
+        this.displaySuggestions = this.foundUsers.length > 0;
+      })
+      .catch((error) => {
+        console.error('Fehler beim Laden der User:', error);
+        this.displaySuggestions = false;
+        this.foundUsers = [];
+      });
+  }
+  
+
+  searchChannels(input: string): void {
+    this.channelService
+      .getAllChannels()
+      .then((allChannels) => {
+        this.foundChannels = allChannels.filter((channel) =>
+          channel.cName.toLowerCase().includes(input.toLowerCase())
+        );
+        this.displaySuggestions = this.foundChannels.length > 0;
+      })
+      .catch((error) => {
+        console.error('Fehler beim Laden der Channels:', error);
+        this.displaySuggestions = false;
+        this.foundChannels = [];
+      });
   }
 }

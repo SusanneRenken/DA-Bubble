@@ -101,11 +101,30 @@
   </div>
 
   <div class="chatbox-textfield thread-margin">
+    @if (displaySuggestions) {
+
+    <div class="suggestions">
+      @for(user of foundUsers; track user) {
+      <div>
+        <div class="user-img-status">
+          <img src="/assets/img/{{ user?.uUserImage }}" alt="" />
+          <span [ngClass]="user?.uStatus ? 'online' : 'offline'"></span>
+        </div>
+        <span>{{ user?.uName }}</span>
+      </div>
+      } @for(channel of foundChannels; track channel) {
+      <div># {{channel?.cName}}</div>
+      }
+    </div>
+
+    }
+
     <textarea
       type="text"
       [placeholder]="getPlaceholder()"
       [(ngModel)]="newMessageText"
       #messageInput
+      (input)="onTextChange($event)"
       rows="2"
     ></textarea>
 
@@ -133,8 +152,7 @@
     [channelData]="channelData"
     (close)="toggleEdit()"
   ></app-channel-leave>
-  } 
-  @if (isProfilOpen) {
+  } @if (isProfilOpen) {
   <app-profil
     [activeUserId]="activeUserId"
     [userImage]="chatPartner?.uUserImage"
@@ -146,8 +164,7 @@
     [showButton]="true"
     (close)="toggleProfile()"
   ></app-profil>
-  } 
-  @if (isChannelMemberOpen) {
+  } @if (isChannelMemberOpen) {
   <app-channel-members
     [channelMembers]="channelMembers"
     [activeUserId]="activeUserId"

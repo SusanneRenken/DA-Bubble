@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
-import { doc, getDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
 import { Channel } from '../interfaces/channel.interface';
 
 @Injectable({
@@ -8,6 +8,19 @@ import { Channel } from '../interfaces/channel.interface';
 })
 export class ChannelService {
   private firestore = inject(Firestore);
+
+  async getAllChannels(): Promise<Channel[]> {
+    const channelsCollectionRef = collection(this.firestore, 'channels');
+    const querySnapshot = await getDocs(channelsCollectionRef);
+    const allChannels: Channel[] = [];
+
+    querySnapshot.forEach((docSnap) => {
+      const channelData = { ...(docSnap.data() as Channel), id: docSnap.id };
+      allChannels.push(channelData);
+    });
+
+    return allChannels;
+  }
 
   async getChannel(channelId: string | null): Promise<Channel> {
     if (!channelId) {
@@ -22,5 +35,4 @@ export class ChannelService {
       }
     });
   }
-
 }

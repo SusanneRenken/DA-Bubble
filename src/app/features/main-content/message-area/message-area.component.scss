@@ -210,6 +210,39 @@ textarea {
   }
 }
 
+.suggestions{
+  position: absolute;
+  bottom: 128px;
+  left: 20px;
+  max-height: 360px;
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  background-color: #ffffff;
+  border: 1px solid #ADB0D9;
+  border-radius: 20px 20px 20px 0px;
+  @include flexBox(column, initial, initial, 16);
+  z-index: 98;
+
+  div{
+    cursor: pointer;
+    padding: 4px 24px;
+    @include flexBox(row, initial, center, 16);
+    div{
+      padding: 0;
+    }
+    &:hover{
+      background-color: #eceefe;
+      border-radius: 30px;
+    }
+  }
+}
+
 .thread-margin {
   width: calc(100% - 40px);
   margin: 40px 20px;

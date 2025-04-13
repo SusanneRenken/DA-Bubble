@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
-import { doc, getDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
 import { UserInterface } from '../interfaces/user.interface';
 
 @Injectable({
@@ -8,6 +8,19 @@ import { UserInterface } from '../interfaces/user.interface';
 })
 export class UserService {
   private firestore = inject(Firestore);
+
+  async getAllUsers(): Promise<UserInterface[]> {
+    const usersCollectionRef = collection(this.firestore, 'users');
+    const querySnapshot = await getDocs(usersCollectionRef);
+    const allUsers: UserInterface[] = [];
+
+    querySnapshot.forEach((docSnap) => {
+      const userData = { ...(docSnap.data() as UserInterface), id: docSnap.id };
+      allUsers.push(userData);
+    });
+
+    return allUsers;
+  }
 
   async getUser(userId: string | null): Promise<UserInterface> {
     if (!userId) {
@@ -43,5 +56,4 @@ export class UserService {
 
     return results;
   }
-
 }

@@ -34,6 +34,7 @@ export class MessageComponent implements OnInit {
         this.message.mReactions,
         this.activeUserId
       );
+      console.log('Grouped Reactions:', this.groupedReactions);
     }
   }
 
@@ -48,10 +49,10 @@ export class MessageComponent implements OnInit {
       });
   }
 
-   setShownReactionNumber() {
+  setShownReactionNumber() {
     if (this.shownReactionNumber < this.groupedReactions.length) {
       this.shownReactionNumber = this.groupedReactions.length;
-    } else{
+    } else {
       //hier muss später 7 rein
       this.shownReactionNumber = 2;
     }
@@ -89,10 +90,18 @@ export class MessageComponent implements OnInit {
       }
     });
 
-    return Array.from(grouped.entries()).map(([reaction, data]) => ({
-      reaction,
-      count: data.count,
-      names: data.names,
-    }));
+    return Array.from(grouped.entries()).map(([reaction, data]) => {
+      const duIndex = data.names.indexOf('Du');
+      if (duIndex !== -1 && duIndex !== 0) {
+        data.names.splice(duIndex, 1);
+        data.names.unshift('Du');
+      }
+
+      return {
+        reaction,
+        count: data.count,
+        names: data.names,
+      };
+    });
   }
 }

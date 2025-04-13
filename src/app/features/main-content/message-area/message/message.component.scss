@@ -10,7 +10,7 @@ section {
     height: 70px;
     border-radius: 50%;
   }
-  &:hover {
+  >&:hover {
     background-color: #eceefe;
     .message-text {
       color: #000000;
@@ -36,7 +36,7 @@ section {
 .message {
   @include flexBox(column, initial, initial, 8);
 
-  div {
+  > div {
     @include flexBox(row, initial, center, 20);
   }
 
@@ -52,7 +52,7 @@ section {
 }
 
 .user-message {
-  div {
+  > div {
     @include flexBox(row, flex-end, center, 20);
     &:first-child {
       @include flexBox(row-reverse, flex-start, center, 20);
@@ -68,7 +68,7 @@ section {
 .reaction-field {
   @include flexBox(row, initial, center, 10);
   flex-wrap: wrap;
-  div {
+  > div {
     cursor: pointer;
     height: 34px;
     padding: 5px 10px;
@@ -77,11 +77,40 @@ section {
     border-radius: 20px;
     &:hover {
       border: 1px solid #444df2;
+      .reaction-details {
+        display: flex;
+      }
     }
   }
 }
 
-.message-actions{
+.single-reaction {
+  position: relative;
+}
+
+.reaction-details {
+  position: absolute;
+  bottom: 33px;
+  left: 32px;
+  width: 160px;
+  padding: 16px 8px;
+  color: #ffffff;
+  background-color: #444df2;
+  border-radius: 30px 30px 30px 0px;
+  @include flexBox(column, center, center, 5);
+  display: none;
+  > span {
+    width: 30px;
+    height: 30px;
+    font-size: 30px;
+    @include flexBox(initial, center, center, 0);
+  }
+  >p{
+    font-size: 16px;
+  }
+}
+
+.message-actions {
   position: absolute;
   right: 46px;
   top: -18px;
@@ -91,25 +120,24 @@ section {
   border-radius: 25px 25px 0px 25px;
   @include flexBox(row, initial, center, 5);
   display: none;
-  span{
+  > span {
     cursor: pointer;
     width: 40px;
     height: 40px;
     font-size: 20px;
     @include flexBox(initial, center, center, 0);
   }
-  .action-btn{
+  .action-btn {
     width: 40px;
     height: 40px;
   }
-
 }
 
-.user-message-actions{
+.user-message-actions {
   right: initial;
   left: 46px;
 }
 
-.d-none{
+.d-none {
   display: none;
 }

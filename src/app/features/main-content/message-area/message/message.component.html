@@ -17,7 +17,49 @@
       <span class="reaction-field">
         @for (reaction of groupedReactions.slice(0,shownReactionNumber); track
         reaction) {
-        <div>{{ reaction.reaction }} {{ reaction.count }}</div>
+
+        <div class="single-reaction">
+          <div class="reaction-details">
+            <span>{{ reaction.reaction }}</span>
+
+            @if (reaction.names && reaction.names.length === 1) {
+            <div>{{ reaction.names[0] }}</div>
+            <p>
+              {{
+                reaction.names[0] === "Du" ? "hast reagiert" : "hat reagiert"
+              }}
+            </p>
+            } @if (reaction.names && reaction.names.length === 2) {
+            <div>{{ reaction.names[0] }} und {{ reaction.names[1] }}</div>
+
+            } @if (reaction.names && reaction.names.length === 3) {
+            <div>
+              {{ reaction.names[0] }}, {{ reaction.names[1] }} und
+              {{ reaction.names[2] }}
+            </div>
+
+            } @if (reaction.names && reaction.names.length > 3) {
+            <div>
+              {{ reaction.names[0] }}, {{ reaction.names[1] }},
+              {{ reaction.names[2] }}
+            </div>
+            <p>
+              und
+
+              {{ reaction.count === 4 ? "ein weiterer" : "{{ reaction.names.length - 3}}
+              weitere" }}
+            </p>
+
+            }
+
+            <p>
+              {{ reaction.count === 1 ? "" : "haben reagiert" }}
+            </p>
+          </div>
+
+          <span>{{ reaction.reaction }} {{ reaction.count }}</span>
+        </div>
+
         } @if (groupedReactions.length > shownReactionNumber) {
         <div (click)="setShownReactionNumber()">
           +{{ groupedReactions.length - shownReactionNumber }} weitere
@@ -37,7 +79,10 @@
     </div>
   </div>
 
-  <div class="message-actions" [class.user-message-actions]="message.mSenderId === activeUserId">
+  <div
+    class="message-actions"
+    [class.user-message-actions]="message.mSenderId === activeUserId"
+  >
     <span>💚</span>
     <span>☀️</span>
     <div class="material-symbols action-btn">sentiment_satisfied</div>

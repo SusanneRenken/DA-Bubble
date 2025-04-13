@@ -12,7 +12,6 @@
         <span [ngClass]="chatPartner?.uStatus ? 'online' : 'offline'"></span>
       </div>
 
-      <!-- Funktion kommt von Alexander -->
       <h1 (click)="toggleProfile()">
         {{ chatPartner?.uName }}
       </h1>
@@ -105,7 +104,7 @@
 
     <div class="suggestions">
       @for(user of foundUsers; track user) {
-      <div>
+      <div (click)="insertUserSuggestion(user)">
         <div class="user-img-status">
           <img src="/assets/img/{{ user?.uUserImage }}" alt="" />
           <span [ngClass]="user?.uStatus ? 'online' : 'offline'"></span>
@@ -113,7 +112,9 @@
         <span>{{ user?.uName }}</span>
       </div>
       } @for(channel of foundChannels; track channel) {
-      <div># {{channel?.cName}}</div>
+      <div (click)="insertChannelSuggestion(channel)">
+        #{{ channel?.cName }}
+      </div>
       }
     </div>
 
@@ -134,7 +135,7 @@
           <div class="material-symbols textfield-icon">sentiment_satisfied</div>
         </button>
 
-        <button class="icon-button blue-hover">
+        <button class="icon-button blue-hover" (click)="openUserSuggestions()">
           <div class="material-symbols textfield-icon">alternate_email</div>
         </button>
       </div>

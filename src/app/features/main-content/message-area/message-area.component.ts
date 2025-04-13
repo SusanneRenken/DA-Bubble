@@ -68,6 +68,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   foundUsers: UserInterface[] = [];
   foundChannels: Channel[] = [];
   displaySuggestions: boolean = false;
+  currentMentionPos: number = -1;
 
   ngAfterViewInit(): void {
     setTimeout(() => {
@@ -231,11 +232,25 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   getDateString(mTime: any): string {
     const date = this.extractDateOnly(mTime);
 
-    return date.toLocaleDateString('de-DE', {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'long',
-    });
+    const now = new Date();
+    const todayMidnight = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate()
+    ).getTime();
+    const checkDate = date.getTime();
+
+    if (checkDate === todayMidnight) {
+      return 'Heute';
+    } else if (checkDate === todayMidnight - 86400000) {
+      return 'Gestern';
+    } else {
+      return date.toLocaleDateString('de-DE', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+      });
+    }
   }
 
   getPlaceholder(): string {
@@ -295,6 +310,8 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
     const atPos = message.lastIndexOf('@');
     const hashPos = message.lastIndexOf('#');
     const mentionPos = Math.max(atPos, hashPos);
+    this.currentMentionPos =
+      mentionPos !== -1 && mentionPos < caretPos ? mentionPos : -1;
 
     if (mentionPos !== -1 && mentionPos < caretPos) {
       const mentionText = message.slice(mentionPos + 1, caretPos);
@@ -318,6 +335,26 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
     }
   }
 
+  openUserSuggestions(): void {
+    const txtArea = this.messageInputRef?.nativeElement;
+    if (!txtArea) return;
+
+    const caretPos = txtArea.selectionStart || 0;
+    const prefix = this.newMessageText.slice(0, caretPos);
+    const suffix = this.newMessageText.slice(caretPos);
+    const newText = prefix + '@' + suffix;
+    this.newMessageText = newText;
+    txtArea.value = newText;
+
+    const newCaretPos = caretPos + 1;
+    txtArea.setSelectionRange(newCaretPos, newCaretPos);
+
+    this.currentMentionPos = prefix.length;
+    this.searchUsers('');
+    this.displaySuggestions = true;
+    txtArea.focus();
+  }
+
   searchUsers(input: string): void {
     this.userService
       .getAllUsers()
@@ -333,7 +370,6 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
         this.foundUsers = [];
       });
   }
-  
 
   searchChannels(input: string): void {
     this.channelService
@@ -349,5 +385,41 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
         this.displaySuggestions = false;
         this.foundChannels = [];
       });
+  }
+
+  insertUserSuggestion(user: UserInterface): void {
+    if (user && user.uName) {
+      this.insertSuggestion(user.uName);
+    }
+  }
+
+  insertChannelSuggestion(channel: any): void {
+    if (channel && channel.cName) {
+      this.insertSuggestion(channel.cName);
+    }
+  }
+
+  private insertSuggestion(suggestion: string): void {
+    const txtArea = this.messageInputRef?.nativeElement;
+    if (!txtArea || this.currentMentionPos === -1) return;
+
+    const fullText = this.newMessageText;
+    const caretPos = txtArea.selectionStart;
+    const prefix = fullText.slice(0, this.currentMentionPos + 1);
+    const suffix = fullText.slice(caretPos);
+    const newText = prefix + suggestion + ' ' + suffix;
+
+    this.newMessageText = newText;
+    txtArea.value = newText;
+
+    const newCaretPos = prefix.length + suggestion.length + 1;
+    txtArea.setSelectionRange(newCaretPos, newCaretPos);
+
+    this.displaySuggestions = false;
+    this.foundUsers = [];
+    this.foundChannels = [];
+    this.currentMentionPos = -1;
+
+    txtArea.focus();
   }
 }

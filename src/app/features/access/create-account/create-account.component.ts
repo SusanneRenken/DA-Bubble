@@ -14,7 +14,7 @@ import { CustomInputComponent } from '../../general-components/custom-input/cust
   selector: 'app-create-account',
   imports: [ButtonComponent, ReactiveFormsModule, CustomInputComponent],
   templateUrl: './create-account.component.html',
-  styleUrl: './create-account.component.scss',
+  styleUrls: ['./create-account.component.scss', './create-account-checkbox.component.scss'],
 })
 export class CreateAccountComponent implements OnInit {
   registerForm!: FormGroup;

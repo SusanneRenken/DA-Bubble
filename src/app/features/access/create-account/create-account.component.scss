@@ -21,18 +21,6 @@ form {
   }
 }
 
-.checkbox-container {
-  width: 100%;
-  padding-left: 10px;
-  display: flex;
-  gap: 5px;
-
-  > span {
-    cursor: pointer;
-    color: vari.$light-blue;
-  }
-}
-
 .btn-container {
   width: 100%;
   @include mixin.dFlex($justify: flex-end);

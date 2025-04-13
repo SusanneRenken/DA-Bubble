@@ -27,7 +27,7 @@
       </a>
 
       <div class="channel-members">
-        <div>
+        <div (click)="toggleChannelMembers()">
           @for (member of channelMembers.slice(0,3); track member) {
           <img src="/assets/img/{{ member.uUserImage }}" alt="" />
           } @if (channelMembers.length > 3) {
@@ -35,9 +35,8 @@
           }
           <span>{{ channelMembers.length }}</span>
         </div>
-        <button class="icon-button">
-          <img src="/assets/icons/add-members-button.svg" alt="" />
-        </button>
+
+        <span class="material-symbols add-person-icon">person_add</span>
       </div>
     </div>
     } @else if(chatType === 'thread'){
@@ -134,7 +133,8 @@
     [channelData]="channelData"
     (close)="toggleEdit()"
   ></app-channel-leave>
-  } @if (isProfilOpen) {
+  } 
+  @if (isProfilOpen) {
   <app-profil
     [activeUserId]="activeUserId"
     [userImage]="chatPartner?.uUserImage"
@@ -146,6 +146,13 @@
     [showButton]="true"
     (close)="toggleProfile()"
   ></app-profil>
+  } 
+  @if (isChannelMemberOpen) {
+  <app-channel-members
+    [channelMembers]="channelMembers"
+    [activeUserId]="activeUserId"
+    (close)="toggleChannelMembers()"
+  ></app-channel-members>
   }
 </section>
 }

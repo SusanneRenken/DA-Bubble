@@ -20,10 +20,18 @@ import { ChannelService } from '../../../shared/services/channel.service';
 import { FormsModule } from '@angular/forms';
 import { ChannelLeaveComponent } from '../../general-components/channel-leave/channel-leave.component';
 import { ProfilComponent } from '../../general-components/profil/profil.component';
+import { ChannelMembersComponent } from './channel-members/channel-members.component';
 
 @Component({
   selector: 'app-message-area',
-  imports: [CommonModule, MessageComponent, FormsModule, ChannelLeaveComponent, ProfilComponent],
+  imports: [
+    CommonModule,
+    MessageComponent,
+    FormsModule,
+    ChannelLeaveComponent,
+    ProfilComponent,
+    ChannelMembersComponent,
+  ],
   templateUrl: './message-area.component.html',
   styleUrls: ['./message-area.component.scss'],
 })
@@ -38,9 +46,10 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   @Input() chatId: string | null = null;
   @Input() activeUserId: string | null = null;
 
-
-  @ViewChild('scrollContainer') private scrollContainer!: ElementRef<HTMLDivElement>;
-  @ViewChild('messageInput') private messageInputRef!: ElementRef<HTMLTextAreaElement>;
+  @ViewChild('scrollContainer')
+  private scrollContainer!: ElementRef<HTMLDivElement>;
+  @ViewChild('messageInput')
+  private messageInputRef!: ElementRef<HTMLTextAreaElement>;
 
   messages: Message[] = [];
 
@@ -50,17 +59,19 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   channelMembers: UserInterface[] = [];
 
   newMessageText: string = '';
+
   isLoading: boolean = true;
   isEditChannelOpen: boolean = false;
   isProfilOpen: boolean = false;
+  isChannelMemberOpen: boolean = false;
 
   ngAfterViewInit(): void {
     setTimeout(() => {
       this.isLoading = false;
       setTimeout(() => {
         this.scrollToBottom();
-      this.focusMessageInput();        
-        }, 500);
+        this.focusMessageInput();
+      }, 500);
     }, 500);
   }
 
@@ -73,9 +84,9 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
         this.isLoading = false;
         setTimeout(() => {
           this.scrollToBottom();
-          this.focusMessageInput();      
-          }, 500);
-      }, 500);    
+          this.focusMessageInput();
+        }, 500);
+      }, 500);
     }
   }
 
@@ -169,6 +180,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
       .getFilteredUsers(userIds)
       .then((users) => {
         this.channelMembers = users;
+        console.log('Channel-Mitglieder:', this.channelMembers);
       })
       .catch((error) => {
         console.error('Fehler beim Laden der Channel-Mitglieder:', error);
@@ -292,4 +304,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
     this.isProfilOpen = !this.isProfilOpen;
   }
 
+  toggleChannelMembers(): void {
+    this.isChannelMemberOpen = !this.isChannelMemberOpen;
+  }
 }

@@ -24,12 +24,14 @@ export class MessageComponent implements OnInit {
   @Output() profileClick = new EventEmitter<string>();
 
   senderData: User | null = null;
+  activeUserData: User | null = null;
   groupedReactions: GroupedReaction[] = [];
   //hier muss später 7 rein
   shownReactionNumber: number = 2;
 
   ngOnInit(): void {
-    this.getUserData();
+    this.loadSenderData();
+    this.loadActiveUserData();
 
     if (this.message.mReactions && this.activeUserId) {
       this.groupedReactions = this.groupReactionsWithNames(
@@ -39,15 +41,25 @@ export class MessageComponent implements OnInit {
     }
   }
 
-  getUserData() {
+  loadSenderData() {
     this.userService
       .getUser(this.message.mSenderId)
       .then((userData) => {
-        this.senderData = userData;
+        this.senderData = userData;        
       })
       .catch((error) => {
         console.error('Fehler beim Laden des Users:', error);
       });
+  }
+
+  loadActiveUserData(): void {
+    if (!this.activeUserId) return;
+
+    this.userService.getUser(this.activeUserId)
+      .then((userData) => {
+        this.activeUserData = userData;
+      })
+      .catch((error) => console.error('Fehler beim Laden des aktiven Users:', error));
   }
 
   setShownReactionNumber() {
@@ -105,6 +117,15 @@ export class MessageComponent implements OnInit {
       };
     });
   }
+
+  addReaction(reaction: string): void {
+    this.userService.editLastReactions(this.activeUserId, reaction)
+      .then(() => {
+        this.loadActiveUserData();
+      })
+      .catch((error) => console.error('Fehler beim Editieren der Reaction:', error));
+  }
+
 
   openProfil(): void {
     if (this.message.mSenderId) {

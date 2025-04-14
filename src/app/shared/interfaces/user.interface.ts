@@ -12,5 +12,7 @@ export interface User {
     uEmail: string;
     uStatus: boolean; 
     uUserImage: string;
-    uLastReactions?: string[];
+    uLastReactions: string[];
 }
+
+

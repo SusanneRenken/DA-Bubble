@@ -57,7 +57,7 @@
             </p>
           </div>
 
-          <span>{{ reaction.reaction }} {{ reaction.count }}</span>
+          <span  (click)="addReaction(reaction.reaction)">{{ reaction.reaction }} {{ reaction.count }}</span>
         </div>
 
         } @if (groupedReactions.length > shownReactionNumber) {
@@ -83,8 +83,10 @@
     class="message-actions"
     [class.user-message-actions]="message.mSenderId === activeUserId"
   >
-    <span>💚</span>
-    <span>☀️</span>
+    @for (reaction of activeUserData?.uLastReactions; track reaction) {
+    <span (click)="addReaction(reaction)">{{ reaction }}</span>
+    }
+
     <div class="material-symbols action-btn">sentiment_satisfied</div>
     <div class="material-symbols action-btn">comment</div>
     <div

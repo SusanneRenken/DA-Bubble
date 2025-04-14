@@ -130,6 +130,9 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
       .getMessages(this.chatType, this.chatId, this.activeUserId)
       .subscribe((messages) => {
         this.messages = messages;
+        setTimeout(() => {
+          this.scrollToBottom();
+        }, 100);
       });
   }
 
@@ -186,7 +189,11 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
     this.userService
       .getFilteredUsers(userIds)
       .then((users) => {
-        this.channelMembers = users;
+        this.channelMembers = users.sort((a, b) => {
+          if (a.uId === this.activeUserId) return -1;
+          if (b.uId === this.activeUserId) return 1;
+          return 0;
+        });
       })
       .catch((error) => {
         console.error('Fehler beim Laden der Channel-Mitglieder:', error);

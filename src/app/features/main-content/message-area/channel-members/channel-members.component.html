@@ -7,13 +7,18 @@
 
     <div class="memberlist">
       <div class="members">
-        @for (member of channelMembers; track member) {
+        @for (member of channelMembers; track member; let i = $index) {
         <div (click)="toggleMemberProfil(member)">
           <div class="user-img-status">
             <img src="/assets/img/{{ member?.uUserImage }}" alt="" />
             <span [ngClass]="member?.uStatus ? 'online' : 'offline'"></span>
           </div>
-          <span>{{ member?.uName }}</span>
+          <span
+            >{{ member?.uName }}
+            @if (i === 0) {
+            <span>(Du)</span>
+            }
+          </span>
         </div>
 
         }
@@ -28,15 +33,15 @@
 </main>
 
 @if (isChannelMemberProfilOpen) {
-    <app-profil
-      [activeUserId]="activeUserId"
-      [userImage]="activChannelMemberProfil?.uUserImage"
-      [userName]="activChannelMemberProfil?.uName"
-      [userEmail]="activChannelMemberProfil?.uEmail"
-      [userStatus]="activChannelMemberProfil?.uStatus"
-      #profilRef
-      size="big"
-      [showButton]="true"
-      (close)="toggleMemberProfil()"
-    ></app-profil>
-    } 
+<app-profil
+  [activeUserId]="activeUserId"
+  [userImage]="activChannelMemberProfil?.uUserImage"
+  [userName]="activChannelMemberProfil?.uName"
+  [userEmail]="activChannelMemberProfil?.uEmail"
+  [userStatus]="activChannelMemberProfil?.uStatus"
+  #profilRef
+  size="big"
+  [showButton]="activeUserId !== activChannelMemberProfil?.uId"
+  (close)="toggleMemberProfil()"
+></app-profil>
+}

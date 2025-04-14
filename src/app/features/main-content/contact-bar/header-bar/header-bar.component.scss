@@ -33,5 +33,30 @@ section{
 .squareImage:hover .icon{
     color: blue;
 }
+@media(max-width: 1000px){
+    header{
+        display: none;
+    }
+    .squareImageNewPosition{
+        @include flexBox('', center, center, '');
+        position: absolute;
+        height: 60px;
+        width: 60px;
+        border-radius: 50%;
+        bottom: 64px;
+        right: 40px;
+        background-color: #444DF2;
+        border: none;
+        &:hover{
+            opacity: 0.8;
+        }
+    }
+    .icon{
+        color: white;
+    }
+    .squareImage:hover .icon{
+        color: none;
+    }
+}
 
   

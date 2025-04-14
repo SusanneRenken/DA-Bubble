@@ -4,11 +4,12 @@ import { ProfilComponent } from '../../../general-components/profil/profil.compo
 import { ActivatedRoute } from '@angular/router';
 import { Firestore, collection, collectionData } from '@angular/fire/firestore';
 import { map } from 'rxjs/operators';
+import { DeviceVisibleComponent } from '../../../../shared/services/responsive';
 
 @Component({
   selector: 'app-user-name',
   standalone: true,
-  imports: [CommonModule, ProfilComponent],
+  imports: [CommonModule, ProfilComponent, DeviceVisibleComponent],
   templateUrl: './user-name.component.html',
   styleUrl: './user-name.component.scss',
 })
@@ -21,8 +22,9 @@ export class UserNameComponent {
   userName: string = '';
   userEmail: string = '';
   userImage: string = '';
+  @ViewChild('tabletToggleBtn') tabletToggleBtn?: ElementRef;
+  @ViewChild('arrowToggleBtn') arrowToggleBtn?: ElementRef;
   @ViewChild('logOutBox') logOutBox?: ElementRef;
-  @ViewChild('toggleBtn') toggleBtn?: ElementRef;
   @ViewChild('profilWrapper') profilWrapper?: ElementRef;
 
   constructor(private route: ActivatedRoute, private firestore: Firestore) {}
@@ -45,28 +47,33 @@ export class UserNameComponent {
   }
 
 
-  toggleLogOut() {
+  toggleLogOut() {    
     this.isLogOutVisible = !this.isLogOutVisible;
     setTimeout(() => {}, 0);
+    console.log(this.isLogOutVisible);
+    
+  }
+
+  toggleImage(){
+    this.toggleLogOut()
   }
 
 
   @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent) {
-    const clickedInsideLogOut = this.logOutBox?.nativeElement?.contains(
-      event.target
-    );
-    const clickedToggleBtn = this.toggleBtn?.nativeElement?.contains(
-      event.target
-    );
-    const clickedInsideProfil = this.profilWrapper?.nativeElement?.contains(
-      event.target
-    );
-
-    if (!clickedInsideLogOut && !clickedToggleBtn && !clickedInsideProfil) {
-      this.isLogOutVisible = false;
-    }
+onDocumentClick(event: MouseEvent) {
+  const clickedInsideLogOut = this.logOutBox?.nativeElement?.contains(event.target);
+  const clickedToggleTablet = this.tabletToggleBtn?.nativeElement?.contains(event.target);
+  const clickedArrow = this.arrowToggleBtn?.nativeElement?.contains(event.target);
+  const clickedInsideProfil = this.profilWrapper?.nativeElement?.contains(event.target);
+  if (
+    !clickedInsideLogOut &&
+    !clickedToggleTablet &&
+    !clickedArrow &&
+    !clickedInsideProfil
+  ) {
+    this.isLogOutVisible = false;
   }
+}
 
   
   openProfil() {

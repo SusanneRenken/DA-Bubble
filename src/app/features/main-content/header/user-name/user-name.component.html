@@ -1,24 +1,40 @@
 <main>
   <div class="avatar">
-    <span>{{ userName }}</span>
-    <img [src]="'/assets/img/' + userImage" />
+    <span class="avatarNameText">{{ userName }}</span>
+    <div class="userStatus">
+        <app-device-visible mode="tabletBig">
+          <img #tabletToggleBtn (click)="toggleImage()" [src]="'/assets/img/' + userImage" />
+      </app-device-visible>
+      <app-device-visible mode="desktopBig">
+        <img class="normalImage" (click)="toggleImage()" [src]="'/assets/img/' + userImage" />
+        <span class="normalImagePoint" [ngClass]="userStatus === 'true' || userStatus === true ? 'online' : 'offline'"></span>
+      </app-device-visible>
+     
+    </div>
+   
   </div>
-  <button class="openLogOut " (click)="toggleLogOut()"  #toggleBtn>
+  <button class="openLogOut" (click)="toggleLogOut()"  #arrowToggleBtn>
     <div class="arrowDownHeight material-symbols arrowDown">keyboard_arrow_down</div>
   </button>
 </main>
 @if (isLogOutVisible) {
   <section>
-    <div class="logOut" #logOutBox>
-      <button (click)="openProfil()">
-        <div class=" material-symbols">account_circle</div>
-        <span>Profil</span>
-      </button>
-      <button>
-        <div class=" material-symbols">logout</div>
-        <span>Log out</span>
-      </button>
+    <div class="popUpStyle">
+      <app-device-visible mode="tabletBig">
+          <div class="popUpXLine"></div>
+      </app-device-visible>
+      <div class="logOut" #logOutBox>
+        <button (click)="openProfil()">
+          <div class=" material-symbols">account_circle</div>
+          <span>Profil</span>
+        </button>
+        <button>
+          <div class=" material-symbols">logout</div>
+          <span>Log out</span>
+        </button>
+      </div>
     </div>
+   
   </section>
 }
 <div #profilWrapper>

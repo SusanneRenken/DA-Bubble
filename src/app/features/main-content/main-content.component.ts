@@ -4,6 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 import { HeaderComponent } from './header/header.component';
 import { ContactBarComponent } from './contact-bar/contact-bar.component';
 import { MessageAreaComponent } from './message-area/message-area.component';
+import { SearchBarComponent } from "./header/search-bar/search-bar.component";
+import { DeviceVisibleComponent } from '../../shared/services/responsive';
 
 
 @Component({
@@ -14,13 +16,16 @@ import { MessageAreaComponent } from './message-area/message-area.component';
     HeaderComponent,
     ContactBarComponent,
     MessageAreaComponent,
-  ],
+    SearchBarComponent,
+    DeviceVisibleComponent
+],
   templateUrl: './main-content.component.html',
   styleUrls: ['./main-content.component.scss'],
 })
 export class MainContentComponent {
   private route = inject(ActivatedRoute);
-
+  smallSize: boolean = false;
+  messageIn: boolean = false;
   activeUserId: string | null = null;
 
   chatType: 'private' | 'channel' | 'thread' | 'new' = 'channel';
@@ -41,10 +46,21 @@ export class MainContentComponent {
 
     // muss später aktiviert werden:
     // this.chatId = this.activeUserId;
+
+    this.checkScreenSize();
+    window.addEventListener('resize', this.checkScreenSize.bind(this));
+  }
+
+  checkScreenSize() {
+    this.smallSize = window.innerWidth < 1000;
   }
 
   toggleSection() {
     this.sectionVisible = !this.sectionVisible;
+  }
+
+  handleMessageInToggle(state: boolean) {
+    this.messageIn = state;
   }
 
   handleOpenChat(eventData: { chatType: 'private' | 'channel'; chatId: string }) {

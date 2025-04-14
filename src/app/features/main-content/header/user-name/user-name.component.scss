@@ -18,10 +18,25 @@ main {
     width: 70px;
   }
 }
+.userStatus{
+  position: relative;
+  height: 70px;
+  width: 70px;
+  span {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid white;
+  }
+}
 .arrowDownHeight{
   font-size: 30px;
 }
 .openLogOut {
+  @include flexBox("", right, center, "");
   border: none;
   padding-inline: 0;
   padding-block: 0;
@@ -36,8 +51,8 @@ main {
   height: 30px;
   width: 30px;
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 55%;
+  left: 70%;
   transform: translate(-50%, -50%);
   transition: opacity 0.3s ease;
 }
@@ -54,8 +69,7 @@ section {
   z-index: 50;
 }
 .logOut {
-  @include flexBox("", center, center, "");
-  flex-direction: column;
+  @include flexBox(column, center, center, 15);
   height: 180px;
   width: 260px;
   top: 120px;
@@ -64,7 +78,6 @@ section {
   background-color: white;
   border-radius: 30px 0 30px 30px;
   padding: 30px;
-  gap: 15px;
   z-index: 15;
   button {
     all: unset;
@@ -94,4 +107,61 @@ section {
   transform: translateY(-50%);
   transition: opacity 0.3s ease;
 }
-
+@media(max-width: 1200px){
+  .avatarNameText{
+    display: none;
+  }
+  .avatar{
+    width: 70px;
+  }
+  main{
+    width: 120px;
+  }
+}
+@media(max-width: 1000px){
+  .openLogOut{
+    display: none;
+  }
+  .userStatus img{
+    cursor: pointer;
+  }
+  .normalImage{
+    display: none
+  }
+  .normalImagePoint{
+    display: none
+  }
+  .logOut {
+    @include flexBox("", center, start, "");
+    width: 380px;
+    height: 180px;
+    bottom: 0px;
+    top: auto;
+    right: auto;
+    margin-left: 32px;
+    padding: 0;
+  }
+  .popUpXLine{
+    background-color: #d9d9d9;
+    width: 60px;
+    height: 8px;
+    border-radius: 25px;
+    margin: 0 auto;
+    margin-top: 25px;
+  }
+  .popUpStyle{
+    height: 210px;
+    background-color: white;
+    position: absolute;
+    border-radius: 30px 30px 0px 0px;
+    width: 100%;
+    bottom: 0px;
+  }
+}
+@media(max-width: 600px){
+  .logOut {
+    button {
+      width: 180px;
+    }
+  }
+}

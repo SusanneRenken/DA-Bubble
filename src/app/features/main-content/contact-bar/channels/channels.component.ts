@@ -21,7 +21,15 @@ export class ChannelsComponent{
   @Input() activeUserId!: string | null;
   @Output() openChat = new EventEmitter<{ chatType: 'private' | 'channel'; chatId: string }>();
   private firestore = inject(Firestore);
+  @Output() toggleMessage = new EventEmitter<boolean>();
 
+  someAction() {
+    const screenWidth = window.innerWidth;
+    
+    if (screenWidth < 1000) {
+      this.toggleMessage.emit(true);
+    }
+  }
   
   ngOnInit() {
     this.loadChannels();

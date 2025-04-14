@@ -16,7 +16,11 @@ export class ContactBarComponent {
   @Input() activeUserId!: string | null;
   @Output() toggle = new EventEmitter<void>();
   @Output() openChat = new EventEmitter<{ chatType: 'private' | 'channel'; chatId: string }>();
+  @Output() messageInToggle = new EventEmitter<boolean>();
 
+  toggleMessageIn() {
+    this.messageInToggle.emit(true); // oder false je nach Logik
+  }
   
   toggleSection() {
     this.toggle.emit();

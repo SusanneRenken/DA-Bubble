@@ -22,7 +22,7 @@
         <section>
             <div class="newChannels">
                 @for (channel of channels$ | async; track channel.id) {
-                    <button (click)="selectChannel(channel.id)" class="everyChannel">
+                    <button (click)="selectChannel(channel.id); someAction()" class="everyChannel">
                       <div class="tagImage">
                         <div class="material-symbols hashtagIcon">tag</div>
                       </div>

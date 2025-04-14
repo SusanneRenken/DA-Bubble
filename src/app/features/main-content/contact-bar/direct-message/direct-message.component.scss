@@ -59,3 +59,8 @@ section{
     width: 50px;
     border-radius: 50%;
 }
+@media(max-width: 1000px){
+    main{
+        margin: 0 0;
+    }
+}

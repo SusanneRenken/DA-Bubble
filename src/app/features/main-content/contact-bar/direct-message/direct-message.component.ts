@@ -21,6 +21,15 @@ export class DirectMessageComponent implements OnInit {
   inactiveUsers$!: Observable<any[]>;
   @Input() activeUserId!: string | null;
   @Output() openChat = new EventEmitter<{ chatType: 'private' | 'channel'; chatId: string }>();
+  @Output() toggleMessage = new EventEmitter<boolean>();
+
+  someAction() {
+    const screenWidth = window.innerWidth;
+    
+    if (screenWidth < 1000) {
+      this.toggleMessage.emit(true);
+    }
+  }
   
   constructor(private firestore: Firestore, private route: ActivatedRoute) {}
 

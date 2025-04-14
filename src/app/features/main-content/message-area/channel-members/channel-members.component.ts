@@ -55,8 +55,7 @@ export class ChannelMembersComponent implements OnChanges {
       this.activChannelMemberProfil = null;
     }
   }
-
-  
+ 
 
   addChannelMember(channelId: any) {
     console.log( 'Adding channel member:', channelId);

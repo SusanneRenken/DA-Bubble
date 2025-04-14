@@ -82,6 +82,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    // Auch scrollen, wenn eine neue Message gekommen ist
     if (changes['chatType'] || changes['chatId'] || changes['activeUserId']) {
       this.isLoading = true;
       this.loadMessages();

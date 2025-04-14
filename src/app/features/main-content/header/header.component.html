@@ -1,5 +1,18 @@
 <header class="nunitoFont">
-    <img src="/assets/img/logo.png">
-    <app-search-bar></app-search-bar>
-    <app-user-name></app-user-name>
+    @if (messageIn) {
+        <div class="messageInWorkspace">
+            <button (click)="toggleMessageInView()">
+                <div class="material-symbols arrowLeft">keyboard_arrow_left</div>
+                <img src="/assets/img/workspaceLogo.png">
+            </button>
+            <h1>Devespace</h1>
+        </div>
+    }
+    @else {
+        <img src="/assets/img/logo.png">
+    }
+    <app-device-visible mode="desktopBig">
+        <app-search-bar></app-search-bar>
+    </app-device-visible>
+    <app-user-name [activeUserId]="activeUserId"></app-user-name>
 </header>

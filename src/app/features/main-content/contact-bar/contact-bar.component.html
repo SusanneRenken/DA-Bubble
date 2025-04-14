@@ -1,7 +1,7 @@
 <main class="nunitoFont">
     <app-header-bar></app-header-bar>
-    <app-channels></app-channels>
-    <app-direct-message></app-direct-message>
+    <app-channels (toggleMessage)="messageInToggle.emit($event)" [activeUserId]="activeUserId"  (openChat)="onChatOpen($event)"></app-channels>
+    <app-direct-message (toggleMessage)="messageInToggle.emit($event)" [activeUserId]="activeUserId"  (openChat)="onChatOpen($event)"></app-direct-message>
 </main>
 
   

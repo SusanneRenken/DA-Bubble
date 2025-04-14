@@ -1,0 +1,70 @@
+<main>
+    <section>
+        <div>
+            <h1>Gefundene Nutzer</h1>
+            @if (!showContact) {
+                @for (user of users; track $index) {
+                    <div class="userPhoto" >
+                        <img [src]="'/assets/img/' + user.uUserImage" alt="{{ user.uName }}">
+                        <span>{{ user.uName }}</span>
+                    </div>
+                }
+            }
+            @else {
+                <span>Keine Nutzer gefunden!</span>
+            }
+        </div>
+        <div>
+            <h1>Gefundene Channels und Nutzer in Channels</h1>
+            @if (!showChannels) {
+                @for (channel of channels; track $index) {
+                    <div class="everyInfo">
+                        <h3># {{ channel.cName }}</h3>
+                    </div>
+                }
+            }
+            @else {
+                <span>keine Channels in Nutzer gefunden !</span>
+            }
+        </div>
+        <div>
+            <h1>Gefundene Nachrichten in Channels</h1>
+            @if (!showMatchedMessages) {
+                @for (msg of matchedMessages; track $index) {
+                    <div class="everyInfo">
+                        <h3><strong>#{{ msg.channelName }}</strong>: {{ msg.mText }}</h3>
+                    </div>
+                }
+            }
+            @else{
+                <span>keine Nachrichten in Channels gefunden !</span>
+            }
+        </div>
+        <div>
+            <h1>Gefundene private Nachrichten</h1>
+            @if (directMessages.length > 0) {
+                @for (msg of directMessages; track $index) {
+                    <div class="everyInfo">
+                        <p><strong>{{ msg.userName }}</strong>: {{ msg.mText }}</p>
+                    </div>
+                }
+            }
+            @else {
+                <span>keine private Nachrichten gefunden !</span>
+            }
+        </div>
+        <div>
+            <h1>Gefundene Nachrichten in Threads</h1>
+            @if (!showThreadMessages) {
+                @for (msg of threadMessages; track $index) {
+                    <div class="everyInfo">
+                        <p><strong>Thread {{ msg.threadId }}</strong>: {{ msg.mText }}</p>
+                    </div>
+                }
+            }
+            @else {
+                <span>keine Nachrichten in Threads gefunden!</span>
+            }
+        </div>
+    </section>
+</main>

@@ -46,6 +46,9 @@ header{
 .closeButton:hover img{
     background-color: #ECEEFE;
 }
+.closeButton:hover div{
+    color: #535AF1;
+}
 .addChannelText{
     @include fontStyle(18px, black, 400);
     height: 50px;
@@ -117,6 +120,6 @@ textarea::placeholder{
     border: none;
     cursor: pointer;
     &:hover{
-        opacity: 0.9;
+        opacity: 0.8;
     }
 }

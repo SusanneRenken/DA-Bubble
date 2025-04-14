@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, EventEmitter, HostListener, Output, inject, NgZone, OnInit } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Output, inject, NgZone, OnInit, Input } from '@angular/core';
 import { Firestore, collection, doc, setDoc, serverTimestamp } from '@angular/fire/firestore';
-
 
 @Component({
   selector: 'app-add-channel',
@@ -13,10 +12,10 @@ import { Firestore, collection, doc, setDoc, serverTimestamp } from '@angular/fi
 export class AddChannelComponent implements OnInit {
   private firestore = inject(Firestore);
   @Output() close = new EventEmitter<void>();
+  @Input() activeUserId!: string | null;
   constructor(private elRef: ElementRef, private ngZone: NgZone) {}
 
   ngOnInit(): void {
-    // main.ts oder eine zentrale Initialisierungsdatei
     const originalConsoleWarn = console.warn;
     console.warn = (message?: any, ...optionalParams: any[]) => {
       if (
@@ -25,7 +24,6 @@ export class AddChannelComponent implements OnInit {
           'Calling Firebase APIs outside of an Injection context'
         )
       ) {
-        // Warnung unterdrücken
         return;
       }
       originalConsoleWarn(message, ...optionalParams);
@@ -45,25 +43,34 @@ export class AddChannelComponent implements OnInit {
     this.close.emit();
   }
 
+
+  private buildChannelData( name: string, description: string, userId: string, id: string ) {
+    return {
+      cName: name,
+      cDescription: description,
+      cId: id,
+      createdAt: serverTimestamp(),
+      cCreatedByUser: userId,
+      cUserIds: {
+        0: userId,
+      },
+    };
+  }
+
+
   async createChannel(name: string, description: string): Promise<void> {
-    if (!name) return; // Pflichtfeld prüfen
+    if (!name || !this.activeUserId) return;
     const channelsCollectionRef = collection(this.firestore, 'channels');
     const newDocRef = doc(channelsCollectionRef);
     const newId = newDocRef.id;
-  
-    const channelData = {
-      cName: name,
-      cDescription: description,
-      cId: newId,
-      createdAt: serverTimestamp()  // Zeitstempel hinzufügen
-    };
-  
-    // Verwende then/catch, um sicherzustellen, dass alle Aufrufe in der Angular-Zone bleiben.
+    const channelData = this.buildChannelData(
+      name,
+      description,
+      this.activeUserId,
+      newId
+    );
     this.ngZone.run(() => {
-      setDoc(newDocRef, channelData)
-        .then(() => this.close.emit())
-        .catch(error => console.error('Fehler beim Erstellen des Channels:', error));
+      setDoc(newDocRef, channelData).then(() => this.close.emit());
     });
   }
-  
 }

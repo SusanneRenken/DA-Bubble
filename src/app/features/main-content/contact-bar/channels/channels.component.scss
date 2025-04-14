@@ -17,8 +17,7 @@ header{
     cursor: pointer;
 }
 .showChannelsIcon{
-    height: 24px;
-    width: 24px;
+    font-size: 30px;
 }
 .channelHeadShow{
     all: unset;
@@ -29,16 +28,14 @@ header{
 }
 .workSpaceText{
     @include flexBox('', left, center, 10);
-    @include fontStyle(20px, black, 700);
 }
 .workSpaceIcon, .addIcon, .hashtagIcon{
-    height: 24px;
-    width: 24px;
+    font-size: 24px;
 }
 
 .channelHeadShow:hover .workSpaceIcon,
 .channelHeadShow:hover .showChannelsIcon,
-.channelHeadShow:hover .channelText,
+.channelHeadShow:hover h2,
 .addButton:hover .addIcon,
 .addChannel:hover span,
 .everyChannel:hover span,
@@ -63,7 +60,7 @@ section{
     width: 310px;
 }
 .addChannel{
-    @include flexBox('', center, center, 10);
+    @include flexBox('', center, center, 9);
     width: 220px;
     height: 32px;
     margin-left: 32px;
@@ -82,8 +79,10 @@ section{
     padding: 0 20px;
     border-radius: 20px;
     cursor: pointer;
+    background-color: white;
+    border: none;
     span{
-        @include fontStyle(18px, black, 700);
+        @include fontStyle(18px, black, 400);
     }
     &:hover{
         background-color: #ECEEFE;
@@ -105,4 +104,10 @@ section{
 .addChannel:hover .addIconChannel{
     color: #535AF1;
     border-color: #535AF1;
+}
+@media(max-width: 1000px){
+    main{
+        margin: 0 0;
+        width: 100%;
+    }
 }

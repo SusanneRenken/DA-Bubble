@@ -1,0 +1,64 @@
+<main (click)="onMainClick($event)">
+    <section #profilWrapper [ngClass]="size">
+        <header>
+            @if (!showEditProfil) {
+                <h1>Profil</h1>
+            }
+            @else {
+                <h1 >Dein Profil bearbeiten</h1>
+            }
+            <button (click)="closeProfil()" class="closeProfil">
+                <div class="material-symbols closeIcon">close</div>
+            </button>
+        </header>
+        <img [src]="'/assets/img/' + userImage">
+        @if (!showEditProfil) {
+            <div class="nameActive">
+                <div class="nameEdit">
+                    <span>{{ userName }}</span>
+                    <a *ngIf="!showButton" (click)="onEditClick()">Bearbeiten</a>
+                </div>
+                <div class="status" *ngIf="isActive">
+                    <img src="/assets/img/green_point.png">
+                    <span class="statusActive">Aktive</span>
+                </div>
+                <div class="status" *ngIf="!isActive">
+                    <img src="/assets/img/grey_point.png">
+                    <span class="statusAbsent">Abwesend</span>
+                </div>
+            </div>
+        }
+        @else {
+            <div class="editInput" *ngIf="showEditProfil">
+                <div class="editAccountText">
+                    <img src="/assets/icons/account_circle.svg">
+                    <h2>Vollständiger Name</h2>
+                </div>
+                <input [(ngModel)]="editedUserName" [placeholder]="userName" type="text">
+            </div>
+        }
+        @if (!showEditProfil) {
+            <div class="mailAdress">
+                <div>
+                    <img src="/assets/icons/mail.svg">
+                    <h2>E-Mail-Adresse</h2>
+                </div>
+                <span>{{ userEmail }}</span>
+            </div>
+        }
+        @if (showButton) {
+            <div class="messageArea">
+                <button class="messageButton">
+                    <img src="/assets/icons/mode_comment.svg">
+                    <span>Nachricht</span>
+                </button>
+            </div>
+        }
+        @if (showEditProfil) {
+            <div class="editSaveButtons">
+                <button (click)="closeProfil()" class="editButton stopButton">Abbrechen</button>
+                <button (click)="changeUserName(); closeProfil()" class="editButton saveButton">Speichern</button>
+            </div>
+        }
+    </section>
+</main>

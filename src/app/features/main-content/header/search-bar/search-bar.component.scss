@@ -1,10 +1,11 @@
 main{
-    width: 900px;
     position: relative;
     height: 100%;
     border-radius: 42px;
     border: none;
     z-index: 1;
+    max-width: 990px;
+    height: 70px;
 }
 :host {
   height: 100%;
@@ -29,7 +30,7 @@ input{
     left: 0;
     top: 0px;
     font-size: 24px;
-    width: 900px;
+    width: 100%;
     padding: 17.5px 45px;
     border-radius: 42px;
     background-color: white;
@@ -37,5 +38,27 @@ input{
     z-index: 2;
 }
 input:focus{
-    outline: 2px solid blue;
+    outline: 2px solid #444df2;
+}
+
+@media(max-width: 1450px){
+    .searchButton{
+        right: 24px;
+    }
+    input{
+        padding: 17.5px 24px;
+    }
+}
+@media(max-width: 1000px){
+    input{
+        height: 56px;
+        border: 1px solid #adb0d9;
+    }
+    .searchButton{
+        top: 12px;
+        height: 35px;
+    }
+    main{
+        height: 60px;
+    }
 }

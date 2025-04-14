@@ -1,7 +1,6 @@
 @import '../../../../../styles.scss';
 header{
     width: 310px;
-    margin: 0 auto;
     padding-top: 30px
 }
 section{
@@ -10,7 +9,6 @@ section{
 }
 .logoText{
     @include flexBox('', left, center, 15);
-    @include fontStyle(24px, black, 700);
     width: 250px;
     img{
         height: 60px;
@@ -25,7 +23,6 @@ section{
     border: none;
     cursor: pointer;    
     position: relative;
-    
 }
 .icon{
     width: 24px;
@@ -35,6 +32,31 @@ section{
 }
 .squareImage:hover .icon{
     color: blue;
+}
+@media(max-width: 1000px){
+    header{
+        display: none;
+    }
+    .squareImageNewPosition{
+        @include flexBox('', center, center, '');
+        position: absolute;
+        height: 60px;
+        width: 60px;
+        border-radius: 50%;
+        bottom: 64px;
+        right: 40px;
+        background-color: #444DF2;
+        border: none;
+        &:hover{
+            opacity: 0.8;
+        }
+    }
+    .icon{
+        color: white;
+    }
+    .squareImage:hover .icon{
+        color: none;
+    }
 }
 
   

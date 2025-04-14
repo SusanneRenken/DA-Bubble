@@ -178,6 +178,7 @@
   <app-channel-members
     [channelMembers]="channelMembers"
     [activeUserId]="activeUserId"
+    [channelId]="channelData?.cId"
     (close)="toggleChannelMembers()"
   ></app-channel-members>
   }

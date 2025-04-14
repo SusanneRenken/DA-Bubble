@@ -12,7 +12,8 @@ import { ProfilComponent } from '../../../general-components/profil/profil.compo
 })
 export class ChannelMembersComponent implements OnChanges {
   @Input() channelMembers:  User[] = [];
-  @Input() activeUserId: string | null = null;
+  @Input() activeUserId: string | null = null;  
+  @Input() channelId: any;
   
   @Output() close = new EventEmitter<void>();
   @ViewChild('channelWrapper') channelWrapper?: ElementRef;
@@ -55,5 +56,11 @@ export class ChannelMembersComponent implements OnChanges {
     }
   }
 
+  
+
+  addChannelMember(channelId: any) {
+    console.log( 'Adding channel member:', channelId);
+    
+  }
   
 }

@@ -10,6 +10,9 @@ export interface User {
     uId?: string; 
     uName: string; 
     uEmail: string;
-    uStatus: string; 
+    uStatus: boolean; 
     uUserImage: string;
+    uLastReactions: string[];
 }
+
+

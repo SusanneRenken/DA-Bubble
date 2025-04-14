@@ -13,7 +13,8 @@ import {
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Message } from '../interfaces/message.interface';
-import { addDoc, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
+import { addDoc, doc, getDoc, serverTimestamp, updateDoc } from 'firebase/firestore';
+import { Reaction } from '../interfaces/reaction.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -186,5 +187,28 @@ export class MessageService {
     });
   }
 
+  async toggleReaction(messageId: string, reaction: Reaction): Promise<void> {
+    const messageRef = doc(this.firestore, 'messages', messageId);
+  
+    const docSnap = await getDoc(messageRef);
+    if (!docSnap.exists()) {
+      throw new Error('Message not found');
+    }
+  
+    const messageData = docSnap.data() as Message;
+    const newReactions = [...(messageData.mReactions || [])];
+  
+    const index = newReactions.findIndex(
+      (r) => r.userId === reaction.userId && r.reaction === reaction.reaction
+    );
+  
+    if (index > -1) {
+      newReactions.splice(index, 1);
+    } else {
+      newReactions.push(reaction);
+    }
+  
+    await updateDoc(messageRef, { mReactions: newReactions });
+  }
 
 }

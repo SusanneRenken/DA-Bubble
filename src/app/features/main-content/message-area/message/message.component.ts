@@ -1,12 +1,22 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { Message } from '../../../../shared/interfaces/message.interface';
 import { Timestamp } from 'firebase/firestore';
 import { UserService } from '../../../../shared/services/user.service';
-import { UserInterface } from '../../../../shared/interfaces/user.interface';
+import { User } from '../../../../shared/interfaces/user.interface';
 import {
   GroupedReaction,
   Reaction,
 } from '../../../../shared/interfaces/reaction.interface';
+import { Subscription } from 'rxjs';
+import { MessageService } from '../../../../shared/services/message.service';
 
 @Component({
   selector: 'app-message',
@@ -16,28 +26,37 @@ import {
 })
 export class MessageComponent implements OnInit {
   private userService = inject(UserService);
+  private messageService = inject(MessageService);
+  private userSubscription: Subscription | null = null;
 
   @Input() chatType: 'private' | 'channel' | 'thread' | 'new' | null = null;
   @Input() message!: Message;
   @Input() activeUserId: string | null = null;
 
-  senderData: UserInterface | null = null;
+  @Output() profileClick = new EventEmitter<string>();
+
+  activeUserData: User | null = null;
+  senderData: User | null = null;
   groupedReactions: GroupedReaction[] = [];
-  //hier muss später 7 rein
-  shownReactionNumber: number = 2;
+  shownReactionNumber: number = 7;
 
   ngOnInit(): void {
-    this.getUserData();
+    this.loadSenderData();
+    this.loadActiveUserData();
+    this.regroupReactions();
+  }
 
-    if (this.message.mReactions && this.activeUserId) {
-      this.groupedReactions = this.groupReactionsWithNames(
-        this.message.mReactions,
-        this.activeUserId
-      );
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['message'] && changes['message'].currentValue) {
+      this.regroupReactions();
     }
   }
 
-  getUserData() {
+  ngOnDestroy() {
+    this.userSubscription?.unsubscribe();
+  }
+
+  loadSenderData() {
     this.userService
       .getUser(this.message.mSenderId)
       .then((userData) => {
@@ -48,12 +67,36 @@ export class MessageComponent implements OnInit {
       });
   }
 
-   setShownReactionNumber() {
+  loadActiveUserData(): void {
+    if (this.activeUserId) {
+      this.userSubscription = this.userService
+        .getUserRealtime(this.activeUserId)
+        .subscribe({
+          next: (user) => {
+            this.activeUserData = user;
+          },
+          error: (err) =>
+            console.error('Fehler beim User-Live-Datenabruf', err),
+        });
+    }
+  }
+
+  regroupReactions(): void {
+    if (this.message.mReactions && this.activeUserId) {
+      this.groupedReactions = this.groupReactionsWithNames(
+        this.message.mReactions,
+        this.activeUserId
+      );
+    } else {
+      this.groupedReactions = [];
+    }
+  }
+
+  setShownReactionNumber() {
     if (this.shownReactionNumber < this.groupedReactions.length) {
       this.shownReactionNumber = this.groupedReactions.length;
-    } else{
-      //hier muss später 7 rein
-      this.shownReactionNumber = 2;
+    } else {
+      this.shownReactionNumber = 7;
     }
   }
 
@@ -89,10 +132,53 @@ export class MessageComponent implements OnInit {
       }
     });
 
-    return Array.from(grouped.entries()).map(([reaction, data]) => ({
-      reaction,
-      count: data.count,
-      names: data.names,
-    }));
+    return Array.from(grouped.entries()).map(([reaction, data]) => {
+      const duIndex = data.names.indexOf('Du');
+      if (duIndex !== -1 && duIndex !== 0) {
+        data.names.splice(duIndex, 1);
+        data.names.unshift('Du');
+      }
+
+      return {
+        reaction,
+        count: data.count,
+        names: data.names,
+      };
+    });
+  }
+
+  addReaction(reaction: string): void {
+    if (!this.message.mId) {
+      console.error('Es existiert keine mId für diese Message.');
+      return;
+    }
+
+    if (!this.activeUserId) {
+      console.error('Es existiert keine activeUserId.');
+      return;
+    }
+
+    this.userService
+      .editLastReactions(this.activeUserId, reaction)
+      .then(() => this.loadActiveUserData())
+      .catch((error) =>
+        console.error('Fehler beim Editieren der Reaction:', error)
+      );
+  
+    this.messageService
+      .toggleReaction(this.message.mId, {
+        reaction: reaction,
+        userId: this.activeUserId,
+        userName: this.activeUserData?.uName ?? '',
+      })
+      .catch((error) =>
+        console.error('Fehler beim Hinzufügen/Entfernen der Reaction', error)
+      );
+  }
+
+  openProfil(): void {
+    if (this.message.mSenderId) {
+      this.profileClick.emit(this.message.mSenderId);
+    }
   }
 }

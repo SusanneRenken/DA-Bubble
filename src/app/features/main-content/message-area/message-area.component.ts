@@ -13,17 +13,25 @@ import { MessageService } from '../../../shared/services/message.service';
 import { Message } from '../../../shared/interfaces/message.interface';
 import { CommonModule } from '@angular/common';
 import { MessageComponent } from './message/message.component';
-import { UserInterface } from '../../../shared/interfaces/user.interface';
+import { User } from '../../../shared/interfaces/user.interface';
 import { UserService } from '../../../shared/services/user.service';
 import { Channel } from '../../../shared/interfaces/channel.interface';
 import { ChannelService } from '../../../shared/services/channel.service';
 import { FormsModule } from '@angular/forms';
 import { ChannelLeaveComponent } from '../../general-components/channel-leave/channel-leave.component';
 import { ProfilComponent } from '../../general-components/profil/profil.component';
+import { ChannelMembersComponent } from './channel-members/channel-members.component';
 
 @Component({
   selector: 'app-message-area',
-  imports: [CommonModule, MessageComponent, FormsModule, ChannelLeaveComponent, ProfilComponent],
+  imports: [
+    CommonModule,
+    MessageComponent,
+    FormsModule,
+    ChannelLeaveComponent,
+    ProfilComponent,
+    ChannelMembersComponent,
+  ],
   templateUrl: './message-area.component.html',
   styleUrls: ['./message-area.component.scss'],
 })
@@ -38,29 +46,38 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   @Input() chatId: string | null = null;
   @Input() activeUserId: string | null = null;
 
-
-  @ViewChild('scrollContainer') private scrollContainer!: ElementRef<HTMLDivElement>;
-  @ViewChild('messageInput') private messageInputRef!: ElementRef<HTMLTextAreaElement>;
+  @ViewChild('scrollContainer')
+  private scrollContainer!: ElementRef<HTMLDivElement>;
+  @ViewChild('messageInput')
+  private messageInputRef!: ElementRef<HTMLTextAreaElement>;
 
   messages: Message[] = [];
 
-  chatPartner: UserInterface | null = null;
+  chatPartner: User | null = null;
+  userProfil: User | null = null;
 
   channelData: Channel | null = null;
-  channelMembers: UserInterface[] = [];
+  channelMembers: User[] = [];
 
   newMessageText: string = '';
+
   isLoading: boolean = true;
   isEditChannelOpen: boolean = false;
   isProfilOpen: boolean = false;
+  isChannelMemberOpen: boolean = false;
+
+  foundUsers: User[] = [];
+  foundChannels: Channel[] = [];
+  displaySuggestions: boolean = false;
+  currentMentionPos: number = -1;
 
   ngAfterViewInit(): void {
     setTimeout(() => {
       this.isLoading = false;
       setTimeout(() => {
         this.scrollToBottom();
-      this.focusMessageInput();        
-        }, 500);
+        this.focusMessageInput();
+      }, 500);
     }, 500);
   }
 
@@ -73,9 +90,9 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
         this.isLoading = false;
         setTimeout(() => {
           this.scrollToBottom();
-          this.focusMessageInput();      
-          }, 500);
-      }, 500);    
+          this.focusMessageInput();
+        }, 500);
+      }, 500);
     }
   }
 
@@ -94,6 +111,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   private focusMessageInput(): void {
     if (this.messageInputRef && this.messageInputRef.nativeElement) {
       this.messageInputRef.nativeElement.focus();
+      this.messageInputRef.nativeElement.value = '';
     }
   }
 
@@ -140,7 +158,6 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
       });
   }
 
-  //Es kann sein dass ich channelData mit subscribe() laden muss
   loadChannelData() {
     this.channelService
       .getChannel(this.chatId)
@@ -215,11 +232,25 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   getDateString(mTime: any): string {
     const date = this.extractDateOnly(mTime);
 
-    return date.toLocaleDateString('de-DE', {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'long',
-    });
+    const now = new Date();
+    const todayMidnight = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate()
+    ).getTime();
+    const checkDate = date.getTime();
+
+    if (checkDate === todayMidnight) {
+      return 'Heute';
+    } else if (checkDate === todayMidnight - 86400000) {
+      return 'Gestern';
+    } else {
+      return date.toLocaleDateString('de-DE', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+      });
+    }
   }
 
   getPlaceholder(): string {
@@ -239,8 +270,14 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
     }
   }
 
+  handleKeyDown(event: KeyboardEvent): void {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      this.sendMessage();
+    }
+  }
+
   sendMessage(): void {
-    console.log('Nachricht gesendet...');
     const newMessage: Message = {
       mText: this.newMessageText,
       mReactions: [],
@@ -254,42 +291,155 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
     this.newMessageText = '';
     setTimeout(() => {
       this.scrollToBottom();
-    }, 0);
+    }, 100);
   }
-
-  // testMessage(): void {
-  //   console.log('Testnachricht wird erstellt...');
-  //   const testMessage: Message = {
-  //     mId: '3rxhuNGtA0tluXvBJZ3J',
-  //     mText: "",
-  //     mReactions: [
-  //       { reaction: "🥳", userId: "Eg2jVLodTA9FI99IMJUK", userName: "Sofia Müller" },
-  //       { reaction: "💚", userId: "Eg2jVLodTA9FI99IMJUK", userName: "Sofia Müller" },
-  //       { reaction: "🎉", userId: "8nmFp28ZO3TOeDohgGQSqR0niUj1", userName: "Bisasam" },
-  //       { reaction: "🎉", userId: "Eg2jVLodTA9FI99IMJUK", userName: "Sofia Müller" },
-  //       { reaction: "🍿", userId: "Eg2jVLodTA9FI99IMJUK", userName: "Sofia Müller" },
-  //       { reaction: "🎞️", userId: "Eg2jVLodTA9FI99IMJUK", userName: "Sofia Müller" },
-  //       { reaction: "☀️", userId: "8nmFp28ZO3TOeDohgGQSqR0niUj1", userName: "Bisasam" },
-  //     ],
-  //     mTime: "",
-  //     mSenderId: "",
-  //     mUserId: "",
-  //     mChannelId: "",
-  //     mThreadId: ""
-  //   };
-  //   this.messageService.editMessage(testMessage);
-  // }
-
-  // sofia:string = "Eg2jVLodTA9FI99IMJUK Sofia Müller";
-  // noah:string = "sEg8GcSNNZ6YWhxRs4SE Noah Braun";
-  // bisasam:string = "8nmFp28ZO3TOeDohgGQSqR0niUj1 Bisasam";
 
   toggleEdit(): void {
     this.isEditChannelOpen = !this.isEditChannelOpen;
   }
 
-  toggleProfile(): void {
+  toggleProfile(user: User | null): void {
+    this.userProfil = user;
     this.isProfilOpen = !this.isProfilOpen;
   }
 
+  openUserProfil(userId: string): void {
+    this.userService
+      .getUser(userId)
+      .then((userProfilData) => {
+        this.userProfil = userProfilData;
+      })
+      .catch((error) => {
+        console.error('Fehler beim Laden des Users:', error);
+      });
+
+    this.isProfilOpen = true;
+  }
+
+  toggleChannelMembers(): void {
+    this.isChannelMemberOpen = !this.isChannelMemberOpen;
+  }
+
+  onTextChange(event: Event): void {
+    const txtArea = event.target as HTMLTextAreaElement;
+    if (!txtArea) return;
+
+    const message = txtArea.value;
+    const caretPos = txtArea.selectionStart || 0;
+
+    const atPos = message.lastIndexOf('@');
+    const hashPos = message.lastIndexOf('#');
+    const mentionPos = Math.max(atPos, hashPos);
+    this.currentMentionPos =
+      mentionPos !== -1 && mentionPos < caretPos ? mentionPos : -1;
+
+    if (mentionPos !== -1 && mentionPos < caretPos) {
+      const mentionText = message.slice(mentionPos + 1, caretPos);
+
+      if (mentionText.includes(' ')) {
+        this.displaySuggestions = false;
+        this.foundUsers = [];
+        this.foundChannels = [];
+        return;
+      }
+
+      if (message[mentionPos] === '@') {
+        this.searchUsers(mentionText);
+      } else if (message[mentionPos] === '#') {
+        this.searchChannels(mentionText);
+      }
+    } else {
+      this.displaySuggestions = false;
+      this.foundUsers = [];
+      this.foundChannels = [];
+    }
+  }
+
+  openUserSuggestions(): void {
+    const txtArea = this.messageInputRef?.nativeElement;
+    if (!txtArea) return;
+
+    const caretPos = txtArea.selectionStart || 0;
+    const prefix = this.newMessageText.slice(0, caretPos);
+    const suffix = this.newMessageText.slice(caretPos);
+    const newText = prefix + '@' + suffix;
+    this.newMessageText = newText;
+    txtArea.value = newText;
+
+    const newCaretPos = caretPos + 1;
+    txtArea.setSelectionRange(newCaretPos, newCaretPos);
+
+    this.currentMentionPos = prefix.length;
+    this.searchUsers('');
+    this.displaySuggestions = true;
+    txtArea.focus();
+  }
+
+  searchUsers(input: string): void {
+    this.userService
+      .getAllUsers()
+      .then((allUsers) => {
+        this.foundUsers = allUsers.filter((user) =>
+          user.uName.toLowerCase().includes(input.toLowerCase())
+        );
+        this.displaySuggestions = this.foundUsers.length > 0;
+      })
+      .catch((error) => {
+        console.error('Fehler beim Laden der User:', error);
+        this.displaySuggestions = false;
+        this.foundUsers = [];
+      });
+  }
+
+  searchChannels(input: string): void {
+    this.channelService
+      .getAllChannels()
+      .then((allChannels) => {
+        this.foundChannels = allChannels.filter((channel) =>
+          channel.cName.toLowerCase().includes(input.toLowerCase())
+        );
+        this.displaySuggestions = this.foundChannels.length > 0;
+      })
+      .catch((error) => {
+        console.error('Fehler beim Laden der Channels:', error);
+        this.displaySuggestions = false;
+        this.foundChannels = [];
+      });
+  }
+
+  insertUserSuggestion(user: User): void {
+    if (user && user.uName) {
+      this.insertSuggestion(user.uName);
+    }
+  }
+
+  insertChannelSuggestion(channel: any): void {
+    if (channel && channel.cName) {
+      this.insertSuggestion(channel.cName);
+    }
+  }
+
+  insertSuggestion(suggestion: string): void {
+    const txtArea = this.messageInputRef?.nativeElement;
+    if (!txtArea || this.currentMentionPos === -1) return;
+
+    const fullText = this.newMessageText;
+    const caretPos = txtArea.selectionStart;
+    const prefix = fullText.slice(0, this.currentMentionPos + 1);
+    const suffix = fullText.slice(caretPos);
+    const newText = prefix + suggestion + ' ' + suffix;
+
+    this.newMessageText = newText;
+    txtArea.value = newText;
+
+    const newCaretPos = prefix.length + suggestion.length + 1;
+    txtArea.setSelectionRange(newCaretPos, newCaretPos);
+
+    this.displaySuggestions = false;
+    this.foundUsers = [];
+    this.foundChannels = [];
+    this.currentMentionPos = -1;
+
+    txtArea.focus();
+  }
 }

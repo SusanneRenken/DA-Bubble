@@ -6,7 +6,7 @@
     [class.user-message]="message.mSenderId === activeUserId"
   >
     <div>
-      <h3>{{ senderData?.uName }}</h3>
+      <h3 (click)="openProfil()">{{ senderData?.uName }}</h3>
       <h5>{{ getTimeInHours(message.mTime) }} Uhr</h5>
     </div>
 

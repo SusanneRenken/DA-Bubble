@@ -1,6 +1,6 @@
 import { CommonModule} from '@angular/common';
 import { Component, Input, Output, EventEmitter, ElementRef, ViewChild, SimpleChanges, OnChanges} from '@angular/core';
-import { UserInterface } from '../../../../shared/interfaces/user.interface';
+import { User } from '../../../../shared/interfaces/user.interface';
 import { ProfilComponent } from '../../../general-components/profil/profil.component';
 
 
@@ -11,13 +11,13 @@ import { ProfilComponent } from '../../../general-components/profil/profil.compo
   styleUrl: './channel-members.component.scss'
 })
 export class ChannelMembersComponent implements OnChanges {
-  @Input() channelMembers:  UserInterface[] = [];
+  @Input() channelMembers:  User[] = [];
   @Input() activeUserId: string | null = null;
   
   @Output() close = new EventEmitter<void>();
   @ViewChild('channelWrapper') channelWrapper?: ElementRef;
 
-  activChannelMemberProfil: UserInterface | null = null;
+  activChannelMemberProfil: User | null = null;
 
   isChannelMemberProfilOpen: boolean = false;
 
@@ -43,7 +43,7 @@ export class ChannelMembersComponent implements OnChanges {
     }
   }
 
-  toggleMemberProfil(member?: UserInterface) {
+  toggleMemberProfil(member?: User) {
     console.log('Clicked on member:', member);
     
     this.isChannelMemberProfilOpen = !this.isChannelMemberProfilOpen;

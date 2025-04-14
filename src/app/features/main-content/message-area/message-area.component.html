@@ -6,13 +6,13 @@
 <section>
   <div class="chatbox-header">
     @if(chatType === 'private'){
-    <div class="private-header">
+    <div class="private-header" (click)="toggleProfile(chatPartner)">
       <div class="user-img-status">
         <img src="/assets/img/{{ chatPartner?.uUserImage }}" alt="" />
         <span [ngClass]="chatPartner?.uStatus ? 'online' : 'offline'"></span>
       </div>
 
-      <h1 (click)="toggleProfile()">
+      <h1>
         {{ chatPartner?.uName }}
       </h1>
     </div>
@@ -60,42 +60,48 @@
       <p>2 Antworten</p>
       <span></span>
     </div>
-    } @if (messages && messages.length === 0) { @if(chatType === 'private'){
-    <div class="empty-private-chat">
-      <div>
-        <img src="/assets/img/{{ chatPartner?.uUserImage }}" alt="" />
-        <h1>{{ chatPartner?.uName }}</h1>
+    } 
+    @if (messages && messages.length === 0) { 
+      @if(chatType === 'private'){
+      <div class="empty-private-chat">
+        <div>
+          <img src="/assets/img/{{ chatPartner?.uUserImage }}" alt="" />
+          <h1>{{ chatPartner?.uName }}</h1>
+        </div>
+        <p>
+          Diese Unterhaltung findet nur Zwichen
+          <span>&#64;{{ chatPartner?.uName }}</span> und dir statt
+        </p>
       </div>
-      <p>
-        Diese Unterhaltung findet nur Zwichen
-        <span>&#64;{{ chatPartner?.uName }}</span> und dir statt
-      </p>
-    </div>
-    } @else if(chatType === 'channel'){
-    <div class="empty-channel-chat">
-      <div>
-        <div class="material-symbols tag-icon">tag</div>
-        <h1>{{ channelData?.cName }}</h1>
+      } @else if(chatType === 'channel'){
+      <div class="empty-channel-chat">
+        <div>
+          <div class="material-symbols tag-icon">tag</div>
+          <h1>{{ channelData?.cName }}</h1>
+        </div>
+        <p>
+          Du hast diesen Channel heute erstellt. Das ist der Anfang des Channels
+          <span>&#64;{{ channelData?.cName }}.</span>
+        </p>
       </div>
-      <p>
-        Du hast diesen Channel heute erstellt. Das ist der Anfang des Channels
-        <span>&#64;{{ channelData?.cName }}.</span>
-      </p>
-    </div>
-    } } @else{ @for (message of messages; track message.mId; let i = $index) {
-    @if (shouldShowDateSeparator(i)) {
-    <div class="date-separator">
-      <span></span>
-      <p>{{ getDateString(message.mTime) }}</p>
-      <span></span>
-    </div>
-    } @if (message.mSenderId === activeUserId) { }
+      } 
+    } 
+    @else{ 
+        @for (message of messages; track message.mId; let i = $index) {
+          @if (shouldShowDateSeparator(i)) {
+          <div class="date-separator">
+            <span></span>
+            <p>{{ getDateString(message.mTime) }}</p>
+            <span></span>
+          </div>
+          } 
 
-    <app-message
-      [message]="message"
-      [activeUserId]="activeUserId"
-      [chatType]="chatType"
-    ></app-message>
+          <app-message
+            [message]="message"
+            [activeUserId]="activeUserId"
+            [chatType]="chatType"
+            (profileClick)="openUserProfil($event)"
+          ></app-message>
     } }
   </div>
 
@@ -153,19 +159,21 @@
     [channelData]="channelData"
     (close)="toggleEdit()"
   ></app-channel-leave>
-  } @if (isProfilOpen) {
+  } 
+  @if (isProfilOpen) {
   <app-profil
     [activeUserId]="activeUserId"
-    [userImage]="chatPartner?.uUserImage"
-    [userName]="chatPartner?.uName"
-    [userEmail]="chatPartner?.uEmail"
-    [userStatus]="chatPartner?.uStatus"
+    [userImage]="userProfil?.uUserImage"
+    [userName]="userProfil?.uName"
+    [userEmail]="userProfil?.uEmail"
+    [userStatus]="userProfil?.uStatus"
     #profilRef
     size="big"
     [showButton]="true"
-    (close)="toggleProfile()"
+    (close)="toggleProfile(null)"
   ></app-profil>
-  } @if (isChannelMemberOpen) {
+  } 
+  @if (isChannelMemberOpen) {
   <app-channel-members
     [channelMembers]="channelMembers"
     [activeUserId]="activeUserId"

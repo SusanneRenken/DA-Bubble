@@ -1,8 +1,8 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { Message } from '../../../../shared/interfaces/message.interface';
 import { Timestamp } from 'firebase/firestore';
 import { UserService } from '../../../../shared/services/user.service';
-import { UserInterface } from '../../../../shared/interfaces/user.interface';
+import { User } from '../../../../shared/interfaces/user.interface';
 import {
   GroupedReaction,
   Reaction,
@@ -21,7 +21,9 @@ export class MessageComponent implements OnInit {
   @Input() message!: Message;
   @Input() activeUserId: string | null = null;
 
-  senderData: UserInterface | null = null;
+  @Output() profileClick = new EventEmitter<string>();
+
+  senderData: User | null = null;
   groupedReactions: GroupedReaction[] = [];
   //hier muss später 7 rein
   shownReactionNumber: number = 2;
@@ -34,7 +36,6 @@ export class MessageComponent implements OnInit {
         this.message.mReactions,
         this.activeUserId
       );
-      console.log('Grouped Reactions:', this.groupedReactions);
     }
   }
 
@@ -103,5 +104,11 @@ export class MessageComponent implements OnInit {
         names: data.names,
       };
     });
+  }
+
+  openProfil(): void {
+    if (this.message.mSenderId) {
+      this.profileClick.emit(this.message.mSenderId);
+    }
   }
 }

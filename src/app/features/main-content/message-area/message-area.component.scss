@@ -54,6 +54,7 @@ section {
 }
 
 .private-header {
+  cursor: pointer;
   height: 100%;
   @include flexBox(row, initial, center, 16);
 }

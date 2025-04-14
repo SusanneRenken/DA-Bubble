@@ -13,7 +13,7 @@ import { MessageService } from '../../../shared/services/message.service';
 import { Message } from '../../../shared/interfaces/message.interface';
 import { CommonModule } from '@angular/common';
 import { MessageComponent } from './message/message.component';
-import { UserInterface } from '../../../shared/interfaces/user.interface';
+import { User } from '../../../shared/interfaces/user.interface';
 import { UserService } from '../../../shared/services/user.service';
 import { Channel } from '../../../shared/interfaces/channel.interface';
 import { ChannelService } from '../../../shared/services/channel.service';
@@ -53,10 +53,11 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
 
   messages: Message[] = [];
 
-  chatPartner: UserInterface | null = null;
+  chatPartner: User | null = null;
+  userProfil: User | null = null;
 
   channelData: Channel | null = null;
-  channelMembers: UserInterface[] = [];
+  channelMembers: User[] = [];
 
   newMessageText: string = '';
 
@@ -65,7 +66,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   isProfilOpen: boolean = false;
   isChannelMemberOpen: boolean = false;
 
-  foundUsers: UserInterface[] = [];
+  foundUsers: User[] = [];
   foundChannels: Channel[] = [];
   displaySuggestions: boolean = false;
   currentMentionPos: number = -1;
@@ -292,8 +293,23 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
     this.isEditChannelOpen = !this.isEditChannelOpen;
   }
 
-  toggleProfile(): void {
+  toggleProfile(user: User | null): void {
+    this.userProfil = user;    
     this.isProfilOpen = !this.isProfilOpen;
+  }
+
+  openUserProfil(userId: string): void { 
+
+    this.userService
+      .getUser(userId)
+      .then((userProfilData) => {
+        this.userProfil = userProfilData;
+      })
+      .catch((error) => {
+        console.error('Fehler beim Laden des Users:', error);
+      });
+  
+    this.isProfilOpen = true;
   }
 
   toggleChannelMembers(): void {
@@ -387,7 +403,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
       });
   }
 
-  insertUserSuggestion(user: UserInterface): void {
+  insertUserSuggestion(user: User): void {
     if (user && user.uName) {
       this.insertSuggestion(user.uName);
     }

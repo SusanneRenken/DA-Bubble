@@ -1,13 +1,11 @@
+@use '../../../shared/scss/mixins' as mixin;
+@use '../../../shared/scss/variables' as vari;
+
 form {
-  display: flex;
-  align-items: center;
-  gap: 40px;
-  flex-direction: column;
+  @include mixin.dFlex($gap: 30px, $direction: column);
 
   > h1 {
-    color: #444DF2;
-    font-size: 46px;
-    font-weight: 700;
+    @include mixin.accHead(vari.$dark-blue);
   }
 
   > p {
@@ -17,20 +15,19 @@ form {
 
   > span {
     cursor: pointer;
-    color: #2796BF;
+    color: vari.$light-blue;
     padding: 5px 15px;
 
     &:hover {
-      color: #444DF2;
-      background-color: #ECEEFE;
+      color: vari.$dark-blue;
+      background-color: vari.$sky-grey;
       border-radius: 30px;
     }
   }
 }
 
 .or-container {
-  display: flex;
-  justify-content: center;
+  @include mixin.dFlex($align: normal);
   width: 100%;
   position: relative;
 
@@ -38,7 +35,7 @@ form {
     position: relative;
     z-index: 5;
     padding: 0 15px;
-    background-color: #ffffff;
+    background-color: vari.$white;
   }
 
   &::before {
@@ -55,6 +52,5 @@ form {
 }
 
 .btn-container {
-  display: flex;
-  gap: 30px;
+  @include mixin.dFlex($gap: 30px);
 }

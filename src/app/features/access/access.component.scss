@@ -1,9 +1,10 @@
+@use '../../shared/scss/mixins' as mixin;
+@use '../../shared/scss/variables' as vari;
+
 :host {
   width: 100vw;
   height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  @include mixin.dFlex();
   position: relative;
 }
 
@@ -16,10 +17,7 @@
 }
 
 .sign-in-container {
-  display: flex;
-  align-items: flex-end;
-  flex-direction: column;
-  gap: 20px;
+  @include mixin.dFlex($align: flex-end, $gap: 20px, $direction: column);
   position: absolute;
   top: 0;
   right: 0;
@@ -29,7 +27,7 @@
 
 .card {
   position: relative;
-  background-color: #ffffff;
+  background-color: vari.$white;
   max-width: 650px;
   width: 100%;
   padding: 40px 53px;
@@ -38,8 +36,7 @@
 }
 
 footer {
-  display: flex;
-  gap: 45px;
+  @include mixin.dFlex($gap: 45px);
   position: absolute;
   bottom: 0;
   margin-bottom: 48px;
@@ -48,15 +45,16 @@ footer {
 .link {
   cursor: pointer;
   padding: 10px 15px;
-  color: #797ef3;
+  color: vari.$light-blue;
   font-size: 18px;
   font-weight: 400;
+  border: 1px solid transparent;
   transition: all 0.2s ease;
 
   &:hover {
-    color: #444df2;
+    color: vari.$dark-blue;
     font-weight: 500;
-    border: 1px solid #adb0d9;
+    border-color: #adb0d9;
     border-radius: 30px;
   }
 }

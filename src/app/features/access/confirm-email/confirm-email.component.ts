@@ -8,10 +8,11 @@ import {
 } from '@angular/forms';
 import { ComponentSwitcherService } from '../../../shared/services/component-switcher.service';
 import { AuthentificationService } from '../../../shared/services/authentification.service';
+import { CustomInputComponent } from '../../general-components/custom-input/custom-input.component';
 
 @Component({
   selector: 'app-confirm-email',
-  imports: [ButtonComponent, ReactiveFormsModule],
+  imports: [ButtonComponent, ReactiveFormsModule, CustomInputComponent],
   templateUrl: './confirm-email.component.html',
   styleUrl: './confirm-email.component.scss',
 })

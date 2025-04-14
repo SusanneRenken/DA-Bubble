@@ -1,20 +1,37 @@
-@import '../../../../styles.scss';
+@use "../../../shared/scss/mixins" as mixin;
+@use "../../../shared/scss/variables" as vari;
 
 :host {
   position: relative;
-  @include dFlex($gap: 10px, $direction: column);
+  @include mixin.dFlex($gap: 25px, $direction: column);
 }
 
 .arrow {
-  position: absolute;
-  top: 10px;
-  left: 0;
+  @include mixin.arrow(
+    $bg-color: vari.$sky-grey,
+    $icon-color: vari.$purple
+  );
+}
+
+h1 {
+  @include mixin.accHead(vari.$dark-blue);
+  padding-bottom: 30px;
 }
 
 .img-contaier {
-  background-color: #797EF3;
+  background-color: vari.$light-blue;
   border-radius: 50%;
   padding: 40px;
+}
+
+h2 {
+  font-size: 32px;
+  font-weight: 700;
+}
+
+span {
+  width: 100%;
+  padding-left: 10px;
 }
 
 .avatar-container {
@@ -31,11 +48,17 @@
     transition: border-color 0.3s ease;
 
     &:hover {
-      border: 5px solid #e6e6e6;
+      border: 5px solid vari.$gainsboro;
     }
   }
 
   > img.selected {
-    border: 5px solid #eceefe;
+    border: 5px solid vari.$sky-grey;
   }
+}
+
+.btn-container {
+  width: 100%;
+  padding-right: 10px;
+  @include mixin.dFlex($justify: flex-end);
 }

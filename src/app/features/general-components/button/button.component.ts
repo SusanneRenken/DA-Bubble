@@ -1,23 +1,41 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/core';
+
+type ButtonColor = 'blue' | 'white' | 'gray';
 
 @Component({
   selector: 'app-button',
   imports: [],
   template: `
-    <button [type]="type" [disabled]="disabled">
+    <button
+      class="font-nuninto"
+      [class]="getButtonClasses()"
+      [type]="type"
+      [disabled]="disabled"
+      (click)="handleClick()"
+    >
       <ng-content></ng-content>
     </button>
   `,
-  styles: [
-    `
-      button {
-        padding: 12px 25px;
-        border-radius: 25px;
-      }
-    `,
-  ],
+  styleUrls: ['./button.component.scss'],
 })
 export class ButtonComponent {
   @Input() type: 'button' | 'submit' | 'reset' = 'button';
   @Input() disabled = false;
+  @Input() color: ButtonColor = 'blue';
+
+  @Output() clicked = new EventEmitter<void>();
+
+  @HostBinding('class.full-width-host') 
+  get isFullWidth(): boolean {
+    return this.color === 'gray';
+  }
+
+  getButtonClasses(): string {
+    const baseClass = `btn btn-${this.color}`;
+    return baseClass;
+  }
+
+  handleClick(): void {
+    this.clicked.emit();
+  }
 }

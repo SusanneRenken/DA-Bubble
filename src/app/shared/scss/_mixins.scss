@@ -1,0 +1,40 @@
+@mixin dFlex($justify: center, $align: center, $gap: 0px, $direction: null) {
+  display: flex;
+  justify-content: $justify;
+  align-items: $align;
+  gap: $gap;
+
+  @if $direction !=null {
+    flex-direction: $direction;
+  }
+}
+
+@mixin arrow($bg-color, $icon-color) {
+  position: absolute;
+  top: 10px;
+  left: -20px;
+  cursor: pointer;
+  padding: 11px 12px 5px 12px;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background-color: $bg-color;
+    border-radius: 50%;
+
+    > svg path {
+      fill: $icon-color;
+    }
+  }
+}
+
+@mixin accHead($head-color) {
+  color: $head-color;
+  font-size: 46px;
+  font-weight: 700;
+}
+
+@mixin btnColor($bg-color, $bor-color, $text-color) {
+  background-color: $bg-color;
+  border-color: $bor-color;
+  color: $text-color;
+}

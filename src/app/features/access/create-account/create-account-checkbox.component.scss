@@ -1,0 +1,62 @@
+@use "../../../shared/scss/mixins" as mixin;
+@use "../../../shared/scss/variables" as vari;
+
+.checkbox-container {
+  width: 100%;
+  padding-left: 10px;
+  display: flex;
+  gap: 10px;
+
+  > p span {
+    cursor: pointer;
+    color: vari.$light-blue;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: vari.$dark-blue;
+    }
+  }
+}
+
+.checkboxItem {
+  @include mixin.dFlex();
+
+  &:not(:last-of-type) {
+    margin-bottom: 16px;
+  }
+
+  .checkbox {
+    appearance: none;
+    position: relative;
+    width: 18px;
+    height: 18px;
+    border: 2px solid vari.$light-blue;
+    border-radius: 2px;
+    background-color: transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:checked::after {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 2px;
+      width: 8px;
+      height: 4px;
+      border-bottom: 2px solid;
+      border-left: 2px solid;
+      border-color: vari.$light-blue;
+      transform: rotate(-45deg);
+    }
+
+    &:hover {
+      border-color: vari.$dark-blue;
+      box-shadow: 0 0 0 5px vari.$sky-grey;
+      background-color: vari.$sky-grey;
+
+      &:checked::after {
+        border-color: vari.$dark-blue;
+      }
+    }
+  }
+}

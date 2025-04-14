@@ -27,6 +27,7 @@ import { MessageService } from '../../../../shared/services/message.service';
 export class MessageComponent implements OnInit {
   private userService = inject(UserService);
   private messageService = inject(MessageService);
+  private userSubscription: Subscription | null = null;
 
   @Input() chatType: 'private' | 'channel' | 'thread' | 'new' | null = null;
   @Input() message!: Message;
@@ -34,9 +35,7 @@ export class MessageComponent implements OnInit {
 
   @Output() profileClick = new EventEmitter<string>();
 
-  private userSubscription: Subscription | null = null;
   activeUserData: User | null = null;
-
   senderData: User | null = null;
   groupedReactions: GroupedReaction[] = [];
   shownReactionNumber: number = 7;

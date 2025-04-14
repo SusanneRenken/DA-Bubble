@@ -158,7 +158,6 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
       });
   }
 
-  //Es kann sein dass ich channelData mit subscribe() laden muss
   loadChannelData() {
     this.channelService
       .getChannel(this.chatId)
@@ -271,8 +270,14 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
     }
   }
 
+  handleKeyDown(event: KeyboardEvent): void {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      this.sendMessage();
+    }
+  }
+
   sendMessage(): void {
-    console.log('Nachricht gesendet...');
     const newMessage: Message = {
       mText: this.newMessageText,
       mReactions: [],
@@ -286,7 +291,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
     this.newMessageText = '';
     setTimeout(() => {
       this.scrollToBottom();
-    }, 0);
+    }, 100);
   }
 
   toggleEdit(): void {
@@ -294,12 +299,11 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   }
 
   toggleProfile(user: User | null): void {
-    this.userProfil = user;    
+    this.userProfil = user;
     this.isProfilOpen = !this.isProfilOpen;
   }
 
-  openUserProfil(userId: string): void { 
-
+  openUserProfil(userId: string): void {
     this.userService
       .getUser(userId)
       .then((userProfilData) => {
@@ -308,7 +312,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
       .catch((error) => {
         console.error('Fehler beim Laden des Users:', error);
       });
-  
+
     this.isProfilOpen = true;
   }
 
@@ -415,7 +419,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
     }
   }
 
-  private insertSuggestion(suggestion: string): void {
+  insertSuggestion(suggestion: string): void {
     const txtArea = this.messageInputRef?.nativeElement;
     if (!txtArea || this.currentMentionPos === -1) return;
 

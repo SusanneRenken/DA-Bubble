@@ -132,6 +132,7 @@
       [(ngModel)]="newMessageText"
       #messageInput
       (input)="onTextChange($event)"
+      (keydown)="handleKeyDown($event)"
       rows="2"
     ></textarea>
 

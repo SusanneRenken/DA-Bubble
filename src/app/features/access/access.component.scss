@@ -12,8 +12,15 @@
   position: absolute;
   top: 0;
   left: 0;
+  @include mixin.dFlex();
   margin-top: 75px;
   margin-left: 75px;
+
+  > span {
+    font-size: 24px;
+    font-weight: bold;
+    margin-left: 10px;
+  }
 }
 
 .sign-in-container {

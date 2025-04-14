@@ -16,7 +16,7 @@
       @if (groupedReactions && groupedReactions.length > 0) {
       <span class="reaction-field">
         @for (reaction of groupedReactions.slice(0,shownReactionNumber); track
-        reaction) {
+        reaction.reaction) {
 
         <div class="single-reaction">
           <div class="reaction-details">
@@ -65,9 +65,8 @@
           +{{ groupedReactions.length - shownReactionNumber }} weitere
         </div>
         }
-        <!-- Hier muss später die 2 durch eine 7 ersetzt werden -->
         @if (groupedReactions.length === shownReactionNumber &&
-        shownReactionNumber > 2) {
+        shownReactionNumber > 7) {
         <div (click)="setShownReactionNumber()">Weniger anzeigen</div>
         }
         <span class="material-symbols">add_reaction</span>

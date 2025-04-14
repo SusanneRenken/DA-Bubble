@@ -1,13 +1,43 @@
 import { Injectable, inject } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
-import { collection, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  onSnapshot,
+  updateDoc,
+} from 'firebase/firestore';
 import { User } from '../interfaces/user.interface';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
   private firestore = inject(Firestore);
+
+  getUserRealtime(userId: string): Observable<User | null> {
+    return new Observable<User | null>((subscriber) => {
+      const userDocRef = doc(this.firestore, 'users', userId);
+
+      const unsubscribe = onSnapshot(
+        userDocRef,
+        (docSnap) => {
+          if (docSnap.exists()) {
+            subscriber.next(docSnap.data() as User);
+          } else {
+            subscriber.next(null);
+          }
+        },
+        (error) => {
+          subscriber.error(error);
+        }
+      );
+
+      return () => unsubscribe();
+    });
+  }
 
   async getAllUsers(): Promise<User[]> {
     const usersCollectionRef = collection(this.firestore, 'users');
@@ -57,26 +87,29 @@ export class UserService {
     return results;
   }
 
-  async editLastReactions(userId: string | null, reaction: string): Promise<void> {
+  async editLastReactions(
+    userId: string | null,
+    reaction: string
+  ): Promise<void> {
     if (!userId) {
       console.warn('Invalid userId: null');
       return;
     }
-  
+
     const userDocRef = doc(this.firestore, 'users', userId);
-  
+
     try {
       const docSnap = await getDoc(userDocRef);
-  
+
       if (!docSnap.exists()) {
         console.warn('User not found');
         return;
       }
-  
+
       const userData = docSnap.data() as User;
       const lastReactions = userData.uLastReactions || [];
       const index = lastReactions.indexOf(reaction);
-  
+
       if (index === 0) {
       } else if (index > 0) {
         lastReactions.splice(index, 1);
@@ -87,12 +120,10 @@ export class UserService {
           lastReactions.pop();
         }
       }
-  
+
       await updateDoc(userDocRef, { uLastReactions: lastReactions });
-  
     } catch (error) {
       console.error('Fehler beim Editieren der LastReactions:', error);
     }
   }
-
 }

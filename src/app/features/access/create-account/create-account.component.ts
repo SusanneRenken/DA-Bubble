@@ -18,6 +18,7 @@ import { CustomInputComponent } from '../../general-components/custom-input/cust
 })
 export class CreateAccountComponent implements OnInit {
   registerForm!: FormGroup;
+  confError: string = '';
 
   constructor(
     public componentSwitcher: ComponentSwitcherService,
@@ -26,7 +27,7 @@ export class CreateAccountComponent implements OnInit {
 
   ngOnInit(): void {
     this.registerForm = new FormGroup({
-      regName: new FormControl('', Validators.required),
+      regName: new FormControl('', [Validators.required, Validators.minLength(3)]),
       regEmail: new FormControl('', [Validators.required, Validators.email]),
       regPassword: new FormControl('', [Validators.required, Validators.minLength(6)]),
       acceptPrivacy: new FormControl(false, Validators.requiredTrue),
@@ -36,14 +37,15 @@ export class CreateAccountComponent implements OnInit {
   onSubmit() {
     if (this.registerForm.valid) {
       const { regEmail, regPassword, regName } = this.registerForm.value;
-      this.authService.registerWithEmail(regEmail, regPassword, regName)
+      this.authService.prepareRegistration(regEmail, regPassword, regName)
       .then(() => {
-        console.log('Registration successful');
-        console.log('Create-Data: ', this.registerForm.value);
+        console.log('Email is valide');
+        console.log('Create-Data: ', this.authService.registrationData);
         this.changeComponent('avatar');
       })
       .catch((error) => {
-        console.error('Error during registration', error);
+        console.error('Email is taken: ', error);
+        if (error) this.confError = 'Diese E-Mail ist bereits vorhanden! Bitte geben sie eine andere E-Mail-Adresse ein.';
       });
     }
   }

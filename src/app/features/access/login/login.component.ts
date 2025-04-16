@@ -20,6 +20,7 @@ import { CustomInputComponent } from '../../general-components/custom-input/cust
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
+  authError: string = '';
 
   constructor(
     public componentSwitcher: ComponentSwitcherService,
@@ -47,6 +48,14 @@ export class LoginComponent implements OnInit {
       })
       .catch(error => {
         console.error('Login error:', error);
+        switch(error.code) {
+          case 'auth/invalid-credential':
+            this.authError = 'E-Mail oder Passwort ist nicht korrekt.';
+            break;
+          default:
+            this.authError = 'Ein Fehler ist aufgetreten. Bitte versuche es erneut.';
+            break;
+        }
       });
     }
   }

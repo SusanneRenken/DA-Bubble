@@ -18,6 +18,7 @@ import { CustomInputComponent } from '../../general-components/custom-input/cust
 })
 export class ConfirmEmailComponent implements OnInit {
   confirmForm!: FormGroup;
+  findEmail: string = '';
 
   constructor(
     public componentSwitcher: ComponentSwitcherService,
@@ -39,6 +40,7 @@ export class ConfirmEmailComponent implements OnInit {
       })
       .catch(error => {
         console.error('Error when sending the reset email:', error);
+        if (error) this.findEmail = 'Es wurde keine E-Mail gefunden. Bitte geben sie iher richtige E-Mail-Adresse ein.';
       });
     }
   }

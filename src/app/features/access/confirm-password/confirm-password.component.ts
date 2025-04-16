@@ -1,8 +1,11 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
+  AbstractControl,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
+  ValidationErrors,
+  ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { ComponentSwitcherService } from '../../../shared/services/component-switcher.service';
@@ -21,6 +24,12 @@ export class ConfirmPasswordComponent implements OnInit {
   newPassword!: FormGroup;
   oobCode: string | null = null;
 
+  static passwordMatchValidator: ValidatorFn = (group: AbstractControl): ValidationErrors | null => {
+    const newPassword = group.get('newPassword')?.value;
+    const conPassword = group.get('conPassword')?.value;
+    return newPassword === conPassword ? null : { passwordMismatch: true };
+  };
+
   constructor(
     public componentSwitcher: ComponentSwitcherService,
     private route: ActivatedRoute,
@@ -33,7 +42,11 @@ export class ConfirmPasswordComponent implements OnInit {
     this.newPassword = new FormGroup({
       newPassword: new FormControl('', [Validators.required, Validators.minLength(6)]),
       conPassword: new FormControl('', [Validators.required, Validators.minLength(6)]),
-    });
+    }, { validators: ConfirmPasswordComponent.passwordMatchValidator });
+  }
+
+  isPasswordMismatch(): boolean {
+    return !!this.newPassword.errors && this.newPassword.errors['passwordMismatch'];
   }
 
   onSubmit() {

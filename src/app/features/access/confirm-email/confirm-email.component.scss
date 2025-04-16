@@ -1,5 +1,5 @@
-@use '../../../shared/scss/mixins' as mixin;
-@use '../../../shared/scss/variables' as vari;
+@use "../../../shared/scss/mixins" as mixin;
+@use "../../../shared/scss/variables" as vari;
 
 :host {
   position: relative;
@@ -27,9 +27,13 @@ form {
     font-size: 20px;
     font-weight: 400;
   }
+}
 
-  > div {
-    width: 100%;
-    @include mixin.dFlex($justify: flex-end);
-  }
+.btn-container {
+  width: 100%;
+  @include mixin.dFlex($justify: flex-end);
+}
+
+.input-container {
+  @include mixin.errMess($text-color: vari.$rose);
 }

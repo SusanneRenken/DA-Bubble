@@ -26,6 +26,10 @@ form {
   }
 }
 
+.input-container {
+  @include mixin.errMess($text-color: vari.$rose);
+}
+
 .or-container {
   @include mixin.dFlex($align: normal);
   width: 100%;

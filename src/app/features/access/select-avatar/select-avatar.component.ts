@@ -18,16 +18,24 @@ export class SelectAvatarComponent {
     'avatar-5.png',
     'avatar-6.png',
   ];
-
   selectedAvatar: string | null = null;
+  username: string | undefined | null = null;
 
   constructor(
     public componentSwitcher: ComponentSwitcherService,
     private authService: AuthentificationService
-  ) {}
+  ) {
+    this.username = this.authService.registrationData?.username;
+  }
+
+  goBack() {
+    this.authService.registrationData = null;
+    this.changeComponent('signin');
+  }
 
   selectAvatar(avatar: string): void {
     this.selectedAvatar = avatar;
+    console.log(this.selectedAvatar);
   }
 
   onNext(): void {
@@ -36,7 +44,7 @@ export class SelectAvatarComponent {
       return;
     }
     this.authService
-      .updateProfilePicture(this.selectedAvatar)
+      .completeRegistration(this.selectedAvatar)
       .then(() => {
         console.log('Profile picture successfully added!');
         this.changeComponent('login');

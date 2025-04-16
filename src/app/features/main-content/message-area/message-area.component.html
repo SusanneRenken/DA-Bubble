@@ -170,7 +170,7 @@
     [userStatus]="userProfil?.uStatus"
     #profilRef
     size="big"
-    [showButton]="true"
+    [showButton]="activeUserId !== userProfil?.uId"
     (close)="toggleProfile(null)"
   ></app-profil>
   } 

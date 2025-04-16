@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component} from '@angular/core';
 import { SearchInformationComponent } from '../../search-information/search-information.component';
+import { DeviceVisibleComponent } from '../../../../shared/services/responsive';
 
 @Component({
   selector: 'app-search-bar',
   standalone: true,
-  imports: [CommonModule, SearchInformationComponent],
+  imports: [CommonModule, SearchInformationComponent, DeviceVisibleComponent],
   templateUrl: './search-bar.component.html',
   styleUrl: './search-bar.component.scss'
 })

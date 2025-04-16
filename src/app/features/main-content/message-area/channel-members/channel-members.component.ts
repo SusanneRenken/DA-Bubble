@@ -14,13 +14,17 @@ export class ChannelMembersComponent implements OnChanges {
   @Input() channelMembers:  User[] = [];
   @Input() activeUserId: string | null = null;  
   @Input() channelId: any;
-  
+  @Input() channelName: any = '';
   @Output() close = new EventEmitter<void>();
   @ViewChild('channelWrapper') channelWrapper?: ElementRef;
+  @ViewChild('memberAddWrapper') memberAddWrapper?: ElementRef;
+
+  
 
   activChannelMemberProfil: User | null = null;
-
+  newChannelMembers: boolean = false;
   isChannelMemberProfilOpen: boolean = false;
+  
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['channelMembers']) {
@@ -36,10 +40,9 @@ export class ChannelMembersComponent implements OnChanges {
   }
  
   onMainClick(event: MouseEvent) {
-    const insideSection = this.channelWrapper?.nativeElement?.contains(
-      event.target
-    );
-    if (!insideSection) {
+    const insideSection = this.channelWrapper?.nativeElement?.contains(event.target);
+    const clickedInsideAddMember = this.memberAddWrapper?.nativeElement?.contains(event.target);
+    if (!insideSection && !clickedInsideAddMember) {
       this.close.emit();
     }
   }
@@ -59,8 +62,8 @@ export class ChannelMembersComponent implements OnChanges {
   
 
   addChannelMember(channelId: any) {
-    console.log( 'Adding channel member:', channelId);
-    
+    console.log( 'Adding channel member:', channelId, this.channelMembers);
+    this.newChannelMembers = true;
   }
   
 }

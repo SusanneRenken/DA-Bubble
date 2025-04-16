@@ -2,7 +2,7 @@
   <div class="avatar">
     <span class="avatarNameText">{{ userName }}</span>
     <div class="userStatus">
-        <app-device-visible mode="tabletBig">
+      <app-device-visible mode="tabletBig">
           <img #tabletToggleBtn (click)="toggleImage()" [src]="'/assets/img/' + userImage" />
       </app-device-visible>
       <app-device-visible mode="desktopBig">

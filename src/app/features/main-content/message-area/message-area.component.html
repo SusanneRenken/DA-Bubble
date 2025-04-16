@@ -176,6 +176,7 @@
   } 
   @if (isChannelMemberOpen) {
   <app-channel-members
+    [channelName]="channelData?.cName"
     [channelMembers]="channelMembers"
     [activeUserId]="activeUserId"
     [channelId]="channelData?.cId"

@@ -1,30 +1,51 @@
 <main (click)="onMainClick($event)">
-  <section #channelWrapper>
-    <div class="memberlist-header">
-      <h1>Mitglieder</h1>
-      <div class="material-symbols" (click)="closeChannelMembers()">close</div>
-    </div>
-
-    <div class="memberlist">
-      <div class="members">
-        @for (member of channelMembers; track member) {
-        <div (click)="toggleMemberProfil(member)">
-          <div class="user-img-status">
-            <img src="/assets/img/{{ member?.uUserImage }}" alt="" />
-            <span [ngClass]="member?.uStatus ? 'online' : 'offline'"></span>
-          </div>
-          <span>{{ member?.uName }}</span>
+  @if (newChannelMembers) {
+    <div class="memberAdd"  #memberAddWrapper>
+      <header class="addMemberHeader">
+        <div>
+          <h1>Leute hinzufügen</h1>
+          <button class="closeIconButton" (click)="closeChannelMembers()">
+            <div class="material-symbols closeIcon">close</div>
+          </button>
         </div>
-
-        }
+        <span class="addMemberChannel"><div class="material-symbols">tag</div> {{ channelName }}</span>
+      </header>
+      <div class="addInputField">
+        <input type="text" placeholder="Name eingeben">
       </div>
-
-      <div class="add-member" (click)="addChannelMember(channelId)">
-        <div class="material-symbols add-person-icon">person_add</div>
-        <span>Mitglieder hinzufügen</span>
+      <div class="addNewMember">
+        <button class="addNewMemberButton">Hinzufügen</button>
       </div>
     </div>
-  </section>
+  }
+  @else {
+    <section #channelWrapper>
+      <div class="memberlist-header">
+        <h1>Mitglieder</h1>
+        <div class="material-symbols" (click)="closeChannelMembers()">close</div>
+      </div>
+  
+      <div class="memberlist">
+        <div class="members">
+          @for (member of channelMembers; track member) {
+          <div (click)="toggleMemberProfil(member)">
+            <div class="user-img-status">
+              <img src="/assets/img/{{ member?.uUserImage }}" alt="" />
+              <span [ngClass]="member?.uStatus ? 'online' : 'offline'"></span>
+            </div>
+            <span>{{ member?.uName }}</span>
+          </div>
+  
+          }
+        </div>
+        <div class="add-member" (click)="addChannelMember(channelId)">
+          <div class="material-symbols add-person-icon">person_add</div>
+          <span>Mitglieder hinzufügen</span>
+        </div>
+      </div>
+    </section>
+  }
+
 </main>
 
 @if (isChannelMemberProfilOpen) {

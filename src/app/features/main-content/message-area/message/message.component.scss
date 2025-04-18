@@ -16,9 +16,6 @@ section {
       color: #000000;
       background-color: #ffffff;
     }
-    .message-actions {
-      display: flex;
-    }
   }
 }
 
@@ -131,6 +128,12 @@ section {
   border-radius: 25px 25px 0px 25px;
   @include flexBox(row, initial, center, 5);
   display: none;
+  section:hover & {
+    display: flex;
+  }
+  &.always {
+    display: flex;
+  }
   > span {
     cursor: pointer;
     width: 40px;
@@ -175,7 +178,7 @@ emoji-mart {
   > div {
     cursor: pointer;
     padding: 10px 20px;
-    width: 220px;  
+    width: 220px;
     font-weight: 600;
     border-radius: 100px;
     &:hover {

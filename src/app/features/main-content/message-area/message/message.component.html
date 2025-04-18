@@ -51,6 +51,7 @@
 
   <div
     class="message-actions"
+    [class.always]="isOptionsOpen"
     [class.user-message-actions]="message.mSenderId === activeUserId"
   >
     @for (reaction of activeUserData?.uLastReactions; track reaction) {

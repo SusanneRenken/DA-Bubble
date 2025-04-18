@@ -44,6 +44,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   private messageService = inject(MessageService);
 
   private messagesSubscription: Subscription | null = null;
+  private lastListLength = 0;
 
   @Input() chatType: 'private' | 'channel' | 'thread' | 'new' = 'private';
   @Input() chatId: string | null = null;
@@ -55,7 +56,6 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   private messageInputRef!: ElementRef<HTMLTextAreaElement>;
   @ViewChild('emojiPicker', { read: ElementRef }) emojiPickerRef?: ElementRef;
   @ViewChild('emojiButton', { read: ElementRef }) emojiButtonRef?: ElementRef;
-  
 
   messages: Message[] = [];
 
@@ -78,7 +78,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   displaySuggestions: boolean = false;
   currentMentionPos: number = -1;
 
-  ngAfterViewInit(): void {  
+  ngAfterViewInit(): void {
     setTimeout(() => {
       this.isLoading = false;
       setTimeout(() => {
@@ -89,9 +89,9 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // Auch scrollen, wenn eine neue Message gekommen ist
     if (changes['chatType'] || changes['chatId'] || changes['activeUserId']) {
       this.isLoading = true;
+      this.lastListLength = 0; 
       this.loadMessages();
       this.loadChatData();
       setTimeout(() => {
@@ -124,22 +124,25 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   }
 
   loadMessages(): void {
-    if (this.messagesSubscription) {
-      this.messagesSubscription.unsubscribe();
-    }
+    this.messagesSubscription?.unsubscribe();
 
     if (!this.chatType || !this.chatId || !this.activeUserId) {
       this.messages = [];
+      this.lastListLength = 0;
       return;
     }
 
     this.messagesSubscription = this.messageService
       .getMessages(this.chatType, this.chatId, this.activeUserId)
       .subscribe((messages) => {
+        const hasNewMessage = messages.length > this.lastListLength;
+
         this.messages = messages;
-        setTimeout(() => {
-          this.scrollToBottom();
-        }, 100);
+        this.lastListLength = messages.length;
+
+        if (hasNewMessage) {
+          setTimeout(() => this.scrollToBottom(), 100);
+        }
       });
   }
 
@@ -461,7 +464,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   toggleEmojiPicker(event: MouseEvent): void {
     event.stopPropagation();
     this.isEmojiPickerOpen = !this.isEmojiPickerOpen;
-  
+
     if (this.isEmojiPickerOpen) {
       setTimeout(() => {
         this.emojiPickerRef?.nativeElement.focus?.();

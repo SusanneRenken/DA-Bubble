@@ -24,7 +24,7 @@ import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 
 @Component({
   selector: 'app-message',
-  imports: [PickerComponent   ],
+  imports: [PickerComponent],
   templateUrl: './message.component.html',
   styleUrl: './message.component.scss',
 })
@@ -40,7 +40,7 @@ export class MessageComponent implements OnInit {
   @Output() profileClick = new EventEmitter<string>();
 
   @ViewChild('emojiPicker', { read: ElementRef }) emojiPickerRef?: ElementRef;
-  @ViewChild('emojiBtn',    { read: ElementRef }) emojiBtnRef?: ElementRef;
+  @ViewChild('emojiBtn', { read: ElementRef }) emojiBtnRef?: ElementRef;
 
   activeUserData: User | null = null;
   senderData: User | null = null;
@@ -141,19 +141,36 @@ export class MessageComponent implements OnInit {
       }
     });
 
-    return Array.from(grouped.entries()).map(([reaction, data]) => {
-      const duIndex = data.names.indexOf('Du');
-      if (duIndex !== -1 && duIndex !== 0) {
-        data.names.splice(duIndex, 1);
-        data.names.unshift('Du');
-      }
+    return Array.from(grouped.entries()).map(([reaction, data]) => ({
+      reaction,
+      count: data.count,
+      names: data.names,
+      namesLine: this.buildNameLine(data.names),
+      actionLine: this.buildActionLine(data.names, data.count),
+    }));
+  }
 
-      return {
-        reaction,
-        count: data.count,
-        names: data.names,
-      };
-    });
+  private buildNameLine(namesOriginal: string[], max = 3): string {
+    const names = [...namesOriginal];
+    const duIdx = names.indexOf('Du');
+    if (duIdx > 0) {
+      names.splice(duIdx, 1);
+      names.unshift('Du');
+    }
+    if (names.length <= max) {
+      return names.join(', ').replace(/, ([^,]*)$/, ' und $1');
+    }
+
+    const first = names.slice(0, max).join(', ');
+    const rest = names.length - max;
+    return `${first} und ${rest === 1 ? 'ein weiterer' : rest + ' weitere'}`;
+  }
+
+  private buildActionLine(names: string[], count: number): string {
+    if (count === 1) {
+      return names[0] === 'Du' ? 'hast reagiert' : 'hat reagiert';
+    }
+    return 'haben reagiert';
   }
 
   addReaction(reaction: string): void {
@@ -196,14 +213,14 @@ export class MessageComponent implements OnInit {
     this.isEmojiPickerOpen = false;
   }
 
-
   @HostListener('document:click', ['$event'])
   closeOnOutsideClick(event: MouseEvent): void {
     if (!this.isEmojiPickerOpen) return;
 
     const target = event.target as HTMLElement;
-    const insidePicker = this.emojiPickerRef?.nativeElement?.contains(target) ?? false;
-    const onBtn        = this.emojiBtnRef?.nativeElement?.contains(target) ?? false;
+    const insidePicker =
+      this.emojiPickerRef?.nativeElement?.contains(target) ?? false;
+    const onBtn = this.emojiBtnRef?.nativeElement?.contains(target) ?? false;
 
     if (!insidePicker && !onBtn) {
       this.isEmojiPickerOpen = false;

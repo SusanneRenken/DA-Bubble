@@ -21,40 +21,8 @@
         <div class="single-reaction">
           <div class="reaction-details">
             <span>{{ reaction.reaction }}</span>
-
-            @if (reaction.names && reaction.names.length === 1) {
-            <div>{{ reaction.names[0] }}</div>
-            <p>
-              {{
-                reaction.names[0] === "Du" ? "hast reagiert" : "hat reagiert"
-              }}
-            </p>
-            } @if (reaction.names && reaction.names.length === 2) {
-            <div>{{ reaction.names[0] }} und {{ reaction.names[1] }}</div>
-
-            } @if (reaction.names && reaction.names.length === 3) {
-            <div>
-              {{ reaction.names[0] }}, {{ reaction.names[1] }} und
-              {{ reaction.names[2] }}
-            </div>
-
-            } @if (reaction.names && reaction.names.length > 3) {
-            <div>
-              {{ reaction.names[0] }}, {{ reaction.names[1] }},
-              {{ reaction.names[2] }}
-            </div>
-            <p>
-              und
-
-              {{ reaction.count === 4 ? "ein weiterer" : "{{ reaction.names.length - 3}}
-              weitere" }}
-            </p>
-
-            }
-
-            <p>
-              {{ reaction.count === 1 ? "" : "haben reagiert" }}
-            </p>
+            <div>{{ reaction.namesLine }}</div>
+            <p>{{ reaction.actionLine }}</p>
           </div>
 
           <span (click)="addReaction(reaction.reaction)"

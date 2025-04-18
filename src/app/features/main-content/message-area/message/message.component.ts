@@ -6,6 +6,9 @@ import {
   OnInit,
   Output,
   SimpleChanges,
+  ElementRef,
+  HostListener,
+  ViewChild,
 } from '@angular/core';
 import { Message } from '../../../../shared/interfaces/message.interface';
 import { Timestamp } from 'firebase/firestore';
@@ -17,10 +20,11 @@ import {
 } from '../../../../shared/interfaces/reaction.interface';
 import { Subscription } from 'rxjs';
 import { MessageService } from '../../../../shared/services/message.service';
+import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 
 @Component({
   selector: 'app-message',
-  imports: [],
+  imports: [PickerComponent   ],
   templateUrl: './message.component.html',
   styleUrl: './message.component.scss',
 })
@@ -35,10 +39,15 @@ export class MessageComponent implements OnInit {
 
   @Output() profileClick = new EventEmitter<string>();
 
+  @ViewChild('emojiPicker', { read: ElementRef }) emojiPickerRef?: ElementRef;
+  @ViewChild('emojiBtn',    { read: ElementRef }) emojiBtnRef?: ElementRef;
+
   activeUserData: User | null = null;
   senderData: User | null = null;
   groupedReactions: GroupedReaction[] = [];
   shownReactionNumber: number = 7;
+
+  isEmojiPickerOpen = false;
 
   ngOnInit(): void {
     this.loadSenderData();
@@ -164,7 +173,7 @@ export class MessageComponent implements OnInit {
       .catch((error) =>
         console.error('Fehler beim Editieren der Reaction:', error)
       );
-  
+
     this.messageService
       .toggleReaction(this.message.mId, {
         reaction: reaction,
@@ -174,6 +183,31 @@ export class MessageComponent implements OnInit {
       .catch((error) =>
         console.error('Fehler beim Hinzufügen/Entfernen der Reaction', error)
       );
+  }
+
+  toggleEmojiPicker(event: MouseEvent): void {
+    event.stopPropagation();
+    this.isEmojiPickerOpen = !this.isEmojiPickerOpen;
+  }
+
+  onEmojiPicked(e: any): void {
+    const char = e.emoji?.native ?? e.emoji;
+    this.addReaction(char);
+    this.isEmojiPickerOpen = false;
+  }
+
+
+  @HostListener('document:click', ['$event'])
+  closeOnOutsideClick(event: MouseEvent): void {
+    if (!this.isEmojiPickerOpen) return;
+
+    const target = event.target as HTMLElement;
+    const insidePicker = this.emojiPickerRef?.nativeElement?.contains(target) ?? false;
+    const onBtn        = this.emojiBtnRef?.nativeElement?.contains(target) ?? false;
+
+    if (!insidePicker && !onBtn) {
+      this.isEmojiPickerOpen = false;
+    }
   }
 
   openProfil(): void {

@@ -40,9 +40,9 @@ section {
     @include flexBox(row, initial, center, 20);
   }
 
-  h3{
+  h3 {
     cursor: pointer;
-    &:hover{
+    &:hover {
       color: #444df2;
     }
   }
@@ -59,8 +59,8 @@ section {
 }
 
 .user-message {
+  @include flexBox(column, initial, flex-end, 8);
   > div {
-    @include flexBox(row, flex-end, center, 20);
     &:first-child {
       @include flexBox(row-reverse, flex-start, center, 20);
     }
@@ -69,6 +69,7 @@ section {
   .message-text {
     color: #ffffff;
     background-color: #797ef3;
+    border-radius: 30px 0px 30px 30px;
   }
 }
 
@@ -112,10 +113,10 @@ section {
     font-size: 30px;
     @include flexBox(initial, center, center, 0);
   }
-  >div{
+  > div {
     text-align: center;
   }
-  >p{
+  > p {
     font-size: 16px;
   }
 }
@@ -141,6 +142,18 @@ section {
     width: 40px;
     height: 40px;
   }
+}
+
+emoji-mart {
+  position: absolute;
+  bottom: 0px;
+  right: 266px;
+  z-index: 95;
+}
+
+.active-user-emoji{
+  right: inherit;
+  left: 308px;
 }
 
 .user-message-actions {

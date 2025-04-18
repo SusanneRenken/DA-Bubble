@@ -21,6 +21,8 @@ import { FormsModule } from '@angular/forms';
 import { ChannelLeaveComponent } from '../../general-components/channel-leave/channel-leave.component';
 import { ProfilComponent } from '../../general-components/profil/profil.component';
 import { ChannelMembersComponent } from './channel-members/channel-members.component';
+import { PickerComponent } from '@ctrl/ngx-emoji-mart';
+import { HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-message-area',
@@ -31,6 +33,7 @@ import { ChannelMembersComponent } from './channel-members/channel-members.compo
     ChannelLeaveComponent,
     ProfilComponent,
     ChannelMembersComponent,
+    PickerComponent,
   ],
   templateUrl: './message-area.component.html',
   styleUrls: ['./message-area.component.scss'],
@@ -50,6 +53,9 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   private scrollContainer!: ElementRef<HTMLDivElement>;
   @ViewChild('messageInput')
   private messageInputRef!: ElementRef<HTMLTextAreaElement>;
+  @ViewChild('emojiPicker', { read: ElementRef }) emojiPickerRef?: ElementRef;
+  @ViewChild('emojiButton', { read: ElementRef }) emojiButtonRef?: ElementRef;
+  
 
   messages: Message[] = [];
 
@@ -65,6 +71,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   isEditChannelOpen: boolean = false;
   isProfilOpen: boolean = false;
   isChannelMemberOpen: boolean = false;
+  isEmojiPickerOpen: boolean = false;
 
   foundUsers: User[] = [];
   foundChannels: Channel[] = [];
@@ -449,5 +456,43 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
     this.currentMentionPos = -1;
 
     txtArea.focus();
+  }
+
+  toggleEmojiPicker(event: MouseEvent): void {
+    event.stopPropagation();
+    this.isEmojiPickerOpen = !this.isEmojiPickerOpen;
+  
+    if (this.isEmojiPickerOpen) {
+      setTimeout(() => {
+        this.emojiPickerRef?.nativeElement.focus?.();
+      });
+    }
+  }
+
+  addEmoji(emoji: any): void {
+    console.log('Emoji:', emoji.emoji.native);
+    const txtArea = this.messageInputRef.nativeElement;
+    const caretPos = txtArea.selectionStart;
+    const textBefore = this.newMessageText.slice(0, caretPos);
+    const textAfter = this.newMessageText.slice(caretPos);
+    this.newMessageText = textBefore + emoji.emoji.native + textAfter;
+    txtArea.value = this.newMessageText;
+    const newCaretPos = caretPos + emoji.emoji.native.length;
+    txtArea.setSelectionRange(newCaretPos, newCaretPos);
+    txtArea.focus();
+    this.isEmojiPickerOpen = false;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (!this.isEmojiPickerOpen) return;
+
+    const target = event.target as HTMLElement;
+    const insidePicker = this.emojiPickerRef?.nativeElement.contains(target);
+    const onIcon = this.emojiButtonRef?.nativeElement.contains(target);
+
+    if (!insidePicker && !onIcon) {
+      this.isEmojiPickerOpen = false;
+    }
   }
 }

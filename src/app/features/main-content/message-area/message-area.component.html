@@ -60,53 +60,51 @@
       <p>2 Antworten</p>
       <span></span>
     </div>
-    } 
-    @if (messages && messages.length === 0) { 
-      @if(chatType === 'private'){
-      <div class="empty-private-chat">
-        <div>
-          <img src="/assets/img/{{ chatPartner?.uUserImage }}" alt="" />
-          <h1>{{ chatPartner?.uName }}</h1>
-        </div>
-        <p>
-          Diese Unterhaltung findet nur Zwichen
-          <span>&#64;{{ chatPartner?.uName }}</span> und dir statt
-        </p>
+    } @if (messages && messages.length === 0) { @if(chatType === 'private'){
+    <div class="empty-private-chat">
+      <div>
+        <img src="/assets/img/{{ chatPartner?.uUserImage }}" alt="" />
+        <h1>{{ chatPartner?.uName }}</h1>
       </div>
-      } @else if(chatType === 'channel'){
-      <div class="empty-channel-chat">
-        <div>
-          <div class="material-symbols tag-icon">tag</div>
-          <h1>{{ channelData?.cName }}</h1>
-        </div>
-        <p>
-          Du hast diesen Channel heute erstellt. Das ist der Anfang des Channels
-          <span>&#64;{{ channelData?.cName }}.</span>
-        </p>
+      <p>
+        Diese Unterhaltung findet nur Zwichen
+        <span>&#64;{{ chatPartner?.uName }}</span> und dir statt
+      </p>
+    </div>
+    } @else if(chatType === 'channel'){
+    <div class="empty-channel-chat">
+      <div>
+        <div class="material-symbols tag-icon">tag</div>
+        <h1>{{ channelData?.cName }}</h1>
       </div>
-      } 
-    } 
-    @else{ 
-        @for (message of messages; track message.mId; let i = $index) {
-          @if (shouldShowDateSeparator(i)) {
-          <div class="date-separator">
-            <span></span>
-            <p>{{ getDateString(message.mTime) }}</p>
-            <span></span>
-          </div>
-          } 
+      <p>
+        Du hast diesen Channel heute erstellt. Das ist der Anfang des Channels
+        <span>&#64;{{ channelData?.cName }}.</span>
+      </p>
+    </div>
+    } } @else{ @for (message of messages; track message.mId; let i = $index) {
+    @if (shouldShowDateSeparator(i)) {
+    <div class="date-separator">
+      <span></span>
+      <p>{{ getDateString(message.mTime) }}</p>
+      <span></span>
+    </div>
+    }
 
-          <app-message
-            [message]="message"
-            [activeUserId]="activeUserId"
-            [chatType]="chatType"
-            (profileClick)="openUserProfil($event)"
-          ></app-message>
+    <app-message
+      [message]="message"
+      [activeUserId]="activeUserId"
+      [chatType]="chatType"
+      (profileClick)="openUserProfil($event)"
+    ></app-message>
     } }
   </div>
 
   <div class="chatbox-textfield thread-margin">
-    @if (displaySuggestions) {
+    @if (isEmojiPickerOpen) {
+    <emoji-mart #emojiPicker (emojiClick)="addEmoji($event)"></emoji-mart>
+
+    } @if (displaySuggestions) {
 
     <div class="suggestions">
       @for(user of foundUsers; track user) {
@@ -138,7 +136,7 @@
 
     <div class="textfield-buttons">
       <div>
-        <button class="icon-button blue-hover">
+        <button class="icon-button blue-hover" (click)="toggleEmojiPicker($event)" >
           <div class="material-symbols textfield-icon">sentiment_satisfied</div>
         </button>
 
@@ -160,8 +158,7 @@
     [channelData]="channelData"
     (close)="toggleEdit()"
   ></app-channel-leave>
-  } 
-  @if (isProfilOpen) {
+  } @if (isProfilOpen) {
   <app-profil
     [activeUserId]="activeUserId"
     [userImage]="userProfil?.uUserImage"
@@ -173,8 +170,7 @@
     [showButton]="activeUserId !== userProfil?.uId"
     (close)="toggleProfile(null)"
   ></app-profil>
-  } 
-  @if (isChannelMemberOpen) {
+  } @if (isChannelMemberOpen) {
   <app-channel-members
     [channelMembers]="channelMembers"
     [activeUserId]="activeUserId"

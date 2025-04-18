@@ -215,9 +215,16 @@ textarea {
   }
 }
 
+emoji-mart{
+  position: absolute;
+  bottom: 132px;
+  left: 20px;
+  z-index: 99;
+}
+
 .suggestions{
   position: absolute;
-  bottom: 128px;
+  bottom: -200px;
   left: 20px;
   max-height: 360px;
   flex: 1;

@@ -7,7 +7,7 @@
 
     <div class="memberlist">
       <div class="members">
-        @for (member of channelMembers; track member; let i = $index) {
+        @for (member of channelMembers; track member) {
         <div (click)="toggleMemberProfil(member)">
           <div class="user-img-status">
             <img src="/assets/img/{{ member?.uUserImage }}" alt="" />
@@ -15,7 +15,7 @@
           </div>
           <span
             >{{ member?.uName }}
-            @if (i === 0) {
+            @if (member.uId === activeUserId) {
             <span>(Du)</span>
             }
           </span>

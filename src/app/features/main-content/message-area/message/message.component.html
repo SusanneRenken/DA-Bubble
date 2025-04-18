@@ -57,19 +57,22 @@
             </p>
           </div>
 
-          <span  (click)="addReaction(reaction.reaction)">{{ reaction.reaction }} {{ reaction.count }}</span>
+          <span (click)="addReaction(reaction.reaction)"
+            >{{ reaction.reaction }} {{ reaction.count }}</span
+          >
         </div>
 
         } @if (groupedReactions.length > shownReactionNumber) {
         <div (click)="setShownReactionNumber()">
           +{{ groupedReactions.length - shownReactionNumber }} weitere
         </div>
-        }
-        @if (groupedReactions.length === shownReactionNumber &&
+        } @if (groupedReactions.length === shownReactionNumber &&
         shownReactionNumber > 7) {
         <div (click)="setShownReactionNumber()">Weniger anzeigen</div>
         }
-        <span class="material-symbols">add_reaction</span>
+        <span class="material-symbols" (click)="toggleEmojiPicker($event)"
+          >add_reaction</span
+        >
       </span>
       } @if (message.mThreadId && chatType !== 'thread') {
       <h4>2 Antworten</h4>
@@ -86,7 +89,14 @@
     <span (click)="addReaction(reaction)">{{ reaction }}</span>
     }
 
-    <div class="material-symbols action-btn">sentiment_satisfied</div>
+    <span
+      #emojiBtn
+      class="material-symbols action-btn"
+      (click)="toggleEmojiPicker($event)"
+    >
+      add_reaction
+    </span>
+
     <div class="material-symbols action-btn">comment</div>
     <div
       class="material-symbols action-btn"
@@ -95,4 +105,10 @@
       more_vert
     </div>
   </div>
+  @if(isEmojiPickerOpen) {<emoji-mart
+    #emojiPicker
+    (emojiClick)="onEmojiPicked($event)"
+    [class.active-user-emoji]="message.mSenderId === activeUserId"
+  ></emoji-mart
+  >}
 </section>

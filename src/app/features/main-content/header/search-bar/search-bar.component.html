@@ -1,5 +1,10 @@
 <main>
-    <input (keyup)="onKey($event)" [value]="searchValue" type="text" placeholder="Devespace durchsuchen">
+    <app-device-visible mode="tabletBig">
+        <input (keyup)="onKey($event)" [value]="searchValue" type="text" placeholder="Gehe zu...">
+    </app-device-visible>
+    <app-device-visible mode="desktopBig">
+        <input (keyup)="onKey($event)" [value]="searchValue" type="text" placeholder="Devespace durchsuchen">
+    </app-device-visible>
     <div class="searchButton">
         <img src="/assets/icons/search.svg">
     </div>

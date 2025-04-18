@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore } from '@angular/fire/firestore';
+import { Firestore, collectionData  } from '@angular/fire/firestore';
 import {
   collection,
   doc,
@@ -85,6 +85,11 @@ export class UserService {
     }
 
     return results;
+  }
+
+  getEveryUsers(): Observable<User[]> {
+    const usersCollection = collection(this.firestore, 'users');
+    return collectionData(usersCollection, { idField: 'uId' }) as Observable<User[]>;
   }
 
   async editLastReactions(

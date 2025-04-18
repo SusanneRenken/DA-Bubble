@@ -41,3 +41,18 @@ app-device-visible {
     color: #535af1;
   }
 }
+@media (max-width: 600px) {
+  header {
+    @include flexBox("", space-between, center, 0);
+    padding-inline: 0px;
+  }
+  app-device-visible{
+    width: 0px;
+    margin-left: 0px;
+  }
+}
+@media (max-width: 450px) {
+  img {
+    width: 200px;
+  }
+}

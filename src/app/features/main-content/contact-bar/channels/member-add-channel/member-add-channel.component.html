@@ -1,0 +1,32 @@
+<section>
+    <div class="addMemberPopUp">
+        <h1>Leute hinzufügen</h1>
+        <button class="buttonIconClose"> 
+            <div class="material-symbols">close</div>
+        </button>
+    </div>
+    <div class="addEveryOrOneMember">
+        <label class="custom-radio">
+            <input type="radio" [(ngModel)]="selectedOption" name="memberOption" value="option1">
+            <span class="radio-mark"></span>
+            <span class="radio-label">Alle Mitglieder von <span>Devspace</span> hinzufügen</span>
+        </label>
+        <div class="OneMember">
+            <label class="custom-radio">
+                <input type="radio" [(ngModel)]="selectedOption" name="memberOption" value="option2">
+                <span class="radio-mark"></span>
+                <span class="radio-label">Bestimmte Leute hinzufügen</span>
+            </label>
+        </div>
+    </div>
+    @if (selectedOption === 'option2') {
+        <div class="OneMemberInput">
+            <input type="text" placeholder="Name eingeben">
+        </div>
+       
+    }
+    
+    <div class="createMember">
+        <button class="createMemberButton">Erstellen</button>
+    </div>
+</section>

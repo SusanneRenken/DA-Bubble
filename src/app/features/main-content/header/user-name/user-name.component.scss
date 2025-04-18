@@ -164,4 +164,18 @@ section {
       width: 180px;
     }
   }
+  main{
+    width: 70px;
+  }
+}
+@media(max-width: 450px){
+  main{
+    width: 60px;
+  }
+  .avatar img,
+  .userStatus
+  {
+    height: 60px;
+    width: 60px;
+  }
 }

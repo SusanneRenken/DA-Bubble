@@ -1,21 +1,14 @@
 <main (click)="onMainClick($event)">
   @if (newChannelMembers) {
-    <div class="memberAdd"  #memberAddWrapper>
-      <header class="addMemberHeader">
-        <div>
-          <h1>Leute hinzufügen</h1>
-          <button class="closeIconButton" (click)="closeChannelMembers()">
-            <div class="material-symbols closeIcon">close</div>
-          </button>
-        </div>
-        <span class="addMemberChannel"><div class="material-symbols">tag</div> {{ channelName }}</span>
-      </header>
-      <div class="addInputField">
-        <input type="text" placeholder="Name eingeben">
-      </div>
-      <div class="addNewMember">
-        <button class="addNewMemberButton">Hinzufügen</button>
-      </div>
+    <div class="memberAdd" #memberAddWrapper>
+      <app-add-new-members     
+        [channelMembers]="channelMembers"
+        [activeUserId]="activeUserId"
+        [channelId]="channelId"
+        [channelName]="channelName"
+        (close)="closeChannelMembers()"
+        [showInput]="true" 
+      ></app-add-new-members>
     </div>
   }
   @else {

@@ -71,7 +71,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   displaySuggestions: boolean = false;
   currentMentionPos: number = -1;
 
-  ngAfterViewInit(): void {
+  ngAfterViewInit(): void {  
     setTimeout(() => {
       this.isLoading = false;
       setTimeout(() => {

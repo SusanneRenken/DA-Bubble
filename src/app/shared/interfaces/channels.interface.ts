@@ -4,5 +4,5 @@ export class Channels {
     cId?: string;
     cName?: string;
     createdAt?: string;
-    cUserIds?: { [key: string]: string };
+    cUserIds?: string[];
 }

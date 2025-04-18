@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
-import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, setDoc,updateDoc ,serverTimestamp} from 'firebase/firestore';
 import { Channel } from '../interfaces/channel.interface';
 
 @Injectable({
@@ -34,5 +34,49 @@ export class ChannelService {
         throw new Error('Channel not found');
       }
     });
+  }
+  
+  async addUserToChannel(channelId: string, userId: string): Promise<void> {
+    const channelRef = doc(this.firestore, 'channels', channelId);
+    const channelSnap = await getDoc(channelRef);
+  
+    if (channelSnap.exists()) {
+      const channelData = channelSnap.data();
+      const currentUserIds = channelData['cUserIds'] || [];
+  
+      if (!currentUserIds.includes(userId)) {
+        const updatedUserIds = [...currentUserIds, userId];
+  
+        await updateDoc(channelRef, {
+          cUserIds: updatedUserIds,
+        });
+  
+        console.log('✅ User-ID wurde am Ende des Arrays hinzugefügt.');
+      } else {
+        console.log('ℹ️ User-ID ist bereits vorhanden.');
+      }
+    } else {
+      console.error('❌ Channel nicht gefunden.');
+    }
+  }
+
+  async createChannel(name: string, description: string, userId: string): Promise<string | void> {
+    if (!name || !userId) return;
+  
+    const channelsCollectionRef = collection(this.firestore, 'channels');
+    const newDocRef = doc(channelsCollectionRef);
+    const newId = newDocRef.id;
+  
+    const newChannel: Channel = {
+      cId: newId,
+      cName: name,
+      cDescription: description,
+      cCreatedByUser: userId,
+      cUserIds: [userId],
+      cTime: serverTimestamp() as any,
+    };
+  
+    await setDoc(newDocRef, newChannel);
+    return newId;
   }
 }

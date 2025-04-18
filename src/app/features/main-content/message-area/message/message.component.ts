@@ -41,6 +41,8 @@ export class MessageComponent implements OnInit {
 
   @ViewChild('emojiPicker', { read: ElementRef }) emojiPickerRef?: ElementRef;
   @ViewChild('emojiBtn', { read: ElementRef }) emojiBtnRef?: ElementRef;
+  @ViewChild('optionsMenu', { read: ElementRef }) optionsMenuRef?: ElementRef;
+  @ViewChild('optionsBtn', { read: ElementRef }) optionsBtnRef?: ElementRef;
 
   activeUserData: User | null = null;
   senderData: User | null = null;
@@ -48,6 +50,7 @@ export class MessageComponent implements OnInit {
   shownReactionNumber: number = 7;
 
   isEmojiPickerOpen = false;
+  isOptionsOpen = false;
 
   ngOnInit(): void {
     this.loadSenderData();
@@ -215,15 +218,25 @@ export class MessageComponent implements OnInit {
 
   @HostListener('document:click', ['$event'])
   closeOnOutsideClick(event: MouseEvent): void {
-    if (!this.isEmojiPickerOpen) return;
+    if (!this.isEmojiPickerOpen && !this.isOptionsOpen) return;
 
     const target = event.target as HTMLElement;
+
     const insidePicker =
       this.emojiPickerRef?.nativeElement?.contains(target) ?? false;
-    const onBtn = this.emojiBtnRef?.nativeElement?.contains(target) ?? false;
+    const onEmojiBtn =
+      this.emojiBtnRef?.nativeElement?.contains(target) ?? false;
 
-    if (!insidePicker && !onBtn) {
+    const insideOptions =
+      this.optionsMenuRef?.nativeElement?.contains(target) ?? false;
+    const onOptionsBtn =
+      this.optionsBtnRef?.nativeElement?.contains(target) ?? false;
+
+    if (!insidePicker && !onEmojiBtn) {
       this.isEmojiPickerOpen = false;
+    }
+    if (!insideOptions && !onOptionsBtn) {
+      this.isOptionsOpen = false;
     }
   }
 
@@ -231,5 +244,10 @@ export class MessageComponent implements OnInit {
     if (this.message.mSenderId) {
       this.profileClick.emit(this.message.mSenderId);
     }
+  }
+
+  toggleOptions(event: MouseEvent): void {
+    event.stopPropagation();
+    this.isOptionsOpen = !this.isOptionsOpen;
   }
 }

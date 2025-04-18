@@ -66,13 +66,28 @@
     </span>
 
     <div class="material-symbols action-btn">comment</div>
+
     <div
+      #optionsBtn
       class="material-symbols action-btn"
       [class.d-none]="message.mSenderId != activeUserId"
+      (click)="toggleOptions($event)"
     >
       more_vert
     </div>
+
+    @if (isOptionsOpen) {
+    <div
+      #optionsMenu
+      class="options-menu"
+      [class.active-user-options]="message.mSenderId === activeUserId"
+    >
+      <div>Nachricht bearbeiten</div>
+      <div>Nachricht löschen</div>
+    </div>
+    }
   </div>
+
   @if(isEmojiPickerOpen) {<emoji-mart
     #emojiPicker
     (emojiClick)="onEmojiPicked($event)"

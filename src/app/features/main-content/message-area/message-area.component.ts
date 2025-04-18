@@ -91,7 +91,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['chatType'] || changes['chatId'] || changes['activeUserId']) {
       this.isLoading = true;
-      this.lastListLength = 0; 
+      this.lastListLength = 0;
       this.loadMessages();
       this.loadChatData();
       setTimeout(() => {

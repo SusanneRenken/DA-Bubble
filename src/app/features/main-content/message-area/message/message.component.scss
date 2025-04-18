@@ -151,7 +151,7 @@ emoji-mart {
   z-index: 95;
 }
 
-.active-user-emoji{
+.active-user-emoji {
   right: inherit;
   left: 308px;
 }
@@ -159,6 +159,31 @@ emoji-mart {
 .user-message-actions {
   right: initial;
   left: 46px;
+}
+
+.options-menu {
+  position: absolute;
+  top: 25px;
+  right: -240px;
+  padding: 10px 20px;
+  background: #ffffff;
+  border-radius: 0 30px 30px 30px;
+  box-shadow: 0px 6px 14px 0px rgba(0, 0, 0, 0.2);
+  z-index: 90;
+  @include flexBox(column, stretch, stretch, 0);
+
+  > div {
+    cursor: pointer;
+    padding: 10px 20px;
+    width: 220px;  
+    font-weight: 600;
+    border-radius: 100px;
+    &:hover {
+      color: #535af1;
+      font-weight: 700;
+      background: #eceefe;
+    }
+  }
 }
 
 .d-none {

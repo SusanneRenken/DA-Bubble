@@ -13,16 +13,23 @@ import { ButtonComponent } from '../../general-components/button/button.componen
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthentificationService } from '../../../shared/services/authentification.service';
 import { CustomInputComponent } from '../../general-components/custom-input/custom-input.component';
+import { SuccessIndicatorComponent } from '../../general-components/success-indicator/success-indicator.component';
 
 @Component({
   selector: 'app-confirm-password',
-  imports: [ButtonComponent, ReactiveFormsModule, CustomInputComponent],
+  imports: [
+    ButtonComponent,
+    ReactiveFormsModule,
+    CustomInputComponent,
+    SuccessIndicatorComponent,
+  ],
   templateUrl: './confirm-password.component.html',
   styleUrl: './confirm-password.component.scss',
 })
 export class ConfirmPasswordComponent implements OnInit {
   newPassword!: FormGroup;
   oobCode: string | null = null;
+  isConfirmationVisible: boolean = false;
 
   static passwordMatchValidator: ValidatorFn = (group: AbstractControl): ValidationErrors | null => {
     const newPassword = group.get('newPassword')?.value;
@@ -40,13 +47,15 @@ export class ConfirmPasswordComponent implements OnInit {
   ngOnInit(): void {
     this.oobCode = this.route.snapshot.queryParamMap.get('oobCode');
     this.newPassword = new FormGroup({
-      newPassword: new FormControl('', [Validators.required, Validators.minLength(6)]),
-      conPassword: new FormControl('', [Validators.required, Validators.minLength(6)]),
-    }, { validators: ConfirmPasswordComponent.passwordMatchValidator });
+      newPassword: new FormControl('', [Validators.required, Validators.minLength(6),]),
+      conPassword: new FormControl('', [Validators.required, Validators.minLength(6),]),
+    },
+    { validators: ConfirmPasswordComponent.passwordMatchValidator }
+    );
   }
 
   isPasswordMismatch(): boolean {
-    return !!this.newPassword.errors && this.newPassword.errors['passwordMismatch'];
+    return (!!this.newPassword.errors && this.newPassword.errors['passwordMismatch']);
   }
 
   onSubmit() {
@@ -57,15 +66,21 @@ export class ConfirmPasswordComponent implements OnInit {
       }
       const { newPassword, conPassword } = this.newPassword.value;
       if (newPassword === conPassword) {
-        this.authService.confirmResetPassword(this.oobCode, newPassword)
-        .then(() => {
-          console.log('Password is confirmed: ', this.newPassword.value);
-          this.router.navigate(['/access']);
-          this.changeComponent('login');
-        })
-        .catch((error) => {
-          console.error('Error when resetting the password:', error);
-        });
+        this.authService
+          .confirmResetPassword(this.oobCode, newPassword)
+          .then(() => {
+            this.isConfirmationVisible = true;
+            setTimeout(() => {
+              this.isConfirmationVisible = false;
+            }, 2000);
+            setTimeout(() => {
+              this.router.navigate(['/access']);
+              this.changeComponent('login');
+            }, 3000);
+          })
+          .catch((error) => {
+            console.error('Error when resetting the password:', error);
+          });
       }
     }
   }

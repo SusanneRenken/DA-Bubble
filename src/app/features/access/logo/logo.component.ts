@@ -51,24 +51,14 @@ import {
       ])
     ]),
 
-    trigger('textColor', [
-      state('white', style({
-        color: 'white'
-      })),
-      state('black', style({
-        color: 'black'
-      })),
-      transition('white => black', [
-        animate('800ms ease-in-out')
-      ])
-    ]),
-
     trigger('backgroundFade', [
       state('visible', style({
-        opacity: 1
+        backgroundColor: '#797ef3',
+        color: 'white'
       })),
       state('hidden', style({
         backgroundColor: 'transparent',
+        color: 'black'
       })),
       transition('visible => hidden', [
         animate('1500ms ease-in-out')
@@ -79,8 +69,7 @@ import {
 export class LogoComponent implements OnInit {
   logoPosition = 'center';
   textState = 'hidden';
-  backgroundState = 'full';
-  textColor = 'white';
+  backgroundState = 'visible';
 
   ngOnInit() {
     localStorage.setItem('showAnimation', 'true');
@@ -94,11 +83,7 @@ export class LogoComponent implements OnInit {
     }, 1800);
 
     setTimeout(() =>{
-      this.textColor = 'black';
-    }, 3400);
-
-    setTimeout(() =>{
       this.backgroundState = 'hidden';
-    }, 3500);
+    }, 2400);
   }
 }

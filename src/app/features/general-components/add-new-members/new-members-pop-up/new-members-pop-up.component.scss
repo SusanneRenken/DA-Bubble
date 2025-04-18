@@ -1,0 +1,67 @@
+@import '../../../../../styles.scss';
+.addInputField{
+    @include flexBox('', left, center, '');
+    width: 100%;
+    padding: 15px 20px;
+    position: relative;
+    height: 60px;
+    border-radius: 30px;
+    border: 1px solid #ADB0D9;
+    input{
+      @include fontStyle(18px, #686868, 400);
+      width: 100%;
+      height: 40px;
+      outline: none;
+      border: none;
+    }
+  }
+  .showMembers{
+    background-color: white;
+    top: 50px;
+    height: 200px;
+    width: 90%;
+    padding: 20px 40px;
+    box-shadow: 4px 4px 7px 4px rgba(0, 0, 0, 0.2);
+    border-radius: 0 30px 30px 30px;
+    position: absolute;
+    z-index: 20
+  }
+  .memberItem{
+    @include flexBox('',  left, center, 15);
+    border: none;
+    width: 100%;
+    padding: 4px 16px;
+    border-radius: 30px;
+    background-color: white;
+    cursor: pointer;
+    &:hover{
+      background-color: #eceefe;
+    }
+  }
+  .inputNamePush{
+    @include flexBox('',  left, center, 15);
+    background-color: #eceefe;
+    width: fit-content;
+    border-radius: 25px;
+    padding: 0 20px;
+    height: 40px;
+  }
+  .inputNameImgPush{
+    @include flexBox('',  left, center, 15);
+    img{
+      border-radius: 50%;
+      height: 32px;
+      width: 32px;
+    }
+  }
+  .inputNamePushClose{
+    @include flexBox('',  center, center, '');
+    background-color: #eceefe;
+    border: none;
+    height: 32px;
+    width: 32px;
+    border-radius: 50%;
+    &:hover{
+      background-color: white;
+    }
+  }

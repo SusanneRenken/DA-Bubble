@@ -4,11 +4,14 @@ import { User } from '../../../shared/interfaces/user.interface';
 import { ChannelService } from '../../../shared/services/channel.service';
 import { UserService } from '../../../shared/services/user.service';
 import { FormsModule } from '@angular/forms';
+import { NewMembersPopUpComponent } from './new-members-pop-up/new-members-pop-up.component';
+import { firstValueFrom } from 'rxjs';
+
 
 @Component({
   selector: 'app-add-new-members',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, NewMembersPopUpComponent],
   templateUrl: './add-new-members.component.html',
   styleUrl: './add-new-members.component.scss'
 })
@@ -22,56 +25,36 @@ export class AddNewMembersComponent {
   @Input() channelDescription: string = '';
   @Output() close = new EventEmitter<void>();
   
-
-  searchValue: string = '';
-  searchText: string = '';
+  memberAddElement: boolean = false;
+  memberInputId: string = '';
   memberInputAdd: string = '';
   memberInputImage: string = '';
-  memberInputId: string = '';
-  charCount:number = 0;
   showMember: boolean = false;
-  memberAddElement: boolean = false;
-  filteredMembers: User[] = [];
+ 
 
-  constructor(private userService: UserService, private channelService: ChannelService) {}
+  constructor(private channelService: ChannelService, private userService: UserService) {}
 
   emitClose() {
     this.close.emit();
   }
 
-  onKey(event: KeyboardEvent) {
-    const input = (event.target as HTMLInputElement).value.toLowerCase().trim();
-    this.searchValue = input;
-    this.charCount = input.length;
-    if (this.charCount >= 3) {
-      this.userService.getEveryUsers().subscribe((users: User[]) => {
-        const memberIds = new Set(this.channelMembers.map(member => member.uId));
-        this.filteredMembers = users.filter(user =>
-          !memberIds.has(user.uId) && user.uName.toLowerCase().includes(this.searchValue)
-        );
-        this.showMember = this.filteredMembers.length > 0;
-      });
-    } else {
-      this.filteredMembers = [];
-      this.showMember = false;
-    }
-  }
+  
 
-  memberNameAdd(memberName: any, memberImage: any, memberId: any){
+  memberNameAdd(memberName: any, memberImage: any, memberId: any) {
     this.memberInputAdd = memberName;
     this.memberInputImage = memberImage;
     this.memberInputId = memberId;
     this.memberAddElement = true;
     this.showMember = false;
-
   }
   
-  inputNameClose(){
+  inputNameClose(): void {
     this.memberAddElement = false;
     this.memberInputAdd = '';
     this.memberInputImage = '';
+    this.memberInputId = '';
   }
-  
+
   addNewChannelMember() {
     if (this.memberAddElement === true && this.channelId && this.memberInputId) {
       this.channelService.addUserToChannel(this.channelId, this.memberInputId)
@@ -83,14 +66,34 @@ export class AddNewMembersComponent {
 
   async createNewChannel(name: string, description: string) {
     if (!name || !this.activeUserId) return;
-
-    try {
-      const newChannelId = await this.channelService.createChannel(name, description, this.activeUserId);
-      this.channelId = newChannelId;
-
-    } catch (error) {
-      console.error('Fehler beim Erstellen des Channels:', error);
+  
+    let userIds: string[] = [];
+  
+    if (this.selectedOption === 'option1') {
+      const allUsers = await firstValueFrom(this.userService.getEveryUsers());
+      userIds = allUsers
+        .map(user => user.uId)
+        .filter((id): id is string => typeof id === 'string');
+    } else {
+      userIds = [this.memberInputId];
     }
+  
+    if (!userIds.includes(this.activeUserId)) {
+      userIds.unshift(this.activeUserId);
+    }
+  
+    const newChannelId = await this.userService.createChannelWithUsers(
+      name,
+      description,
+      this.activeUserId,
+      userIds
+    );
+  
+    this.channelId = newChannelId;
+    this.inputNameClose();
+    this.emitClose();
   }
+  
+  
  
 }

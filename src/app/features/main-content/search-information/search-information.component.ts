@@ -3,7 +3,7 @@ import { Component, Input, ElementRef, EventEmitter, HostListener, Output, } fro
 import { Firestore, collection } from '@angular/fire/firestore';
 import { doc, getDocs } from 'firebase/firestore';
 import { Message } from '../../../shared/interfaces/message.interface';
-import { Channels } from '../../../shared/interfaces/channels.interface';
+import { Channel } from '../../../shared/interfaces/channel.interface';
 import { User } from '../../../shared/interfaces/user.interface';
 
 @Component({
@@ -21,7 +21,7 @@ export class SearchInformationComponent {
   showContact: boolean = true;
   showChannels: boolean = true;
   showThreadMessages: boolean = true;
-  channels: any[] = [];
+  channel: any[] = [];
   users: { uName: string; uUserImage: string }[] = [];
   matchedMessages: { mText: string; channelName: string }[] = [];
   directMessages: { mText: string; userName: string }[] = [];
@@ -58,8 +58,8 @@ export class SearchInformationComponent {
     this.showDirectMessages = this.directMessages.length === 0;
     this.threadMessages = this.getMatchedThreadMessages(messages, searchText);
     this.showThreadMessages = this.threadMessages.length === 0;
-    this.channels = enrichedChannels;
-    this.showChannels = this.channels.length === 0;
+    this.channel = enrichedChannels;
+    this.showChannels = this.channel.length === 0;
   }
 
 
@@ -68,13 +68,13 @@ export class SearchInformationComponent {
   }
 
 
-  private async fetchData(): Promise<[User[], Message[], Channels[]]> {
+  private async fetchData(): Promise<[User[], Message[], Channel[]]> {
     const usersSnap = await getDocs(collection(this.firestore, 'users'));
     const messagesSnap = await getDocs(collection(this.firestore, 'messages'));
     const channelsSnap = await getDocs(collection(this.firestore, 'channels'));
     const users = usersSnap.docs.map((doc) => doc.data() as User);
     const messages = messagesSnap.docs.map((doc) => doc.data() as Message);
-    const channels = channelsSnap.docs.map((doc) => doc.data() as Channels);
+    const channels = channelsSnap.docs.map((doc) => doc.data() as Channel);
     return [users, messages, channels];
   }
 
@@ -122,7 +122,7 @@ export class SearchInformationComponent {
   }
 
 
-  private mapMessagesToChannelNames( messages: Message[], channels: Channels[] ): { mText: string; channelName: string }[] {
+  private mapMessagesToChannelNames( messages: Message[], channels: Channel[] ): { mText: string; channelName: string }[] {
     return messages.map((message) => {
       const channel = channels.find((c) => c.cId === message.mChannelId);
       return {
@@ -133,7 +133,7 @@ export class SearchInformationComponent {
   }
 
 
-  private getMatchedMessages( messages: Message[], channels: Channels[], searchText: string ): { mText: string; channelName: string }[] {
+  private getMatchedMessages( messages: Message[], channels: Channel[], searchText: string ): { mText: string; channelName: string }[] {
     const filteredMessages = this.filterRelevantMessages(messages, searchText);
     return this.mapMessagesToChannelNames(filteredMessages, channels);
   }
@@ -163,7 +163,7 @@ export class SearchInformationComponent {
   }
 
 
-  private filterChannelsByUserOrName( channels: Channels[], matchedUser: User | undefined, searchText: string ): Channels[] {
+  private filterChannelsByUserOrName( channels: Channel[], matchedUser: User | undefined, searchText: string ): Channel[] {
     if (matchedUser?.uId) {
       return channels.filter((channel) => {
         const userIds = Object.values(channel.cUserIds || {});
@@ -177,7 +177,7 @@ export class SearchInformationComponent {
   }
 
 
-  private enrichChannelsWithUserNames( channels: Channels[], users: User[] ): any[] {
+  private enrichChannelsWithUserNames( channels: Channel[], users: User[] ): any[] {
     return channels.map((channel) => {
       const userIds = Object.values(channel.cUserIds || {});
       const memberNames = users

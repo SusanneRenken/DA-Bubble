@@ -17,7 +17,7 @@
         <div>
             <h1>Gefundene Channels und Nutzer in Channels</h1>
             @if (!showChannels) {
-                @for (channel of channels; track $index) {
+                @for (channel of channel; track $index) {
                     <div class="everyInfo">
                         <h3># {{ channel.cName }}</h3>
                     </div>

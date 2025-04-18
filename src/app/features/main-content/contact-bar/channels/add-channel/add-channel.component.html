@@ -1,6 +1,6 @@
 <main>
     @if (showAddMember) {
-        <section>
+        <section class="sectionMain" #addChannel>
             <header>
                 <div class="headlineClose">
                     <span>Channel erstellen</span>
@@ -34,7 +34,8 @@
         </section>
     }
     @else {
-        <app-add-new-members     
+        <section #addChannelAll>
+            <app-add-new-members      
             [activeUserId]="activeUserId"
             (close)="closeWindow()"
             [channelId]="channelId"
@@ -42,6 +43,8 @@
             [channelDescription]="channelDescription"
             [showInput]="false" 
         ></app-add-new-members>
+        </section>
+       
     }
 
 </main>

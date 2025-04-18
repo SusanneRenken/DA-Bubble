@@ -8,7 +8,7 @@ main{
     width: 100%;
     z-index: 30;
 }
-section{
+.sectionMain{
     @include flexBox(column, top, left, 20);
     width: 870px;
     height: 540px;

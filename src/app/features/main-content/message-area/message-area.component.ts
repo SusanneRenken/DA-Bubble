@@ -443,4 +443,8 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
 
     txtArea.focus();
   }
+
+  removeMember(){
+
+  }
 }

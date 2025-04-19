@@ -84,7 +84,7 @@
       [class.active-user-options]="message.mSenderId === activeUserId"
     >
       <div>Nachricht bearbeiten</div>
-      <div>Nachricht löschen</div>
+      <div (click)="togglePermanentDelete()">Nachricht löschen</div>
     </div>
     }
   </div>
@@ -96,3 +96,11 @@
   ></emoji-mart
   >}
 </section>
+@if (isPermanentDeleteOpen) {
+<app-permanent-delete
+  [target]="'message'"
+  [id]="message.mId"
+  (close)="isPermanentDeleteOpen = false"
+></app-permanent-delete>
+
+}

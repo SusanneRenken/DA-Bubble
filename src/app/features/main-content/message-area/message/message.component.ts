@@ -21,10 +21,11 @@ import {
 import { Subscription } from 'rxjs';
 import { MessageService } from '../../../../shared/services/message.service';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
+import { PermanentDeleteComponent } from '../../../general-components/permanent-delete/permanent-delete.component';
 
 @Component({
   selector: 'app-message',
-  imports: [PickerComponent],
+  imports: [PickerComponent, PermanentDeleteComponent],
   templateUrl: './message.component.html',
   styleUrl: './message.component.scss',
 })
@@ -51,6 +52,7 @@ export class MessageComponent implements OnInit {
 
   isEmojiPickerOpen = false;
   isOptionsOpen = false;
+  isPermanentDeleteOpen = false;
 
   ngOnInit(): void {
     this.loadSenderData();
@@ -218,7 +220,7 @@ export class MessageComponent implements OnInit {
 
   @HostListener('document:click', ['$event'])
   closeOnOutsideClick(event: MouseEvent): void {
-    if (!this.isEmojiPickerOpen && !this.isOptionsOpen) return;
+    if (!this.isEmojiPickerOpen && !this.isOptionsOpen || this.isPermanentDeleteOpen) return;
 
     const target = event.target as HTMLElement;
 
@@ -249,5 +251,9 @@ export class MessageComponent implements OnInit {
   toggleOptions(event: MouseEvent): void {
     event.stopPropagation();
     this.isOptionsOpen = !this.isOptionsOpen;
+  }
+
+  togglePermanentDelete(): void {
+    this.isPermanentDeleteOpen = !this.isPermanentDeleteOpen;
   }
 }

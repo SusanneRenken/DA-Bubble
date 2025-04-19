@@ -19,6 +19,7 @@ import {
   getDoc,
   serverTimestamp,
   updateDoc,
+  deleteDoc, 
 } from 'firebase/firestore';
 import { Reaction } from '../interfaces/reaction.interface';
 
@@ -189,6 +190,15 @@ export class MessageService {
     return updateDoc(messageRef, {
       mReactions: message.mReactions,
     });
+  }
+
+  deleteMessage(messageId: string): Promise<void> {
+    if (!messageId) {
+      return Promise.reject(new Error('Message ID fehlt.'));
+    }
+  
+    const messageRef = doc(this.firestore, 'messages', messageId);
+    return deleteDoc(messageRef);
   }
 
   async toggleReaction(messageId: string, reaction: Reaction): Promise<void> {

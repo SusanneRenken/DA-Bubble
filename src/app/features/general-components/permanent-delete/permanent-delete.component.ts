@@ -10,7 +10,7 @@ type DeleteTarget = 'message' | 'channel' | 'user';
   templateUrl: './permanent-delete.component.html',
   styleUrl: './permanent-delete.component.scss',
 })
-export class PermanentDeleteComponent {  
+export class PermanentDeleteComponent {
   private messageService = inject(MessageService);
 
   @Input({ required: true }) target!: DeleteTarget;
@@ -25,9 +25,12 @@ export class PermanentDeleteComponent {
   onYes(): void {
     switch (this.target) {
       case 'message':
-        this.messageService.deleteMessage(this.id)
+        this.messageService
+          .deleteMessage(this.id)
           .then(() => this.close.emit())
-          .catch(err => console.error('Fehler beim Löschen der Nachricht', err));
+          .catch((err) =>
+            console.error('Fehler beim Löschen der Nachricht', err)
+          );
         break;
 
       case 'channel':

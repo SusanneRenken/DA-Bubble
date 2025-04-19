@@ -22,10 +22,11 @@ import { Subscription } from 'rxjs';
 import { MessageService } from '../../../../shared/services/message.service';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { PermanentDeleteComponent } from '../../../general-components/permanent-delete/permanent-delete.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-message',
-  imports: [PickerComponent, PermanentDeleteComponent],
+  imports: [PickerComponent, PermanentDeleteComponent, FormsModule],
   templateUrl: './message.component.html',
   styleUrl: './message.component.scss',
 })
@@ -44,15 +45,19 @@ export class MessageComponent implements OnInit {
   @ViewChild('emojiBtn', { read: ElementRef }) emojiBtnRef?: ElementRef;
   @ViewChild('optionsMenu', { read: ElementRef }) optionsMenuRef?: ElementRef;
   @ViewChild('optionsBtn', { read: ElementRef }) optionsBtnRef?: ElementRef;
+  @ViewChild('editTextarea', { read: ElementRef })
+  editTextareaRef!: ElementRef<HTMLTextAreaElement>;
 
   activeUserData: User | null = null;
   senderData: User | null = null;
   groupedReactions: GroupedReaction[] = [];
   shownReactionNumber: number = 7;
+  editText = '';
 
   isEmojiPickerOpen = false;
   isOptionsOpen = false;
   isPermanentDeleteOpen = false;
+  isEditOpen = false;
 
   ngOnInit(): void {
     this.loadSenderData();
@@ -220,7 +225,11 @@ export class MessageComponent implements OnInit {
 
   @HostListener('document:click', ['$event'])
   closeOnOutsideClick(event: MouseEvent): void {
-    if (!this.isEmojiPickerOpen && !this.isOptionsOpen || this.isPermanentDeleteOpen) return;
+    if (
+      (!this.isEmojiPickerOpen && !this.isOptionsOpen) ||
+      this.isPermanentDeleteOpen
+    )
+      return;
 
     const target = event.target as HTMLElement;
 
@@ -251,6 +260,41 @@ export class MessageComponent implements OnInit {
   toggleOptions(event: MouseEvent): void {
     event.stopPropagation();
     this.isOptionsOpen = !this.isOptionsOpen;
+  }
+
+  toggleEdit(): void {
+    this.isEditOpen = !this.isEditOpen;
+  }
+
+  openEdit(): void {
+    this.editText = this.message.mText ?? '';
+    this.toggleEdit();  
+    setTimeout(() => this.editTextareaRef?.nativeElement.focus());
+  }
+
+  saveEdit(): void {
+    if (!this.message.mId) {
+      console.error('Es existiert keine mId für diese Message.');
+      return;
+    }
+  
+    const trimmed = this.editText.trim();
+  
+    if (trimmed === (this.message.mText ?? '').trim()) {
+      this.toggleEdit();
+      return;
+    }
+  
+    this.messageService
+      .editMessageText(this.message.mId, trimmed)
+      .then(() => {
+        this.message.mText = trimmed;
+        this.toggleEdit();
+        this.isOptionsOpen = false;
+      })
+      .catch((error) =>
+        console.error('Fehler beim Editieren der Message:', error)
+      );
   }
 
   togglePermanentDelete(): void {

@@ -38,19 +38,19 @@
         transition: all 0.1s ease-in-out;
       }
     }
-    
+
     .cancel {
       background: #ffffff;
       color: #686868;
       border: 1px solid #686868;
       &:hover {
-        background: #ECEEFE;
+        background: #eceefe;
         color: #444df2;
         border: 1px solid #797ef3;
       }
     }
     .confirm {
-      background: #ED1D79;
+      background: #ed1d79;
       color: #ffffff;
       &:hover {
         background: #d71a6b;

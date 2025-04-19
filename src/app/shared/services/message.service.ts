@@ -181,14 +181,27 @@ export class MessageService {
     return addDoc(messagesCollection, newMessage);
   }
 
-  editMessage(message: Partial<Message>): Promise<any> {
-    if (!message.mId) {
+  // Kann glaube ich gelöscht werden, da ich toggleReaction() habe
+
+  // editMessage(message: Partial<Message>): Promise<any> {
+  //   if (!message.mId) {
+  //     return Promise.reject(new Error('Message ID fehlt.'));
+  //   }
+  //   const messagesCollection = collection(this.firestore, 'messages');
+  //   const messageRef = doc(messagesCollection, message.mId || '');
+  //   return updateDoc(messageRef, {
+  //     mReactions: message.mReactions,
+  //   });
+  // }
+
+  editMessageText(messageId: string, newText: string): Promise<void> {
+    if (!messageId) {
       return Promise.reject(new Error('Message ID fehlt.'));
     }
-    const messagesCollection = collection(this.firestore, 'messages');
-    const messageRef = doc(messagesCollection, message.mId || '');
+  
+    const messageRef = doc(this.firestore, 'messages', messageId);
     return updateDoc(messageRef, {
-      mReactions: message.mReactions,
+      mText: newText,
     });
   }
 

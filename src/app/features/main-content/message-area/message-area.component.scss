@@ -202,12 +202,6 @@ app-message {
   width: 100%;
 }
 
-textarea {
-  all: unset;
-  word-break: break-word;
-  z-index: 2;
-}
-
 .textfield-buttons {
   @include flexBox(row, space-between, center, 0);
   div {

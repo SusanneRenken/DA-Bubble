@@ -3,6 +3,9 @@ import { NgComponentOutlet } from '@angular/common';
 import { ComponentSwitcherService } from '../../shared/services/component-switcher.service';
 import { ActivatedRoute } from '@angular/router';
 import { LogoComponent } from './logo/logo.component';
+import { LoginComponent } from './login/login.component';
+import { ImprintComponent } from './imprint/imprint.component';
+import { PrivacyComponent } from './privacy/privacy.component';
 
 @Component({
   selector: 'app-access',
@@ -12,6 +15,9 @@ import { LogoComponent } from './logo/logo.component';
 })
 export class AccessComponent implements OnInit {
   showAnimation: boolean = false;
+  LoginComponent = LoginComponent;
+  ImprintComponent = ImprintComponent;
+  PrivacyComponent = PrivacyComponent;
 
   constructor(private route: ActivatedRoute, public componentSwitcher: ComponentSwitcherService) {}
 

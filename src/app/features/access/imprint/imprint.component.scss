@@ -1,0 +1,19 @@
+@use '../../../shared/scss/mixins' as mixin;
+@use '../../../shared/scss/variables' as vari;
+
+:host {
+  position: relative;
+  @include mixin.dFlex($gap: 25px, $direction: column);
+}
+
+.arrow {
+  @include mixin.arrow(
+    $bg-color: vari.$sky-grey,
+    $icon-color: vari.$purple
+  );
+}
+
+h1 {
+  @include mixin.accHead(vari.$dark-blue);
+  padding-bottom: 30px;
+}

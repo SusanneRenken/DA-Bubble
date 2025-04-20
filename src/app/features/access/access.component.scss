@@ -6,6 +6,7 @@
   height: 100vh;
   @include mixin.dFlex();
   position: relative;
+  overflow: hidden;
 }
 
 .logo {

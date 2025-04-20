@@ -4,6 +4,7 @@
 :host {
   position: relative;
   @include mixin.dFlex($gap: 25px, $direction: column);
+  max-height: 700px;
 }
 
 .arrow {
@@ -16,4 +17,9 @@
 h1 {
   @include mixin.accHead(vari.$dark-blue);
   padding-bottom: 30px;
+}
+
+.content {
+  overflow: auto;
+  @include mixin.dFlex($justify:normal, $gap: 15px, $direction: column);
 }

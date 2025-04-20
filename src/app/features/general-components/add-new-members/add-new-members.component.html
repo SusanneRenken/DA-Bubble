@@ -1,5 +1,8 @@
 
 
+    <div class="greyxLineContainer">
+      <div class="greyxLine"></div>
+    </div>
     <header class="addMemberHeader">
       <div>
         <h1>Leute hinzufügen</h1>
@@ -41,7 +44,6 @@
             (memberNameAddEvent)="memberNameAdd($event.name, $event.image, $event.id)"
             (inputNameCloseEvent)="inputNameClose()"
         ></app-new-members-pop-up>
-
     }
     @if (showInput) {
         <app-new-members-pop-up
@@ -55,28 +57,16 @@
             (inputNameCloseEvent)="inputNameClose()"
         ></app-new-members-pop-up>
     }
-   
-
     <div  class="addNewMember">
         @if (!showInput) {
-            @if (selectedOption === 'option1') {
-                <button 
-                [class.active]="memberInputId !== 'right'"
-                [disabled]="memberInputId === 'right'"  
-                class="addNewMemberButton"
-                (click)="createNewChannel(channelName, channelDescription)">Erstellen
-                </button>
-            }
-            @if (selectedOption === 'option2') {
-                <button 
-                [class.active]="memberInputId !== ''"
-                [disabled]="memberInputId === ''"  
-                class="addNewMemberButton"
-                (click)="createNewChannel(channelName, channelDescription)">Erstellen
+            <button 
+              [class.active]="selectedOption !== 'option2' || memberInputId !== ''"
+              [disabled]="selectedOption === 'option2' && memberInputId === ''"
+              class="addNewMemberButton"
+              (click)="createNewChannel(channelName, channelDescription)">
+              Erstellen
             </button>
-            }
-            
-        }
+          }
         @else {
             <button  
             [class.active]="memberInputId !== ''"

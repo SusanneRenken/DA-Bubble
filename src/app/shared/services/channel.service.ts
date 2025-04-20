@@ -1,7 +1,9 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore } from '@angular/fire/firestore';
+import { Firestore, collectionData } from '@angular/fire/firestore';
 import { collection, doc, getDoc, getDocs, setDoc,updateDoc ,serverTimestamp} from 'firebase/firestore';
 import { Channel } from '../interfaces/channel.interface';
+import { retry, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -62,11 +64,9 @@ export class ChannelService {
 
   async createChannel(name: string, description: string, userId: string): Promise<string | void> {
     if (!name || !userId) return;
-  
     const channelsCollectionRef = collection(this.firestore, 'channels');
     const newDocRef = doc(channelsCollectionRef);
     const newId = newDocRef.id;
-  
     const newChannel: Channel = {
       cId: newId,
       cName: name,
@@ -75,8 +75,54 @@ export class ChannelService {
       cUserIds: [userId],
       cTime: serverTimestamp() as any,
     };
-  
     await setDoc(newDocRef, newChannel);
     return newId;
   }
+
+ 
+  async removeUserFromChannel(channelId: string, userId: string): Promise<void> {
+    const channelRef = doc(this.firestore, 'channels', channelId);
+    const channelSnap = await getDoc(channelRef);
+    if (!channelSnap.exists()) return;
+    const channelData = channelSnap.data();
+    const currentUserIds: string[] = channelData['cUserIds'] || [];
+    if (!currentUserIds.includes(userId)) return;
+    const updatedUserIds = currentUserIds.filter(id => id !== userId);
+    await updateDoc(channelRef, { cUserIds: updatedUserIds });
+  }
+
+  async updateChannelName(channelId: string, newName: string): Promise<void> {
+    if (!channelId || !newName.trim()) return;
+
+    const channelRef = doc(this.firestore, 'channels', channelId);
+    await updateDoc(channelRef, { cName: newName.trim() });
+  }
+
+
+  async updateChannelDescription(channelId: string, newDescription: string): Promise<void> {
+    const channelRef = doc(this.firestore, 'channels', channelId);
+    await updateDoc(channelRef, { cDescription: newDescription });
+  }
+
+  getSortedChannels(): Observable<{ id: string; name: string; createdAt: any }[]> {
+    const channelsCollection = collection(this.firestore, 'channels');
+    return collectionData(channelsCollection, { idField: 'id' }).pipe(
+      map((channels: any[]) =>
+        channels
+          .map(channel => ({
+            id: channel.id,
+            name: channel.cName,
+            createdAt: channel.createdAt || 0,
+          }))
+          .sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1))
+      )
+    );
+  }
+
+
+  allChannels(): Promise<Channel[]> {
+    const channelsCollection = collection(this.firestore, 'channels');
+    return getDocs(channelsCollection).then(snap => snap.docs.map(doc => doc.data() as Channel));
+  }
+  
 }

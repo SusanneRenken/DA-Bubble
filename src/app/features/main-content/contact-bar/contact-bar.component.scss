@@ -1,31 +1,44 @@
 @import "../../../../styles.scss";
+
 main{
   @include flexBox(column, top, left, 25);
     height: 100%;
     background-color: white;
     width: 366px;
     border-radius: 30px;
-    padding: 0 30px;
+    padding: 0 30px 30px 30px;
     overflow: auto;
 }
+
 main::-webkit-scrollbar{
   width: 10px;
 }
+
 main::-webkit-scrollbar-track{
   background-color: white;
   border-radius: 8px;
-  margin-top: 64px;
-  margin-bottom: 48px;
+  margin-top: 24px;
+  margin-bottom: 64px;
 }
+
 main::-webkit-scrollbar-thumb{
   background: linear-gradient(#ECEEFE, #ECEEFE);
   border-radius: 8px;
 }
+
 @media(max-width: 1000px){
   main{
     @include flexBox(column, top, left, 16);
     width: 100%;
-    padding: 0 24px;
+    padding: 0 24px 24px 24px;
+  }
+}
+@media(max-width: 450px){
+  main{
+    padding: 0;
+  }
+  main::-webkit-scrollbar{
+    display: none;
   }
 }
 

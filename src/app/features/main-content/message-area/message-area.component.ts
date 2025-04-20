@@ -444,7 +444,8 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
     txtArea.focus();
   }
 
-  removeMember(){
-
+  async removeMember() {
+    if (!this.activeUserId || !this.chatId) return;
+      await this.channelService.removeUserFromChannel(this.chatId, this.activeUserId);
   }
 }

@@ -1,36 +1,45 @@
-@import '../../../../../styles.scss';
-main{
-    width: 300px;
-    margin: 0 auto;
+@import "../../../../../styles.scss";
+
+main {
+  width: 300px;
+  margin: 0 auto;
 }
-header{
-    @include flexBox('', space-between, center, '');
-    height: 46px;
-    width: 100%;
+
+header {
+  @include flexBox("", space-between, center, "");
+  height: 46px;
+  width: 100%;
 }
-.showChannels{
-    @include flexBox('', center, center, '');
-    height: 30px;
-    width: 30px;
-    background-color: white;
-    border: none;
-    cursor: pointer;
+
+.showChannels {
+  @include flexBox("", center, center, "");
+  height: 30px;
+  width: 30px;
+  background-color: white;
+  border: none;
+  cursor: pointer;
 }
-.showChannelsIcon{
-    font-size: 30px;
+
+.showChannelsIcon {
+  font-size: 30px;
 }
-.channelHeadShow{
-    all: unset;
-    @include flexBox('', left, center, 15);
-    width: 180px;
-    height: 40px;   
-    cursor: pointer;
+
+.channelHeadShow {
+  all: unset;
+  @include flexBox("", left, center, 15);
+  width: 180px;
+  height: 40px;
+  cursor: pointer;
 }
-.workSpaceText{
-    @include flexBox('', left, center, 10);
+
+.workSpaceText {
+  @include flexBox("", left, center, 10);
 }
-.workSpaceIcon, .addIcon, .hashtagIcon{
-    font-size: 24px;
+
+.workSpaceIcon,
+.addIcon,
+.hashtagIcon {
+  font-size: 24px;
 }
 
 .channelHeadShow:hover .workSpaceIcon,
@@ -39,75 +48,89 @@ header{
 .addButton:hover .addIcon,
 .addChannel:hover span,
 .everyChannel:hover span,
-.everyChannel:hover .hashtagIcon
-{
-    color: #535AF1;
-    cursor: pointer;
+.everyChannel:hover .hashtagIcon {
+  color: #535af1;
+  cursor: pointer;
 }
-.addButton{
-    @include flexBox('', center, center, '');
-    height: 30px;
-    width: 30px;
-    border: none;
-    background-color: white;
-    border-radius: 50%;
-    &:hover{
-        background-color: #ECEEFE;
-    }
+
+.addButton {
+  @include flexBox("", center, center, "");
+  height: 30px;
+  width: 30px;
+  border: none;
+  background-color: white;
+  border-radius: 50%;
+  &:hover {
+    background-color: #eceefe;
+  }
 }
-section{
-    @include flexBox(column, center, left, 25);
-    width: 310px;
+
+section {
+  @include flexBox(column, center, left, 25);
+  width: 310px;
 }
-.addChannel{
-    @include flexBox('', center, center, 9);
-    width: 220px;
-    height: 32px;
-    margin-left: 32px;
-    background-color: white;
-    border: none;
-    cursor: pointer;
-    span{
-        @include fontStyle(18px, black, 400);
-    }
+
+.addChannel {
+  @include flexBox("", center, center, 9);
+  width: 220px;
+  height: 32px;
+  margin-left: 32px;
+  background-color: white;
+  border: none;
+  cursor: pointer;
+  span {
+    @include fontStyle(18px, black, 400);
+  }
 }
-.everyChannel{
-    @include flexBox('', left, center, 15);
-    height: 35px;
-    margin-left: 25px;
-    width: 275px;
-    padding: 0 20px;
-    border-radius: 20px;
-    cursor: pointer;
-    background-color: white;
-    border: none;
-    span{
-        @include fontStyle(18px, black, 400);
-    }
-    &:hover{
-        background-color: #ECEEFE;
-    }
+
+.everyChannel {
+  @include flexBox("", left, center, 15);
+  height: 35px;
+  margin-left: 25px;
+  width: 275px;
+  padding: 0 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  background-color: white;
+  border: none;
+  span {
+    @include fontStyle(18px, black, 400);
+  }
+  &:hover {
+    background-color: #eceefe;
+  }
 }
-.tagImage{
-    @include flexBox('', center, center, '');
+
+.tagImage {
+  @include flexBox("", center, center, "");
 }
-.newChannels{
-    @include flexBox(column, '', '', 25);
-    margin-top: 25px;
+
+.newChannels {
+  @include flexBox(column, "", "", 25);
+  margin-top: 25px;
 }
-.addIconChannel{
-    height: 20px;
-    width: 20px;
-    border: 1px solid black;
-    border-radius: 50%;
+
+.addIconChannel {
+  height: 20px;
+  width: 20px;
+  border: 1px solid black;
+  border-radius: 50%;
 }
-.addChannel:hover .addIconChannel{
-    color: #535AF1;
-    border-color: #535AF1;
+
+.addChannel:hover .addIconChannel {
+  color: #535af1;
+  border-color: #535af1;
 }
-@media(max-width: 1000px){
-    main{
-        margin: 0 0;
-        width: 100%;
-    }
+
+@media (max-width: 1000px) {
+  main {
+    margin: 0 0;
+    width: 100%;
+  }
+}
+
+@media(max-width: 450px){
+  .addButton{
+    margin-right: 12px;
+  }
 }

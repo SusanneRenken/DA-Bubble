@@ -7,15 +7,11 @@ import { DeviceVisibleComponent } from '../../../shared/services/responsive';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [
-    CommonModule,
-    SearchBarComponent,
-    UserNameComponent,
-    DeviceVisibleComponent,
-  ],
+  imports: [ CommonModule, SearchBarComponent, UserNameComponent, DeviceVisibleComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
+
 export class HeaderComponent {
   @Input() activeUserId!: string | null;
   @Input() messageIn!: boolean;

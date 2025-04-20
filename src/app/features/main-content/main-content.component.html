@@ -5,7 +5,6 @@
       <app-device-visible mode="tabletBig">
         <app-search-bar></app-search-bar>
       </app-device-visible>
-      
       <div class="content-container">
         <button class="toogleBar" (click)="toggleSection()">
           <div>
@@ -23,7 +22,7 @@
             <div class="material-symbols closeIcon">left_panel_open</div>
           </div>
         </button>
-    
+
         <app-contact-bar
           *ngIf="sectionVisible"
           [sectionVisible]="sectionVisible"
@@ -32,8 +31,7 @@
           (openChat)="handleOpenChat($event)"
           (messageInToggle)="handleMessageInToggle($event)"
         ></app-contact-bar>
-  
-  
+
         <div class="messageOut">
           <app-message-area
           class="chat-message-area"
@@ -51,12 +49,9 @@
           </app-message-area>
           }
         </div>
-        
-    
       </div>
     </section>
   }
-  
   @if (messageIn) {
     <div class="messageIn">
         <app-message-area
@@ -75,7 +70,5 @@
         }
       </div>
   }
-  
- 
 </main>
 

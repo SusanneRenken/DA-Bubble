@@ -11,6 +11,7 @@ import { ChannelsComponent } from './channels/channels.component';
   templateUrl: './contact-bar.component.html',
   styleUrl: './contact-bar.component.scss'
 })
+
 export class ContactBarComponent {
   @Input() sectionVisible?: boolean = true;
   @Input() activeUserId!: string | null;
@@ -18,10 +19,12 @@ export class ContactBarComponent {
   @Output() openChat = new EventEmitter<{ chatType: 'private' | 'channel'; chatId: string }>();
   @Output() messageInToggle = new EventEmitter<boolean>();
 
+
   toggleMessageIn() {
-    this.messageInToggle.emit(true); // oder false je nach Logik
+    this.messageInToggle.emit(true);
   }
   
+
   toggleSection() {
     this.toggle.emit();
   }

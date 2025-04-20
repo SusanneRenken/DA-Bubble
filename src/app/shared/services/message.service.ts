@@ -13,7 +13,7 @@ import {
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Message } from '../interfaces/message.interface';
-import { addDoc, doc, getDoc, serverTimestamp, updateDoc } from 'firebase/firestore';
+import { addDoc, doc, getDoc, serverTimestamp, updateDoc, getDocs } from 'firebase/firestore';
 import { Reaction } from '../interfaces/reaction.interface';
 
 @Injectable({
@@ -210,5 +210,12 @@ export class MessageService {
   
     await updateDoc(messageRef, { mReactions: newReactions });
   }
+
+
+  getAllMessages(): Promise<Message[]> {
+    const messagesCollection = collection(this.firestore, 'messages');
+    return getDocs(messagesCollection).then(snap => snap.docs.map(doc => doc.data() as Message));
+  }
+  
 
 }

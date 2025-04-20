@@ -1,29 +1,36 @@
 @import "../../../../styles.scss";
+
 header {
   @include flexBox("", space-between, center, 45);
   padding-inline: 25px;
   height: 100%;
 }
+
 img {
   width: 240px;
 }
+
 app-search-bar {
   width: 100%;
   display: contents;
 }
+
 app-device-visible {
   width: 100%;
   margin-left: 76px;
 }
+
 @media (max-width: 1000px) {
     header{
         padding-inline: 12px
     }
+
   .messageInWorkspace {
     @include flexBox("", space-between, center, 10);
     height: 50px;
     margin-left: -8px
   }
+
   button {
     @include flexBox("", space-between, center, 2);
     background-color: #eceefe;
@@ -34,9 +41,11 @@ app-device-visible {
       width: 50px;
     }
   }
+
   .arrowLeft {
     font-size: 32px;
   }
+
   button:hover .arrowLeft {
     color: #535af1;
   }
@@ -46,6 +55,7 @@ app-device-visible {
     @include flexBox("", space-between, center, 0);
     padding-inline: 0px;
   }
+  
   app-device-visible{
     width: 0px;
     margin-left: 0px;

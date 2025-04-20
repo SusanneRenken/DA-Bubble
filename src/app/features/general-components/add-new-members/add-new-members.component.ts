@@ -7,7 +7,6 @@ import { FormsModule } from '@angular/forms';
 import { NewMembersPopUpComponent } from './new-members-pop-up/new-members-pop-up.component';
 import { firstValueFrom } from 'rxjs';
 
-
 @Component({
   selector: 'app-add-new-members',
   standalone: true,
@@ -15,6 +14,7 @@ import { firstValueFrom } from 'rxjs';
   templateUrl: './add-new-members.component.html',
   styleUrl: './add-new-members.component.scss'
 })
+
 export class AddNewMembersComponent {
   selectedOption: string = '';
   @Input() channelMembers: User[] = [];
@@ -39,7 +39,6 @@ export class AddNewMembersComponent {
   }
 
   
-
   memberNameAdd(memberName: any, memberImage: any, memberId: any) {
     this.memberInputAdd = memberName;
     this.memberInputImage = memberImage;
@@ -48,12 +47,14 @@ export class AddNewMembersComponent {
     this.showMember = false;
   }
   
+
   inputNameClose(): void {
     this.memberAddElement = false;
     this.memberInputAdd = '';
     this.memberInputImage = '';
     this.memberInputId = '';
   }
+
 
   addNewChannelMember() {
     if (this.memberAddElement === true && this.channelId && this.memberInputId) {
@@ -64,36 +65,35 @@ export class AddNewMembersComponent {
     }
   }
 
-  async createNewChannel(name: string, description: string) {
-    if (!name || !this.activeUserId) return;
   
+  private async getSelectedUserIds(): Promise<string[]> {
     let userIds: string[] = [];
-  
     if (this.selectedOption === 'option1') {
       const allUsers = await firstValueFrom(this.userService.getEveryUsers());
       userIds = allUsers
         .map(user => user.uId)
         .filter((id): id is string => typeof id === 'string');
-    } else {
+    } else if (this.selectedOption === 'option2') {
       userIds = [this.memberInputId];
     }
+    return userIds;
+  }
   
+
+  async createNewChannel(name: string, description: string) {
+    if (!name || !this.activeUserId) return;
+    let userIds = await this.getSelectedUserIds();
     if (!userIds.includes(this.activeUserId)) {
       userIds.unshift(this.activeUserId);
     }
-  
     const newChannelId = await this.userService.createChannelWithUsers(
       name,
       description,
       this.activeUserId,
       userIds
     );
-  
     this.channelId = newChannelId;
     this.inputNameClose();
     this.emitClose();
   }
-  
-  
- 
 }

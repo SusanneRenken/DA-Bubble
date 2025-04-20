@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, ElementRef, EventEmitter, HostListener, Output, } from '@angular/core';
-import { Firestore, collection } from '@angular/fire/firestore';
-import { doc, getDocs } from 'firebase/firestore';
+import { Component, Input} from '@angular/core';
 import { Message } from '../../../shared/interfaces/message.interface';
 import { Channel } from '../../../shared/interfaces/channel.interface';
 import { User } from '../../../shared/interfaces/user.interface';
+import { ChannelService } from '../../../shared/services/channel.service';
+import { MessageService } from '../../../shared/services/message.service';
+import { UserService } from '../../../shared/services/user.service';
 
 @Component({
   selector: 'app-search-information',
@@ -26,40 +27,34 @@ export class SearchInformationComponent {
   matchedMessages: { mText: string; channelName: string }[] = [];
   directMessages: { mText: string; userName: string }[] = [];
   threadMessages: { mText: string; threadId: string }[] = [];
-  @Output() close = new EventEmitter<void>();
   @Input() set searchText(value: string) {
     this._searchText = value.trim().toLowerCase();
     this.handleSearch(this._searchText);
   }
 
-  constructor(private firestore: Firestore, private elRef: ElementRef) {}
-
-
-  @HostListener('document:click', ['$event'])
-  onClickOutside(event: MouseEvent) {
-    const clickedInside = this.elRef.nativeElement.contains(event.target);
-    if (!clickedInside) {
-      this.close.emit();
-    }
-  }
+  constructor(
+    private userService: UserService,
+    private messageService: MessageService,
+    private channelService: ChannelService,
+  ) {}
 
 
   async handleSearch(searchText: string) {
     if (!this.isValidSearch(searchText)) return;
     const [users, messages, channels] = await this.fetchData();
-    this.users = this.getMatchedUsers(users, searchText);
-    this.showContact = this.users.length === 0;
-    this.matchedMessages = this.getMatchedMessages( messages, channels, searchText);
-    this.showMatchedMessages = this.matchedMessages.length === 0;
     const matchedUser = this.findUserByName(users, searchText);
     const filteredChannels = this.filterChannelsByUserOrName( channels, matchedUser, searchText);
     const enrichedChannels = this.enrichChannelsWithUserNames( filteredChannels, users);
-    this.directMessages = this.getMatchedDirectMessages( messages, users, searchText);
-    this.showDirectMessages = this.directMessages.length === 0;
-    this.threadMessages = this.getMatchedThreadMessages(messages, searchText);
-    this.showThreadMessages = this.threadMessages.length === 0;
+    this.users = this.getMatchedUsers(users, searchText);
     this.channel = enrichedChannels;
+    this.showContact = this.users.length === 0;
+    this.showMatchedMessages = this.matchedMessages.length === 0;
+    this.showDirectMessages = this.directMessages.length === 0;
+    this.showThreadMessages = this.threadMessages.length === 0;
     this.showChannels = this.channel.length === 0;
+    this.matchedMessages = this.getMatchedMessages( messages, channels, searchText);
+    this.directMessages = this.getMatchedDirectMessages( messages, users, searchText);
+    this.threadMessages = this.getMatchedThreadMessages(messages, searchText); 
   }
 
 
@@ -68,13 +63,13 @@ export class SearchInformationComponent {
   }
 
 
+ 
   private async fetchData(): Promise<[User[], Message[], Channel[]]> {
-    const usersSnap = await getDocs(collection(this.firestore, 'users'));
-    const messagesSnap = await getDocs(collection(this.firestore, 'messages'));
-    const channelsSnap = await getDocs(collection(this.firestore, 'channels'));
-    const users = usersSnap.docs.map((doc) => doc.data() as User);
-    const messages = messagesSnap.docs.map((doc) => doc.data() as Message);
-    const channels = channelsSnap.docs.map((doc) => doc.data() as Channel);
+    const [users, messages, channels] = await Promise.all([
+      this.userService.getAllUsers(),
+      this.messageService.getAllMessages(),
+      this.channelService.getAllChannels(),
+    ]);
     return [users, messages, channels];
   }
 
@@ -183,7 +178,6 @@ export class SearchInformationComponent {
       const memberNames = users
         .filter((user) => user.uId && userIds.includes(user.uId))
         .map((user) => user.uName);
-
       return {
         ...channel,
         memberNames,

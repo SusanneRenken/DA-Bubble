@@ -25,10 +25,9 @@ export class ChannelMembersComponent implements OnChanges {
   activChannelMemberProfil: User | null = null;
   newChannelMembers: boolean = false;
   isChannelMemberProfilOpen: boolean = false;
+  animateOut = false;
 
   
-
-
   ngOnChanges(changes: SimpleChanges) {  
     if (changes['channelMembers']) {
       console.log(
@@ -45,8 +44,14 @@ export class ChannelMembersComponent implements OnChanges {
   onMainClick(event: MouseEvent) {
     const insideSection = this.channelWrapper?.nativeElement?.contains(event.target);
     const clickedInsideAddMember = this.memberAddWrapper?.nativeElement?.contains(event.target);
+  
     if (!insideSection && !clickedInsideAddMember) {
-      this.close.emit();
+      this.animateOut = true;
+  
+      setTimeout(() => {
+        this.newChannelMembers = false;
+        this.animateOut = false;
+      }, 800);
     }
   }
 
@@ -64,8 +69,6 @@ export class ChannelMembersComponent implements OnChanges {
  
 
   addChannelMember(channelId: any) {
-    this.newChannelMembers = true;
+    this.newChannelMembers = true;  
   }
-  
-
 }

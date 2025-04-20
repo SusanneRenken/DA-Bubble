@@ -6,7 +6,7 @@
                 @for (user of users; track $index) {
                     <div class="userPhoto" >
                         <img [src]="'/assets/img/' + user.uUserImage" alt="{{ user.uName }}">
-                        <span>{{ user.uName }}</span>
+                        <h3>{{ user.uName }}</h3>
                     </div>
                 }
             }

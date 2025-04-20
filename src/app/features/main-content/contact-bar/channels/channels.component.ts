@@ -1,10 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { AddChannelComponent } from './add-channel/add-channel.component';
 import { inject, Component, Input, EventEmitter, Output} from '@angular/core';
-import { Firestore, collectionData, collection} from '@angular/fire/firestore';
-import { map } from 'rxjs/operators';
+import { Firestore} from '@angular/fire/firestore';
 import { Observable, of } from 'rxjs';
-
 
 @Component({
   selector: 'app-channels',
@@ -20,36 +18,25 @@ export class ChannelsComponent{
   channels$: Observable<any[]> = of([]); 
   @Input() activeUserId!: string | null;
   @Output() openChat = new EventEmitter<{ chatType: 'private' | 'channel'; chatId: string }>();
-  private firestore = inject(Firestore);
   @Output() toggleMessage = new EventEmitter<boolean>();
+
+
+  constructor(private channelService: ChannelService) {}
+
+  ngOnInit() {
+    this.loadChannels();
+  }
 
   someAction() {
     const screenWidth = window.innerWidth;
-    
     if (screenWidth < 1000) {
       this.toggleMessage.emit(true);
     }
   }
   
-  ngOnInit() {
-    this.loadChannels();
-  }
   
   loadChannels() {
-    this.channels$ = collectionData(
-      collection(this.firestore, 'channels'),
-      { idField: 'id' }
-    ).pipe(
-      map((channels: any[]) =>
-        channels
-          .map(channel => ({
-            id: channel.id,
-            name: channel.cName,
-            createdAt: channel.createdAt || 0,
-          }))
-          .sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1))
-      )
-    );
+    this.channels$ = this.channelService.getSortedChannels();
   }
   
   
@@ -69,4 +56,5 @@ export class ChannelsComponent{
       chatId: channelId
     });
   }
-}
+}import { ChannelService } from '../../../../shared/services/channel.service';
+

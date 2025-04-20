@@ -17,6 +17,8 @@ export class AddChannelComponent{
   channelId: any = '';
   channelName: string = '';
   channelDescription: string = '';
+  animateOut = false;
+  isVisible: boolean = true; 
   @ViewChild('addChannel') channelWrapper?: ElementRef;
   @ViewChild('addChannelAll') memberAddWrapper?: ElementRef;
   
@@ -27,21 +29,23 @@ export class AddChannelComponent{
     const clickedInside = this.elRef.nativeElement
       .querySelector('section')
       ?.contains(event.target);
-    if (!clickedInside) {
-      this.close.emit();
-    }
-  }
-
-
-  onMainClick(event: MouseEvent) {
-    const insideSection = this.channelWrapper?.nativeElement?.contains(event.target);
-    const clickedInsideAddMember = this.memberAddWrapper?.nativeElement?.contains(event.target);
-    if (!insideSection && !clickedInsideAddMember) {
-      this.close.emit();
-    }
-  }
   
+    if (!clickedInside) {
+      this.triggerSlideOut();
+    }
+  }
 
+  
+  triggerSlideOut() {
+    this.animateOut = true;
+    setTimeout(() => {
+      this.isVisible = false;
+      this.animateOut = false;
+      this.close.emit(); 
+    }, 800);
+  }
+
+  
   closeWindow() {
     this.close.emit();
   }

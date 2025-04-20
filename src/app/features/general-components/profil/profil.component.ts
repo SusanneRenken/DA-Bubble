@@ -1,7 +1,8 @@
-import { CommonModule} from '@angular/common';
-import { Component, Input, Output, EventEmitter, ElementRef, ViewChild, inject} from '@angular/core';
-import { Firestore, doc, updateDoc} from '@angular/fire/firestore';
+import { CommonModule } from '@angular/common';
+import { Component, Input, Output, EventEmitter, ElementRef, ViewChild, inject } from '@angular/core';
+import { Firestore, doc, updateDoc, deleteDoc } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profil',
@@ -11,8 +12,7 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './profil.component.scss',
 })
 
-export class ProfilComponent{
-
+export class ProfilComponent {
   firestore = inject(Firestore);
   isActive: boolean = true;
   showEditProfil: boolean = false;
@@ -23,11 +23,12 @@ export class ProfilComponent{
   @Input() userImage: any;
   @Input() userStatus: any;
   @Input() activeUserId!: string | null;
-  @Input() size: 'small' | 'middle'  | 'big' = 'small';
+  @Input() size: 'small' | 'big' = 'small';
   @Output() close = new EventEmitter<void>();
   @ViewChild('profilWrapper') profilWrapper?: ElementRef;
 
-  
+  constructor(private router: Router) {}
+
   ngOnInit(): void {
     this.isActive = this.userStatus === true || this.userStatus === 'true';
   }
@@ -37,17 +38,16 @@ export class ProfilComponent{
     this.close.emit();
   }
 
-  
+
   changeUserName() {
     if (!this.activeUserId || !this.editedUserName.trim()) return;
     const userRef = doc(this.firestore, 'users', this.activeUserId);
     updateDoc(userRef, {
-      uName: this.editedUserName.trim()
-    })
-    .then(() => {
+      uName: this.editedUserName.trim(),
+    }).then(() => {
       this.userName = this.editedUserName;
       this.showEditProfil = false;
-    })
+    });
   }
 
 
@@ -59,9 +59,17 @@ export class ProfilComponent{
       this.close.emit();
     }
   }
-  
-  onEditClick(){
+
+
+  onEditClick() {
     this.showEditProfil = true;
-    this.size = 'middle';
+  }
+
+  
+  async deleteMember() {
+    if (!this.activeUserId) return;
+    const userRef = doc(this.firestore, 'users', this.activeUserId);
+    await deleteDoc(userRef);
+    this.router.navigate(['/access']);
   }
 }

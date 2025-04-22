@@ -9,7 +9,7 @@
 
   
   }@else {
-    
+
   <div class="chatbox-header">
     @if(chatType === 'private'){
     <div class="private-header" (click)="toggleProfile(chatPartner)">
@@ -58,59 +58,67 @@
           <span>Entwicklerteam</span>
         </a>
       </div>
-      <button class="icon-button">
-        <img src="/assets/icons/close-button.svg" alt="" />
-      </button>
+      <div class="material-symbols" (click)="handleCloseThread()">close</div>
     </div>
     }
   </div>
 
   <div class="chatbox-messages" #scrollContainer>
     @if (chatType === 'thread') {
-    <div class="thread-separator">
-      <p>2 Antworten</p>
-      <span></span>
-    </div>
 
-    } @if (messages && messages.length === 0) { @if(chatType === 'private'){
-    <div class="empty-private-chat">
-      <div>
-        <img src="/assets/img/{{ chatPartner?.uUserImage }}" alt="" />
-        <h1>{{ chatPartner?.uName }}</h1>
+      <app-message
+        [message]="messages[0]"
+        [activeUserId]="activeUserId"
+        [chatType]="chatType"
+        (profileClick)="openUserProfil($event)"
+      ></app-message>
+  
+      <div class="thread-separator">
+        <p>
+          {{ threadReplyCount }} Antwort{{ threadReplyCount !== 1 ? 'en' : '' }}
+        </p>
+        <span></span>
       </div>
-      <p>
-        Diese Unterhaltung findet nur zwischen
-        <span>&#64;{{ chatPartner?.uName }}</span> und dir statt
-      </p>
-    </div>
-    } @else if(chatType === 'channel'){
-    <div class="empty-channel-chat">
-      <div>
-        <div class="material-symbols tag-icon">tag</div>
-        <h1>{{ channelData?.cName }}</h1>
-      </div>
-      <p>
-        Du hast diesen Channel heute erstellt. Das ist der Anfang des Channels
-        <span>&#64;{{ channelData?.cName }}.</span>
-      </p>
-    </div>
-    } } @else{ @for (message of messages; track message.mId; let i = $index) {
-    @if (shouldShowDateSeparator(i)) {
-    <div class="date-separator">
-      <span></span>
-      <p>{{ getDateString(message.mTime) }}</p>
-      <span></span>
-    </div>
+  
+      @for (reply of messages.slice(1); track reply.mId; let i = $index) {
+        @if (shouldShowDateSeparator(i + 1)) {
+          <div class="date-separator">
+            <span></span>
+            <p>{{ getDateString(reply.mTime) }}</p>
+            <span></span>
+          </div>
+        }
+  
+        <app-message
+          [message]="reply"
+          [activeUserId]="activeUserId"
+          [chatType]="chatType"
+          (profileClick)="openUserProfil($event)"
+          (threadOpen)="handleThreadClick($event)"
+        ></app-message>
+      }
+  
+    } @else {
+      @if (messages && messages.length === 0) {
+      } @else {
+        @for (message of messages; track message.mId; let i = $index) {
+          @if (shouldShowDateSeparator(i)) {
+            <div class="date-separator">
+              <span></span>
+              <p>{{ getDateString(message.mTime) }}</p>
+              <span></span>
+            </div>
+          }
+          <app-message
+            [message]="message"
+            [activeUserId]="activeUserId"
+            [chatType]="chatType"
+            (profileClick)="openUserProfil($event)"
+            (threadOpen)="handleThreadClick($event)"
+          ></app-message>
+        }
+      }
     }
-
-    <app-message
-      [message]="message"
-      [activeUserId]="activeUserId"
-      [chatType]="chatType"
-      (profileClick)="openUserProfil($event)"
-      (threadOpen)="handleThreadClick($event)"
-    ></app-message>
-    } }
   </div>
 
   <div class="chatbox-textfield thread-margin">
@@ -118,7 +126,6 @@
     <emoji-mart #emojiPicker (emojiClick)="addEmoji($event)"></emoji-mart>
 
     } @if (displaySuggestions) {
-
     <div class="suggestions">
       @for(user of foundUsers; track user) {
       <div (click)="insertUserSuggestion(user)">
@@ -134,7 +141,6 @@
       </div>
       }
     </div>
-
     }
 
     <textarea

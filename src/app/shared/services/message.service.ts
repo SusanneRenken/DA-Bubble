@@ -18,8 +18,9 @@ import {
   doc,
   getDoc,
   serverTimestamp,
-  updateDoc, getDocs,
-  deleteDoc, 
+  updateDoc,
+  getDocs,
+  deleteDoc,
 } from 'firebase/firestore';
 import { Reaction } from '../interfaces/reaction.interface';
 
@@ -153,7 +154,7 @@ export class MessageService {
     });
   }
 
-  private getThreadMessages(chatId: string | null): Observable<Message[]> {
+  getThreadMessages(chatId: string | null): Observable<Message[]> {
     return new Observable<Message[]>((observer) => {
       const messagesCollection = collection(this.firestore, 'messages');
       const q = query(
@@ -181,24 +182,11 @@ export class MessageService {
     return addDoc(messagesCollection, newMessage);
   }
 
-  // Kann glaube ich gelöscht werden, da ich toggleReaction() habe
-
-  // editMessage(message: Partial<Message>): Promise<any> {
-  //   if (!message.mId) {
-  //     return Promise.reject(new Error('Message ID fehlt.'));
-  //   }
-  //   const messagesCollection = collection(this.firestore, 'messages');
-  //   const messageRef = doc(messagesCollection, message.mId || '');
-  //   return updateDoc(messageRef, {
-  //     mReactions: message.mReactions,
-  //   });
-  // }
-
   editMessageText(messageId: string, newText: string): Promise<void> {
     if (!messageId) {
       return Promise.reject(new Error('Message ID fehlt.'));
     }
-  
+
     const messageRef = doc(this.firestore, 'messages', messageId);
     return updateDoc(messageRef, {
       mText: newText,
@@ -209,7 +197,7 @@ export class MessageService {
     if (!messageId) {
       return Promise.reject(new Error('Message ID fehlt.'));
     }
-  
+
     const messageRef = doc(this.firestore, 'messages', messageId);
     return deleteDoc(messageRef);
   }
@@ -243,10 +231,29 @@ export class MessageService {
     await updateDoc(parentRef, { mThreadId: parentMessageId });
   }
 
+  async replyInThread(
+    threadId: string,
+    text: string,
+    senderId: string
+  ): Promise<void> {
+    const messagesCollection = collection(this.firestore, 'messages');
+    const newMsg: Partial<Message> = {
+      mText: text,
+      mSenderId: senderId,
+      mReactions: [],
+      mThreadId: threadId,
+    };
+    await addDoc(messagesCollection, {
+      ...newMsg,
+      mTime: serverTimestamp(),
+    });
+  }
+
+  // Das ist noch nicht ganz richtig. Dann bekommt der User auch alle Nachrichten angezeigt, die er nicht sehen soll.
   getAllMessages(): Promise<Message[]> {
     const messagesCollection = collection(this.firestore, 'messages');
-    return getDocs(messagesCollection).then(snap => snap.docs.map(doc => doc.data() as Message));
+    return getDocs(messagesCollection).then((snap) =>
+      snap.docs.map((doc) => doc.data() as Message)
+    );
   }
-  
-
 }

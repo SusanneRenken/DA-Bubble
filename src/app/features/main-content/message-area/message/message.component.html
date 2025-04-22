@@ -68,9 +68,9 @@
           >add_reaction</span
         >
       </span>
-      } @if (message.mThreadId && chatType !== 'thread') {
-      <h4>2 Antworten</h4>
-      <h5>Letzte Antwort 14:56 Uhr</h5>
+      } @if (message.mThreadId && chatType !== 'thread' && replyCount > 0) {
+      <h4>{{ replyCount }} Antwort{{ replyCount !== 1 ? 'en' : '' }}</h4>
+      <h5>Letzte Antwort {{ getTimeInHours(lastReplyTime) }} Uhr</h5>
       }
     </div>
   </div>

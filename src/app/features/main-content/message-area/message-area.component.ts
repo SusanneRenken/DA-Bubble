@@ -54,6 +54,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   @Input() activeUserId: string | null = null;
 
   @Output() openThread = new EventEmitter<string>();
+  @Output() closeThread = new EventEmitter<string>();
 
   @ViewChild('scrollContainer')
   private scrollContainer!: ElementRef<HTMLDivElement>;
@@ -83,6 +84,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   foundChannels: Channel[] = [];
   displaySuggestions: boolean = false;
   currentMentionPos: number = -1;
+  threadReplyCount = 0;
 
   ngAfterViewInit(): void {
     setTimeout(() => {
@@ -137,15 +139,19 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
       return;
     }
 
-    this.messages = []; 
+    this.messages = [];
 
     this.messagesSubscription = this.messageService
       .getMessages(this.chatType, this.chatId, this.activeUserId)
       .subscribe((messages) => {
         const hasNewMessage = messages.length > this.lastListLength;
 
-        this.messages = messages;
+        this.messages = messages;        
         this.lastListLength = messages.length;
+
+        if (this.chatType === 'thread') {
+          this.threadReplyCount = messages.length > 0 ? messages.length - 1 : 0;
+        }
 
         if (hasNewMessage) {
           setTimeout(() => this.scrollToBottom(), 100);
@@ -155,21 +161,21 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
 
   loadChatData(): void {
     this.channelSubscription?.unsubscribe();
-  
-    this.chatPartner     = null;
-    this.channelData     = null;
-    this.channelMembers  = [];
-  
+
+    this.chatPartner = null;
+    this.channelData = null;
+    this.channelMembers = [];
+
     if (this.chatType === 'private' && this.chatId) {
       this.loadChatPartnerData();
       return;
     }
-  
+
     if (this.chatType === 'channel' && this.chatId) {
       this.channelSubscription = this.channelService
         .getChannelRealtime(this.chatId)
         .subscribe({
-          next : (channel) => {
+          next: (channel) => {
             this.channelData = channel;
             this.loadChannelMembers();
           },
@@ -305,20 +311,28 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
     }
   }
 
-  sendMessage(): void {
+  async sendMessage(): Promise<void> {
     const text = this.newMessageText.trim();
     if (!text) return;
-
-    const newMessage: Message = {
-      mText: text,
-      mReactions: [],
-      mTime: '',
-      mSenderId: this.activeUserId,
-      mUserId: this.chatType === 'private' ? this.chatId : '',
-      mChannelId: this.chatType === 'channel' ? this.chatId : '',
-      mThreadId: this.chatType === 'thread' ? this.chatId : '',
-    };
-    this.messageService.createMessage(newMessage);
+  
+    if (this.chatType === 'thread' && this.chatId) {
+      await this.messageService.replyInThread(
+        this.chatId,
+        text,
+        this.activeUserId!
+      );
+    } else {
+      const newMessage: Partial<Message> = {
+        mText: text,
+        mReactions: [],
+        mSenderId: this.activeUserId!,
+        mUserId: this.chatType === 'private' ? this.chatId! : '',
+        mChannelId: this.chatType === 'channel' ? this.chatId! : '',
+        mThreadId: '',
+      };
+      await this.messageService.createMessage(newMessage);
+    }
+  
     this.newMessageText = '';
     setTimeout(() => this.scrollToBottom(), 100);
   }
@@ -386,6 +400,10 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
 
   handleThreadClick(threadId: string) {
     this.openThread.emit(threadId);
+  }
+
+  handleCloseThread() {
+    this.closeThread.emit();
   }
 
   openUserSuggestions(): void {
@@ -516,6 +534,9 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
 
   async removeMember() {
     if (!this.activeUserId || !this.chatId) return;
-      await this.channelService.removeUserFromChannel(this.chatId, this.activeUserId);
+    await this.channelService.removeUserFromChannel(
+      this.chatId,
+      this.activeUserId
+    );
   }
 }

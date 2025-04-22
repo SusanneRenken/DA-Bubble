@@ -75,4 +75,9 @@ export class MainContentComponent {
     this.isThreadOpen = true;
     this.threadId = threadId;
   }
+
+  closeThread() {
+    this.isThreadOpen = false;
+    this.threadId = null;
+  }
 }

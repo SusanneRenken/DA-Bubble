@@ -6,6 +6,9 @@ import {
   OnInit,
   Output,
   SimpleChanges,
+  ElementRef,
+  HostListener,
+  ViewChild,
 } from '@angular/core';
 import { Message } from '../../../../shared/interfaces/message.interface';
 import { Timestamp } from 'firebase/firestore';
@@ -17,10 +20,13 @@ import {
 } from '../../../../shared/interfaces/reaction.interface';
 import { Subscription } from 'rxjs';
 import { MessageService } from '../../../../shared/services/message.service';
+import { PickerComponent } from '@ctrl/ngx-emoji-mart';
+import { PermanentDeleteComponent } from '../../../general-components/permanent-delete/permanent-delete.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-message',
-  imports: [],
+  imports: [PickerComponent, PermanentDeleteComponent, FormsModule],
   templateUrl: './message.component.html',
   styleUrl: './message.component.scss',
 })
@@ -34,11 +40,25 @@ export class MessageComponent implements OnInit {
   @Input() activeUserId: string | null = null;
 
   @Output() profileClick = new EventEmitter<string>();
+  @Output() threadOpen = new EventEmitter<string>();
+
+  @ViewChild('emojiPicker', { read: ElementRef }) emojiPickerRef?: ElementRef;
+  @ViewChild('emojiBtn', { read: ElementRef }) emojiBtnRef?: ElementRef;
+  @ViewChild('optionsMenu', { read: ElementRef }) optionsMenuRef?: ElementRef;
+  @ViewChild('optionsBtn', { read: ElementRef }) optionsBtnRef?: ElementRef;
+  @ViewChild('editTextarea', { read: ElementRef })
+  editTextareaRef!: ElementRef<HTMLTextAreaElement>;
 
   activeUserData: User | null = null;
   senderData: User | null = null;
   groupedReactions: GroupedReaction[] = [];
   shownReactionNumber: number = 7;
+  editText = '';
+
+  isEmojiPickerOpen = false;
+  isOptionsOpen = false;
+  isPermanentDeleteOpen = false;
+  isEditOpen = false;
 
   ngOnInit(): void {
     this.loadSenderData();
@@ -132,19 +152,36 @@ export class MessageComponent implements OnInit {
       }
     });
 
-    return Array.from(grouped.entries()).map(([reaction, data]) => {
-      const duIndex = data.names.indexOf('Du');
-      if (duIndex !== -1 && duIndex !== 0) {
-        data.names.splice(duIndex, 1);
-        data.names.unshift('Du');
-      }
+    return Array.from(grouped.entries()).map(([reaction, data]) => ({
+      reaction,
+      count: data.count,
+      names: data.names,
+      namesLine: this.buildNameLine(data.names),
+      actionLine: this.buildActionLine(data.names, data.count),
+    }));
+  }
 
-      return {
-        reaction,
-        count: data.count,
-        names: data.names,
-      };
-    });
+  private buildNameLine(namesOriginal: string[], max = 3): string {
+    const names = [...namesOriginal];
+    const duIdx = names.indexOf('Du');
+    if (duIdx > 0) {
+      names.splice(duIdx, 1);
+      names.unshift('Du');
+    }
+    if (names.length <= max) {
+      return names.join(', ').replace(/, ([^,]*)$/, ' und $1');
+    }
+
+    const first = names.slice(0, max).join(', ');
+    const rest = names.length - max;
+    return `${first} und ${rest === 1 ? 'ein weiterer' : rest + ' weitere'}`;
+  }
+
+  private buildActionLine(names: string[], count: number): string {
+    if (count === 1) {
+      return names[0] === 'Du' ? 'hast reagiert' : 'hat reagiert';
+    }
+    return 'haben reagiert';
   }
 
   addReaction(reaction: string): void {
@@ -164,7 +201,7 @@ export class MessageComponent implements OnInit {
       .catch((error) =>
         console.error('Fehler beim Editieren der Reaction:', error)
       );
-  
+
     this.messageService
       .toggleReaction(this.message.mId, {
         reaction: reaction,
@@ -176,9 +213,126 @@ export class MessageComponent implements OnInit {
       );
   }
 
+  toggleEmojiPicker(event: MouseEvent): void {
+    event.stopPropagation();
+    this.isEmojiPickerOpen = !this.isEmojiPickerOpen;
+  }
+
+  onEmojiPicked(e: any): void {
+    const char = e.emoji?.native ?? e.emoji;
+
+    if (this.isEditOpen && this.editTextareaRef) {
+      const ta = this.editTextareaRef.nativeElement;
+      const pos = ta.selectionStart ?? this.editText.length;
+
+      const before = this.editText.slice(0, pos);
+      const after = this.editText.slice(pos);
+      this.editText = before + char + after;
+
+      setTimeout(() => {
+        const newPos = pos + char.length;
+        ta.setSelectionRange(newPos, newPos);
+        ta.focus();
+      });
+
+      return;
+    }
+
+    this.addReaction(char);
+    this.isEmojiPickerOpen = false;
+  }
+
+  @HostListener('document:click', ['$event'])
+  closeOnOutsideClick(event: MouseEvent): void {
+    if (
+      (!this.isEmojiPickerOpen && !this.isOptionsOpen) ||
+      this.isPermanentDeleteOpen
+    )
+      return;
+
+    const target = event.target as HTMLElement;
+
+    const insidePicker =
+      this.emojiPickerRef?.nativeElement?.contains(target) ?? false;
+    const onEmojiBtn =
+      this.emojiBtnRef?.nativeElement?.contains(target) ?? false;
+
+    const insideOptions =
+      this.optionsMenuRef?.nativeElement?.contains(target) ?? false;
+    const onOptionsBtn =
+      this.optionsBtnRef?.nativeElement?.contains(target) ?? false;
+
+    if (!insidePicker && !onEmojiBtn) {
+      this.isEmojiPickerOpen = false;
+    }
+    if (!insideOptions && !onOptionsBtn) {
+      this.isOptionsOpen = false;
+    }
+  }
+
   openProfil(): void {
     if (this.message.mSenderId) {
       this.profileClick.emit(this.message.mSenderId);
     }
   }
+
+  toggleOptions(event: MouseEvent): void {
+    event.stopPropagation();
+    this.isOptionsOpen = !this.isOptionsOpen;
+  }
+
+  toggleEdit(): void {
+    this.isEditOpen = !this.isEditOpen;
+  }
+
+  openEdit(): void {
+    this.editText = this.message.mText ?? '';
+    this.toggleEdit();
+    setTimeout(() => this.editTextareaRef?.nativeElement.focus());
+  }
+
+  saveEdit(): void {
+    if (!this.message.mId) {
+      console.error('Es existiert keine mId für diese Message.');
+      return;
+    }
+
+    const trimmed = this.editText.trim();
+
+    if (trimmed === (this.message.mText ?? '').trim()) {
+      this.toggleEdit();
+      return;
+    }
+
+    this.messageService
+      .editMessageText(this.message.mId, trimmed)
+      .then(() => {
+        this.message.mText = trimmed;
+        this.toggleEdit();
+        this.isOptionsOpen = false;
+      })
+      .catch((error) =>
+        console.error('Fehler beim Editieren der Message:', error)
+      );
+  }
+
+  togglePermanentDelete(): void {
+    this.isPermanentDeleteOpen = !this.isPermanentDeleteOpen;
+  }
+
+  onThreadClick(): void {
+    if (!this.message.mId) return;
+    const tid = this.message.mThreadId || this.message.mId;
+
+    const ensureThread = this.message.mThreadId
+      ? Promise.resolve()
+      : this.messageService.startThread(this.message.mId);
+
+    ensureThread.then(() => {
+      this.message.mThreadId = tid;
+      this.threadOpen.emit(tid);
+    });
+  }
+
+
 }

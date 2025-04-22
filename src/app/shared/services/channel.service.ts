@@ -1,8 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { Firestore, collectionData } from '@angular/fire/firestore';
-import { collection, doc, getDoc, getDocs, setDoc,updateDoc ,serverTimestamp} from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, setDoc,updateDoc ,serverTimestamp, onSnapshot} from 'firebase/firestore';
 import { Channel } from '../interfaces/channel.interface';
-import { retry, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -17,11 +17,23 @@ export class ChannelService {
     const allChannels: Channel[] = [];
 
     querySnapshot.forEach((docSnap) => {
-      const channelData = { ...(docSnap.data() as Channel), id: docSnap.id };
+      const channelData = { ...(docSnap.data() as Channel), cId: docSnap.id };
       allChannels.push(channelData);
     });
 
     return allChannels;
+  }
+
+  getChannelRealtime(channelId: string): Observable<Channel> {
+    return new Observable<Channel>((observer) => {
+      const ref = doc(this.firestore, 'channels', channelId);
+      const unsub = onSnapshot(ref, (snap) => {
+        if (snap.exists()) {
+          observer.next({ ...(snap.data() as Channel), cId: snap.id });
+        }
+      });
+      return () => unsub();
+    });
   }
 
   async getChannel(channelId: string | null): Promise<Channel> {
@@ -31,7 +43,7 @@ export class ChannelService {
     const channelDocRef = doc(this.firestore, 'channels', channelId);
     return getDoc(channelDocRef).then((docSnap) => {
       if (docSnap.exists()) {
-        return docSnap.data() as Channel;
+        return { ...(docSnap.data() as Channel), cId: docSnap.id };
       } else {
         throw new Error('Channel not found');
       }

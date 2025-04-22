@@ -202,12 +202,6 @@ app-message {
   width: 100%;
 }
 
-textarea {
-  all: unset;
-  word-break: break-word;
-  z-index: 2;
-}
-
 .textfield-buttons {
   @include flexBox(row, space-between, center, 0);
   div {
@@ -215,9 +209,16 @@ textarea {
   }
 }
 
-.suggestions{
+emoji-mart {
   position: absolute;
-  bottom: 128px;
+  bottom: 132px;
+  left: 20px;
+  z-index: 99;
+}
+
+.suggestions {
+  position: absolute;
+  bottom: 132px;
   left: 20px;
   max-height: 360px;
   flex: 1;
@@ -229,19 +230,19 @@ textarea {
   -ms-overflow-style: none;
   scrollbar-width: none;
   background-color: #ffffff;
-  border: 1px solid #ADB0D9;
+  border: 1px solid #adb0d9;
   border-radius: 20px 20px 20px 0px;
   @include flexBox(column, initial, initial, 16);
   z-index: 98;
 
-  div{
+  div {
     cursor: pointer;
     padding: 4px 24px;
     @include flexBox(row, initial, center, 16);
-    div{
+    div {
       padding: 0;
     }
-    &:hover{
+    &:hover {
       background-color: #eceefe;
       border-radius: 30px;
     }
@@ -305,6 +306,12 @@ textarea {
   border: none;
   border-radius: 50px;
   @include flexBox(row, center, center, 0);
+  &:disabled {
+    .send-icon {
+      color: #686868;
+      cursor: not-allowed;
+    }
+  }
 }
 
 .add-person-icon {

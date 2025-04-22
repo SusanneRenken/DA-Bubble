@@ -16,9 +16,6 @@ section {
       color: #000000;
       background-color: #ffffff;
     }
-    .message-actions {
-      display: flex;
-    }
   }
 }
 
@@ -33,6 +30,97 @@ section {
   }
 }
 
+.edit-open {
+  background-color: #eceefe;
+}
+
+.edit-message {
+  width: 100%;
+  padding: 20px;
+  background-color: #ffffff;
+  border: 1px solid #adb0d9;
+  border-radius: 20px;
+  @include flexBox(column, initial, initial, 16);
+
+  > div {
+    width: 100%;
+    @include flexBox(row, space-between, center, 0);
+    > div {
+      @include flexBox(row, initial, initial, 32);
+    }
+  }
+}
+
+button {
+  cursor: pointer;
+  font-family: "Nunito", sans-serif;
+  font-weight: 700;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 50px;
+}
+
+.primary-btn {
+  background-color: #444df2;
+  color: #ffffff;
+  border: 1px solid #444df2;
+  &:hover {
+    background-color: #797ef3;
+    border: 1px solid #797ef3;
+  }
+  &:active {
+    background-color: #444df2;
+    border: 1px solid #444df2;
+  }
+  &:disabled {
+    background-color: #686868;
+    border: 1px solid #686868;
+    cursor: not-allowed;
+  }
+}
+
+.secondary-btn {
+  background-color: #ffffff;
+  color: #444df2;
+  border: 1px solid #797ef3;
+  &:hover {
+    background-color: #535AF1;
+    color: #ffffff;
+    border: 1px solid #535AF1;
+  }
+  &:active {
+    background-color: #444df2;
+    border: 1px solid #444df2;
+  }
+  &:disabled {
+    color: #686868;
+    border: 1px solid #686868;
+    cursor: not-allowed;
+  }
+}
+
+.icon-button {
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  font-weight: 400;
+  background-color: transparent;
+  border: none;
+  border-radius: 50px;
+  @include flexBox(row, center, center, 0);
+}
+
+.blue-hover:hover {
+  background-color: #eceefe;
+}
+
+.textfield-icon {
+  color: #686868;
+  &:hover {
+    color: #535af1;
+  }
+}
+
 .message {
   @include flexBox(column, initial, initial, 8);
 
@@ -40,9 +128,9 @@ section {
     @include flexBox(row, initial, center, 20);
   }
 
-  h3{
+  h3 {
     cursor: pointer;
-    &:hover{
+    &:hover {
       color: #444df2;
     }
   }
@@ -59,8 +147,8 @@ section {
 }
 
 .user-message {
+  @include flexBox(column, initial, flex-end, 8);
   > div {
-    @include flexBox(row, flex-end, center, 20);
     &:first-child {
       @include flexBox(row-reverse, flex-start, center, 20);
     }
@@ -69,6 +157,7 @@ section {
   .message-text {
     color: #ffffff;
     background-color: #797ef3;
+    border-radius: 30px 0px 30px 30px;
   }
 }
 
@@ -112,10 +201,10 @@ section {
     font-size: 30px;
     @include flexBox(initial, center, center, 0);
   }
-  >div{
+  > div {
     text-align: center;
   }
-  >p{
+  > p {
     font-size: 16px;
   }
 }
@@ -127,9 +216,31 @@ section {
   padding: 4px 16px 4px 20px;
   background-color: #ffffff;
   border: 1px solid #adb0d9;
-  border-radius: 25px 25px 0px 25px;
+  border-radius: 25px 25px 0 25px;
   @include flexBox(row, initial, center, 5);
-  display: none;
+
+  opacity: 0;
+  transform: translateX(-50px);
+  pointer-events: none;
+  transition: opacity .25s ease, transform .25s ease;
+
+  section:hover &,
+  &.always {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+  }
+
+  &.user-message-actions {
+    right: initial;
+    left: 46px;
+    transform: translateX(50px);
+
+    section:hover &,
+    &.always {
+      transform: translateX(0);
+    }
+  }
   > span {
     cursor: pointer;
     width: 40px;
@@ -143,9 +254,46 @@ section {
   }
 }
 
+emoji-mart {
+  position: absolute;
+  bottom: 0px;
+  right: 266px;
+  z-index: 95;
+}
+
+.active-user-emoji {
+  right: inherit;
+  left: 308px;
+}
+
 .user-message-actions {
   right: initial;
   left: 46px;
+}
+
+.options-menu {
+  position: absolute;
+  top: 25px;
+  right: -240px;
+  padding: 10px 20px;
+  background: #ffffff;
+  border-radius: 0 30px 30px 30px;
+  box-shadow: 0px 6px 14px 0px rgba(0, 0, 0, 0.2);
+  z-index: 90;
+  @include flexBox(column, stretch, stretch, 0);
+
+  > div {
+    cursor: pointer;
+    padding: 10px 20px;
+    width: 220px;
+    font-weight: 600;
+    border-radius: 100px;
+    &:hover {
+      color: #535af1;
+      font-weight: 700;
+      background: #eceefe;
+    }
+  }
 }
 
 .d-none {

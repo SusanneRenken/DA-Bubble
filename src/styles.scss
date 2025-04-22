@@ -41,6 +41,13 @@ h5 {
   font-weight: 400;
 }
 
+
+textarea {
+  all: unset;
+  word-break: break-word;
+  z-index: 2;
+}
+
 .user-img-status {
   position: relative;
   width: 50px;

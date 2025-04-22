@@ -1,6 +1,32 @@
-<section [class.row-reverse]="message.mSenderId === activeUserId">
+<section
+  [class.row-reverse]="message.mSenderId === activeUserId"
+  [class.edit-open]="isEditOpen"
+>
   <img src="/assets/img/{{ senderData?.uUserImage }}" alt="" />
 
+  @if (isEditOpen && message.mSenderId === activeUserId) {
+  <div class="edit-message">
+    <textarea #editTextarea type="text" [(ngModel)]="editText"></textarea>
+    <div>
+      <button
+        class="icon-button blue-hover"
+        (click)="toggleEmojiPicker($event)"
+      >
+        <div class="material-symbols textfield-icon">sentiment_satisfied</div>
+      </button>
+      <div>
+        <button class="secondary-btn" (click)="toggleEdit()">Abbrechen</button>
+        <button
+          class="primary-btn"
+          (click)="saveEdit()"
+          [disabled]="!editText.trim()"
+        >
+          Speichern
+        </button>
+      </div>
+    </div>
+  </div>
+  } @else {
   <div
     class="message"
     [class.user-message]="message.mSenderId === activeUserId"
@@ -21,55 +47,26 @@
         <div class="single-reaction">
           <div class="reaction-details">
             <span>{{ reaction.reaction }}</span>
-
-            @if (reaction.names && reaction.names.length === 1) {
-            <div>{{ reaction.names[0] }}</div>
-            <p>
-              {{
-                reaction.names[0] === "Du" ? "hast reagiert" : "hat reagiert"
-              }}
-            </p>
-            } @if (reaction.names && reaction.names.length === 2) {
-            <div>{{ reaction.names[0] }} und {{ reaction.names[1] }}</div>
-
-            } @if (reaction.names && reaction.names.length === 3) {
-            <div>
-              {{ reaction.names[0] }}, {{ reaction.names[1] }} und
-              {{ reaction.names[2] }}
-            </div>
-
-            } @if (reaction.names && reaction.names.length > 3) {
-            <div>
-              {{ reaction.names[0] }}, {{ reaction.names[1] }},
-              {{ reaction.names[2] }}
-            </div>
-            <p>
-              und
-
-              {{ reaction.count === 4 ? "ein weiterer" : "{{ reaction.names.length - 3}}
-              weitere" }}
-            </p>
-
-            }
-
-            <p>
-              {{ reaction.count === 1 ? "" : "haben reagiert" }}
-            </p>
+            <div>{{ reaction.namesLine }}</div>
+            <p>{{ reaction.actionLine }}</p>
           </div>
 
-          <span  (click)="addReaction(reaction.reaction)">{{ reaction.reaction }} {{ reaction.count }}</span>
+          <span (click)="addReaction(reaction.reaction)"
+            >{{ reaction.reaction }} {{ reaction.count }}</span
+          >
         </div>
 
         } @if (groupedReactions.length > shownReactionNumber) {
         <div (click)="setShownReactionNumber()">
           +{{ groupedReactions.length - shownReactionNumber }} weitere
         </div>
-        }
-        @if (groupedReactions.length === shownReactionNumber &&
+        } @if (groupedReactions.length === shownReactionNumber &&
         shownReactionNumber > 7) {
         <div (click)="setShownReactionNumber()">Weniger anzeigen</div>
         }
-        <span class="material-symbols">add_reaction</span>
+        <span class="material-symbols" (click)="toggleEmojiPicker($event)"
+          >add_reaction</span
+        >
       </span>
       } @if (message.mThreadId && chatType !== 'thread') {
       <h4>2 Antworten</h4>
@@ -80,19 +77,55 @@
 
   <div
     class="message-actions"
+    [class.always]="isOptionsOpen"
     [class.user-message-actions]="message.mSenderId === activeUserId"
   >
     @for (reaction of activeUserData?.uLastReactions; track reaction) {
     <span (click)="addReaction(reaction)">{{ reaction }}</span>
     }
 
-    <div class="material-symbols action-btn">sentiment_satisfied</div>
-    <div class="material-symbols action-btn">comment</div>
+    <span
+      #emojiBtn
+      class="material-symbols action-btn"
+      (click)="toggleEmojiPicker($event)"
+    >
+      add_reaction
+    </span>
+
+    <div class="material-symbols action-btn" (click)="onThreadClick()">comment</div>
+
     <div
+      #optionsBtn
       class="material-symbols action-btn"
       [class.d-none]="message.mSenderId != activeUserId"
+      (click)="toggleOptions($event)"
     >
       more_vert
     </div>
+
+    @if (isOptionsOpen) {
+    <div
+      #optionsMenu
+      class="options-menu"
+      [class.active-user-options]="message.mSenderId === activeUserId"
+    >
+      <div (click)="openEdit()">Nachricht bearbeiten</div>
+      <div (click)="togglePermanentDelete()">Nachricht löschen</div>
+    </div>
+    }
   </div>
+  } @if(isEmojiPickerOpen) {<emoji-mart
+    #emojiPicker
+    (emojiClick)="onEmojiPicked($event)"
+    [class.active-user-emoji]="message.mSenderId === activeUserId"
+  ></emoji-mart
+  >}
 </section>
+@if (isPermanentDeleteOpen) {
+<app-permanent-delete
+  [target]="'message'"
+  [id]="message.mId"
+  (close)="isPermanentDeleteOpen = false"
+></app-permanent-delete>
+
+}

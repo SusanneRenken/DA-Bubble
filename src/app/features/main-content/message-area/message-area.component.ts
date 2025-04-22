@@ -1,10 +1,12 @@
 import {
   Component,
   ElementRef,
+  EventEmitter,
   inject,
   Input,
   OnChanges,
   OnDestroy,
+  Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -21,6 +23,8 @@ import { FormsModule } from '@angular/forms';
 import { ChannelLeaveComponent } from '../../general-components/channel-leave/channel-leave.component';
 import { ProfilComponent } from '../../general-components/profil/profil.component';
 import { ChannelMembersComponent } from './channel-members/channel-members.component';
+import { PickerComponent } from '@ctrl/ngx-emoji-mart';
+import { HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-message-area',
@@ -31,6 +35,7 @@ import { ChannelMembersComponent } from './channel-members/channel-members.compo
     ChannelLeaveComponent,
     ProfilComponent,
     ChannelMembersComponent,
+    PickerComponent,
   ],
   templateUrl: './message-area.component.html',
   styleUrls: ['./message-area.component.scss'],
@@ -41,15 +46,21 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   private messageService = inject(MessageService);
 
   private messagesSubscription: Subscription | null = null;
+  private channelSubscription: Subscription | null = null;
+  private lastListLength = 0;
 
   @Input() chatType: 'private' | 'channel' | 'thread' | 'new' = 'private';
   @Input() chatId: string | null = null;
   @Input() activeUserId: string | null = null;
 
+  @Output() openThread = new EventEmitter<string>();
+
   @ViewChild('scrollContainer')
   private scrollContainer!: ElementRef<HTMLDivElement>;
   @ViewChild('messageInput')
   private messageInputRef!: ElementRef<HTMLTextAreaElement>;
+  @ViewChild('emojiPicker', { read: ElementRef }) emojiPickerRef?: ElementRef;
+  @ViewChild('emojiButton', { read: ElementRef }) emojiButtonRef?: ElementRef;
 
   messages: Message[] = [];
 
@@ -65,13 +76,14 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   isEditChannelOpen: boolean = false;
   isProfilOpen: boolean = false;
   isChannelMemberOpen: boolean = false;
+  isEmojiPickerOpen: boolean = false;
 
   foundUsers: User[] = [];
   foundChannels: Channel[] = [];
   displaySuggestions: boolean = false;
   currentMentionPos: number = -1;
 
-  ngAfterViewInit(): void {  
+  ngAfterViewInit(): void {
     setTimeout(() => {
       this.isLoading = false;
       setTimeout(() => {
@@ -82,9 +94,9 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // Auch scrollen, wenn eine neue Message gekommen ist
     if (changes['chatType'] || changes['chatId'] || changes['activeUserId']) {
       this.isLoading = true;
+      this.lastListLength = 0;
       this.loadMessages();
       this.loadChatData();
       setTimeout(() => {
@@ -98,9 +110,8 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.messagesSubscription) {
-      this.messagesSubscription.unsubscribe();
-    }
+    this.messagesSubscription?.unsubscribe();
+    this.channelSubscription?.unsubscribe();
   }
 
   scrollToBottom() {
@@ -117,34 +128,53 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   }
 
   loadMessages(): void {
-    if (this.messagesSubscription) {
-      this.messagesSubscription.unsubscribe();
-    }
+    this.messagesSubscription?.unsubscribe();
 
     if (!this.chatType || !this.chatId || !this.activeUserId) {
       this.messages = [];
+      this.lastListLength = 0;
       return;
     }
+
+    this.messages = []; 
 
     this.messagesSubscription = this.messageService
       .getMessages(this.chatType, this.chatId, this.activeUserId)
       .subscribe((messages) => {
+        const hasNewMessage = messages.length > this.lastListLength;
+
         this.messages = messages;
+        this.lastListLength = messages.length;
+
+        if (hasNewMessage) {
+          setTimeout(() => this.scrollToBottom(), 100);
+        }
       });
   }
 
   loadChatData(): void {
-    if (this.chatType === 'private') {
+    this.channelSubscription?.unsubscribe();
+  
+    this.chatPartner     = null;
+    this.channelData     = null;
+    this.channelMembers  = [];
+  
+    if (this.chatType === 'private' && this.chatId) {
       this.loadChatPartnerData();
-    } else {
-      this.chatPartner = null;
+      return;
     }
-
-    if (this.chatType === 'channel') {
-      this.loadChannelData();
-    } else {
-      this.channelData = null;
-      this.channelMembers = [];
+  
+    if (this.chatType === 'channel' && this.chatId) {
+      this.channelSubscription = this.channelService
+        .getChannelRealtime(this.chatId)
+        .subscribe({
+          next : (channel) => {
+            this.channelData = channel;
+            this.loadChannelMembers();
+          },
+          error: (err) => console.error('Channel‑Realtime‑Fehler', err),
+        });
+      return;
     }
   }
 
@@ -156,18 +186,6 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
       })
       .catch((error) => {
         console.error('Fehler beim Laden des Users:', error);
-      });
-  }
-
-  loadChannelData() {
-    this.channelService
-      .getChannel(this.chatId)
-      .then((channelData) => {
-        this.channelData = channelData;
-        this.loadChannelMembers();
-      })
-      .catch((error) => {
-        console.error('Fehler beim Laden des Channels:', error);
       });
   }
 
@@ -186,7 +204,11 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
     this.userService
       .getFilteredUsers(userIds)
       .then((users) => {
-        this.channelMembers = users;
+        this.channelMembers = users.sort((a, b) => {
+          if (a.uId === this.activeUserId) return -1;
+          if (b.uId === this.activeUserId) return 1;
+          return 0;
+        });
       })
       .catch((error) => {
         console.error('Fehler beim Laden der Channel-Mitglieder:', error);
@@ -272,15 +294,22 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   }
 
   handleKeyDown(event: KeyboardEvent): void {
-    if (event.key === 'Enter' && !event.shiftKey) {
+    if (
+      event.key === 'Enter' &&
+      !event.shiftKey &&
+      this.newMessageText.trim()
+    ) {
       event.preventDefault();
       this.sendMessage();
     }
   }
 
   sendMessage(): void {
+    const text = this.newMessageText.trim();
+    if (!text) return;
+
     const newMessage: Message = {
-      mText: this.newMessageText,
+      mText: text,
       mReactions: [],
       mTime: '',
       mSenderId: this.activeUserId,
@@ -290,9 +319,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
     };
     this.messageService.createMessage(newMessage);
     this.newMessageText = '';
-    setTimeout(() => {
-      this.scrollToBottom();
-    }, 100);
+    setTimeout(() => this.scrollToBottom(), 100);
   }
 
   toggleEdit(): void {
@@ -354,6 +381,10 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
       this.foundUsers = [];
       this.foundChannels = [];
     }
+  }
+
+  handleThreadClick(threadId: string) {
+    this.openThread.emit(threadId);
   }
 
   openUserSuggestions(): void {
@@ -442,6 +473,44 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
     this.currentMentionPos = -1;
 
     txtArea.focus();
+  }
+
+  toggleEmojiPicker(event: MouseEvent): void {
+    event.stopPropagation();
+    this.isEmojiPickerOpen = !this.isEmojiPickerOpen;
+
+    if (this.isEmojiPickerOpen) {
+      setTimeout(() => {
+        this.emojiPickerRef?.nativeElement.focus?.();
+      });
+    }
+  }
+
+  addEmoji(emoji: any): void {
+    console.log('Emoji:', emoji.emoji.native);
+    const txtArea = this.messageInputRef.nativeElement;
+    const caretPos = txtArea.selectionStart;
+    const textBefore = this.newMessageText.slice(0, caretPos);
+    const textAfter = this.newMessageText.slice(caretPos);
+    this.newMessageText = textBefore + emoji.emoji.native + textAfter;
+    txtArea.value = this.newMessageText;
+    const newCaretPos = caretPos + emoji.emoji.native.length;
+    txtArea.setSelectionRange(newCaretPos, newCaretPos);
+    txtArea.focus();
+    this.isEmojiPickerOpen = false;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (!this.isEmojiPickerOpen) return;
+
+    const target = event.target as HTMLElement;
+    const insidePicker = this.emojiPickerRef?.nativeElement.contains(target);
+    const onIcon = this.emojiButtonRef?.nativeElement.contains(target);
+
+    if (!insidePicker && !onIcon) {
+      this.isEmojiPickerOpen = false;
+    }
   }
 
   async removeMember() {

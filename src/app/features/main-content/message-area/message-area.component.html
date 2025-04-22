@@ -9,6 +9,7 @@
 
   
   }@else {
+    
   <div class="chatbox-header">
     @if(chatType === 'private'){
     <div class="private-header" (click)="toggleProfile(chatPartner)">
@@ -167,6 +168,8 @@
       </button>
     </div>
   </div>
+
+
   } @if (isEditChannelOpen) {
   <app-channel-leave
     [channelData]="channelData"

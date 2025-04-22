@@ -4,6 +4,11 @@
 </div>
 }@else {
 <section>
+  @if (isNewChat) {
+  <div class="new-chat"></div>
+
+  
+  }@else {
   <div class="chatbox-header">
     @if(chatType === 'private'){
     <div class="private-header" (click)="toggleProfile(chatPartner)">
@@ -36,7 +41,11 @@
         </div>
 
         <span class="material-symbols add-person-icon">person_add</span>
-        <span (click)="removeMember()" class="material-symbols add-person-icon personIconHover">person_remove</span>
+        <span
+          (click)="removeMember()"
+          class="material-symbols add-person-icon personIconHover"
+          >person_remove</span
+        >
       </div>
     </div>
     } @else if(chatType === 'thread'){
@@ -61,7 +70,7 @@
       <p>2 Antworten</p>
       <span></span>
     </div>
-    
+
     } @if (messages && messages.length === 0) { @if(chatType === 'private'){
     <div class="empty-private-chat">
       <div>
@@ -158,8 +167,7 @@
       </button>
     </div>
   </div>
-
-  @if (isEditChannelOpen) {
+  } @if (isEditChannelOpen) {
   <app-channel-leave
     [channelData]="channelData"
     (close)="toggleEdit()"

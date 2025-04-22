@@ -51,54 +51,6 @@ section {
   }
 }
 
-button {
-  cursor: pointer;
-  font-family: "Nunito", sans-serif;
-  font-weight: 700;
-  border: none;
-  padding: 12px 25px;
-  border-radius: 50px;
-}
-
-.primary-btn {
-  background-color: #444df2;
-  color: #ffffff;
-  border: 1px solid #444df2;
-  &:hover {
-    background-color: #797ef3;
-    border: 1px solid #797ef3;
-  }
-  &:active {
-    background-color: #444df2;
-    border: 1px solid #444df2;
-  }
-  &:disabled {
-    background-color: #686868;
-    border: 1px solid #686868;
-    cursor: not-allowed;
-  }
-}
-
-.secondary-btn {
-  background-color: #ffffff;
-  color: #444df2;
-  border: 1px solid #797ef3;
-  &:hover {
-    background-color: #535AF1;
-    color: #ffffff;
-    border: 1px solid #535AF1;
-  }
-  &:active {
-    background-color: #444df2;
-    border: 1px solid #444df2;
-  }
-  &:disabled {
-    color: #686868;
-    border: 1px solid #686868;
-    cursor: not-allowed;
-  }
-}
-
 .icon-button {
   cursor: pointer;
   width: 40px;

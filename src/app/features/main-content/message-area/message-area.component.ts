@@ -72,6 +72,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
 
   newMessageText: string = '';
 
+  isNewChat: boolean = false;
   isLoading: boolean = true;
   isEditChannelOpen: boolean = false;
   isProfilOpen: boolean = false;

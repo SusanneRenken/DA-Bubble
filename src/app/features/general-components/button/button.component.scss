@@ -11,8 +11,9 @@
 }
 
 button {
-  @include mixin.dFlex($gap: 20px);
-  padding: 12px 25px;
+  @include mixin.dFlex($gap: clamp(10px, 2.5vw, 20px));
+  font-size: clamp(14px, 2.5vw, 18px);
+  padding: clamp(10px, 2.5vw, 12px) clamp(18px, 2.5vw, 25px);
   border: 1px solid transparent;
   border-radius: 25px;
   cursor: pointer;

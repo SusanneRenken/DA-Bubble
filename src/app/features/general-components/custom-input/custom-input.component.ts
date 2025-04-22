@@ -8,7 +8,6 @@ import {
 import {
   ControlValueAccessor,
   NG_VALUE_ACCESSOR,
-  FormControl,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';

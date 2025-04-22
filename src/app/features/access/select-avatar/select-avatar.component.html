@@ -16,9 +16,10 @@
 <h1>Wähle deinen Avatar</h1>
 
 @if (selectedAvatar) {
-<img class="selected-avatar" [src]="'assets/img/' + selectedAvatar" alt="" />
+<img class="selected-avatar" [src]="'assets/img/' + selectedAvatar" alt="Avatar"/>
 } @else if (!selectedAvatar) {
-<div class="img-contaier">
+  <img class="selected-avatar" src="assets/img/profile.png" alt="profil">
+<!-- <div class="img-contaier">
   <svg
     width="92"
     height="92"
@@ -31,7 +32,7 @@
       fill="#ECEEFE"
     />
   </svg>
-</div>
+</div> -->
 }
 
 <h2>{{ username }}</h2>

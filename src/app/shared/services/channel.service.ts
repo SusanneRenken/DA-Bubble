@@ -16,7 +16,7 @@ export class ChannelService {
     const allChannels: Channel[] = [];
 
     querySnapshot.forEach((docSnap) => {
-      const channelData = { ...(docSnap.data() as Channel), id: docSnap.id };
+      const channelData = { ...(docSnap.data() as Channel), cId: docSnap.id };
       allChannels.push(channelData);
     });
 
@@ -28,7 +28,7 @@ export class ChannelService {
       const ref = doc(this.firestore, 'channels', channelId);
       const unsub = onSnapshot(ref, (snap) => {
         if (snap.exists()) {
-          observer.next(snap.data() as Channel);
+          observer.next({ ...(snap.data() as Channel), cId: snap.id });
         }
       });
       return () => unsub();
@@ -42,7 +42,7 @@ export class ChannelService {
     const channelDocRef = doc(this.firestore, 'channels', channelId);
     return getDoc(channelDocRef).then((docSnap) => {
       if (docSnap.exists()) {
-        return docSnap.data() as Channel;
+        return { ...(docSnap.data() as Channel), cId: docSnap.id };
       } else {
         throw new Error('Channel not found');
       }

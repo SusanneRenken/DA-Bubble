@@ -45,7 +45,7 @@ export class UserService {
     const allUsers: User[] = [];
 
     querySnapshot.forEach((docSnap) => {
-      const userData = { ...(docSnap.data() as User), id: docSnap.id };
+      const userData = { ...(docSnap.data() as User), uId: docSnap.id };
       allUsers.push(userData);
     });
 

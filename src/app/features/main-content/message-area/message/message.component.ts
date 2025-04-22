@@ -40,6 +40,7 @@ export class MessageComponent implements OnInit {
   @Input() activeUserId: string | null = null;
 
   @Output() profileClick = new EventEmitter<string>();
+  @Output() threadOpen = new EventEmitter<string>();
 
   @ViewChild('emojiPicker', { read: ElementRef }) emojiPickerRef?: ElementRef;
   @ViewChild('emojiBtn', { read: ElementRef }) emojiBtnRef?: ElementRef;
@@ -318,4 +319,20 @@ export class MessageComponent implements OnInit {
   togglePermanentDelete(): void {
     this.isPermanentDeleteOpen = !this.isPermanentDeleteOpen;
   }
+
+  onThreadClick(): void {
+    if (!this.message.mId) return;
+    const tid = this.message.mThreadId || this.message.mId;
+
+    const ensureThread = this.message.mThreadId
+      ? Promise.resolve()
+      : this.messageService.startThread(this.message.mId);
+
+    ensureThread.then(() => {
+      this.message.mThreadId = tid;
+      this.threadOpen.emit(tid);
+    });
+  }
+
+
 }

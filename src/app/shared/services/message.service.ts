@@ -237,4 +237,9 @@ export class MessageService {
 
     await updateDoc(messageRef, { mReactions: newReactions });
   }
+
+  async startThread(parentMessageId: string): Promise<void> {
+    const parentRef = doc(this.firestore, 'messages', parentMessageId);
+    await updateDoc(parentRef, { mThreadId: parentMessageId });
+  }
 }

@@ -1,10 +1,12 @@
 import {
   Component,
   ElementRef,
+  EventEmitter,
   inject,
   Input,
   OnChanges,
   OnDestroy,
+  Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -50,6 +52,8 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   @Input() chatType: 'private' | 'channel' | 'thread' | 'new' = 'private';
   @Input() chatId: string | null = null;
   @Input() activeUserId: string | null = null;
+
+  @Output() openThread = new EventEmitter<string>();
 
   @ViewChild('scrollContainer')
   private scrollContainer!: ElementRef<HTMLDivElement>;
@@ -182,18 +186,6 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
       })
       .catch((error) => {
         console.error('Fehler beim Laden des Users:', error);
-      });
-  }
-
-  loadChannelData() {
-    this.channelService
-      .getChannel(this.chatId)
-      .then((channelData) => {
-        this.channelData = channelData;
-        this.loadChannelMembers();
-      })
-      .catch((error) => {
-        console.error('Fehler beim Laden des Channels:', error);
       });
   }
 
@@ -389,6 +381,10 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
       this.foundUsers = [];
       this.foundChannels = [];
     }
+  }
+
+  handleThreadClick(threadId: string) {
+    this.openThread.emit(threadId);
   }
 
   openUserSuggestions(): void {

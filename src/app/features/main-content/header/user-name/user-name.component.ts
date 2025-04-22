@@ -24,6 +24,7 @@ export class UserNameComponent {
   userEmail: string = '';
   userImage: string = '';
   animateOut = false;
+  windowSize = window.innerWidth
   @ViewChild('tabletToggleBtn') tabletToggleBtn?: ElementRef;
   @ViewChild('arrowToggleBtn') arrowToggleBtn?: ElementRef;
   @ViewChild('logOutBox') logOutBox?: ElementRef;
@@ -48,11 +49,21 @@ export class UserNameComponent {
 
   toggleLogOut() {
     if (this.isLogOutVisible) {
-      this.animateOut = true;
-      setTimeout(() => {
+      if ( this.windowSize <= 1000) {
+        console.log('bin drin');
+        
+        this.animateOut = true;
+      
+        setTimeout(() => {
+          this.isLogOutVisible = false;
+          this.animateOut = false;
+        }, 800);
+      }
+      else{
+        console.log('nicht drin');
         this.isLogOutVisible = false;
         this.animateOut = false;
-      }, 800);
+      }
     } else {
       this.isLogOutVisible = true;
     }
@@ -72,11 +83,16 @@ export class UserNameComponent {
     const clickedInsideProfil = this.profilWrapper?.nativeElement?.contains(event.target);
     const clickedOutside = !clickedInsideLogOut && !clickedToggleTablet && !clickedArrow && !clickedInsideProfil;
     if (this.isLogOutVisible && clickedOutside) {
-      this.animateOut = true;
-      setTimeout(() => {
+      if ( this.windowSize <= 1000) {
+        this.animateOut = true;
+        setTimeout(() => {
+          this.isLogOutVisible = false;
+          this.animateOut = false;
+        }, 800);
+      }
+      else{
         this.isLogOutVisible = false;
-        this.animateOut = false;
-      }, 800);
+      }
     }
   }
 

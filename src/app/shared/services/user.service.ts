@@ -7,9 +7,12 @@ import {
   getDocs,
   onSnapshot,
   updateDoc,
+  setDoc,
+  serverTimestamp
 } from 'firebase/firestore';
 import { User } from '../interfaces/user.interface';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
+import { Channel } from '../interfaces/channel.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -131,4 +134,41 @@ export class UserService {
       console.error('Fehler beim Editieren der LastReactions:', error);
     }
   }
+
+  
+  
+  async createChannelWithUsers( name: string, description: string, userId: string, userIds: string[] ): Promise<string | void> {
+    if (!name || !userId || !userIds.length) return;
+    const channelsCollectionRef = collection(this.firestore, 'channels');
+    const newDocRef = doc(channelsCollectionRef);
+    const newId = newDocRef.id;
+    const newChannel: Channel = {
+      cId: newId,
+      cName: name,
+      cDescription: description,
+      cCreatedByUser: userId,
+      cUserIds: userIds,
+      cTime: serverTimestamp() as any,
+    };
+    await setDoc(newDocRef, newChannel);
+    return newId;
+  }
+
+
+  getUserById(userId: string): Observable<User | undefined> {
+    const usersCollection = collection(this.firestore, 'users');
+    return collectionData(usersCollection, { idField: 'uId' }).pipe(
+      map((users: any[]) =>
+        users.find((user) => user.uId === userId)
+      )
+    );
+  }
+
+
+  allUsers(): Promise<User[]> {
+    const usersCollection = collection(this.firestore, 'users');
+    return getDocs(usersCollection).then(snap => snap.docs.map(doc => doc.data() as User));
+  }
+  
+  
 }

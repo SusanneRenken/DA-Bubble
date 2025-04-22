@@ -512,4 +512,9 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
       this.isEmojiPickerOpen = false;
     }
   }
+
+  async removeMember() {
+    if (!this.activeUserId || !this.chatId) return;
+      await this.channelService.removeUserFromChannel(this.chatId, this.activeUserId);
+  }
 }

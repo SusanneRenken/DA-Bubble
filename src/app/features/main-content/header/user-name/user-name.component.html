@@ -9,9 +9,7 @@
         <img class="normalImage" (click)="toggleImage()" [src]="'/assets/img/' + userImage" />
         <span class="normalImagePoint" [ngClass]="userStatus === 'true' || userStatus === true ? 'online' : 'offline'"></span>
       </app-device-visible>
-     
     </div>
-   
   </div>
   <button class="openLogOut" (click)="toggleLogOut()"  #arrowToggleBtn>
     <div class="arrowDownHeight material-symbols arrowDown">keyboard_arrow_down</div>
@@ -19,7 +17,7 @@
 </main>
 @if (isLogOutVisible) {
   <section>
-    <div class="popUpStyle">
+    <div class="popUpStyle"  [ngClass]="{ 'slide-down': animateOut }">
       <app-device-visible mode="tabletBig">
           <div class="popUpXLine"></div>
       </app-device-visible>
@@ -28,13 +26,12 @@
           <div class=" material-symbols">account_circle</div>
           <span>Profil</span>
         </button>
-        <button>
+        <button (click)="logOut()">
           <div class=" material-symbols">logout</div>
           <span>Log out</span>
         </button>
       </div>
     </div>
-   
   </section>
 }
 <div #profilWrapper>

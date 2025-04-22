@@ -8,8 +8,9 @@ main {
   width: 100%;
   z-index: 30;
 }
+
 section {
-  @include flexBox(column, '', "", 20);
+  @include flexBox(column, "", "", 20);
   position: absolute;
   left: 50%;
   top: 50%;
@@ -20,6 +21,7 @@ section {
   border-radius: 0 30px 30px 30px;
   padding: 40px;
 }
+
 header {
   @include flexBox("", space-between, center, "");
   height: 40px;
@@ -34,6 +36,7 @@ header {
     }
   }
 }
+
 .channelHashtagName {
   @include flexBox("", left, center, 10);
   width: auto;
@@ -45,6 +48,7 @@ header {
     @include fontStyle(18px, black, 400);
   }
 }
+
 .closeChannelLeave {
   @include flexBox("", center, center, "");
   height: 40px;
@@ -61,9 +65,11 @@ header {
     background-color: #eceefe;
   }
 }
+
 .closeChannelLeave:hover div {
   color: #535af1;
 }
+
 .nameBox {
   @include flexBox(column, space-between, "", "");
   height: 110px;
@@ -72,12 +78,14 @@ header {
   border: 1px solid #adb0d9;
   padding: 20px;
 }
+
 .nameSaveBox {
   @include flexBox(column, space-between, "", "");
   height: 110px;
   width: 100%;
   border: none;
 }
+
 .boxEdit {
   @include flexBox("", space-between, center, "");
   height: 25px;
@@ -93,6 +101,7 @@ header {
     }
   }
 }
+
 .saveBox {
   @include flexBox("", space-between, center, "");
   height: 25px;
@@ -109,6 +118,7 @@ header {
     }
   }
 }
+
 .channelHashtagName {
   @include flexBox("", left, center, 10);
   img {
@@ -139,6 +149,7 @@ header {
     height: 25px;
   }
 }
+
 .descriptionBox {
   @include flexBox(column, space-between, "", 20);
   height: 280px;
@@ -147,76 +158,92 @@ header {
   border: 1px solid #adb0d9;
   border-radius: 20px;
 }
-.descriptionSaveBox{
-    @include flexBox(column, space-between, "", 25);
-    height: 250px;
-    width: 100%;
+
+.descriptionSaveBox {
+  @include flexBox(column, space-between, "", 25);
+  height: 250px;
+  width: 100%;
 }
-.descriptionSaveOutBox{
-    @include flexBox(column, space-between, "", 25);
-    height: 280px;
-    width: 100%;
+
+.descriptionSaveOutBox {
+  @include flexBox(column, space-between, "", 25);
+  height: 280px;
+  width: 100%;
 }
-.inputDescription{
-    @include flexBox('', '', center, '');
-    width: 100%;
-    height: 60px;
-    border: 1px solid #adb0d9;
-    padding: 0 20px;
-    border-radius: 30px;
-    textarea{
-        height: 25px;
-        width: 750px;
-        outline: none;
-        border: none;
-        resize: none;
-    }
+
+.inputDescription {
+  @include flexBox("", "", center, "");
+  width: 100%;
+  height: 60px;
+  border: 1px solid #adb0d9;
+  padding: 0 20px;
+  border-radius: 30px;
+  textarea {
+    height: 25px;
+    width: 750px;
+    outline: none;
+    border: none;
+    resize: none;
+  }
 }
-textarea::-webkit-scrollbar{
-    width: 8px;
+
+textarea::-webkit-scrollbar {
+  width: 8px;
 }
-textarea::-webkit-scrollbar-track{
-    background-color: white;
-    border-radius: 8px;
+
+textarea::-webkit-scrollbar-track {
+  background-color: white;
+  border-radius: 8px;
 }
-textarea::-webkit-scrollbar-thumb{
-    background: linear-gradient(#ECEEFE, #ECEEFE);
-    border-radius: 8px;
+
+textarea::-webkit-scrollbar-thumb {
+  background: linear-gradient(#eceefe, #eceefe);
+  border-radius: 8px;
 }
+
 .descriptionBoxText {
   height: 60px;
   overflow-y: auto;
 }
+
 .descriptionBoxText::-webkit-scrollbar {
   width: 10px;
 }
+
 .descriptionBoxText::-webkit-scrollbar-track {
   background-color: white;
   border-radius: 8px;
 }
+
 .descriptionBoxText::-webkit-scrollbar-thumb {
   background: linear-gradient(#eceefe, #eceefe);
   border-radius: 8px;
 }
+
 .descriptionText {
   @include flexBox(column, space-between, "", 20);
-  height: 110px
+  height: 110px;
 }
+
 .creatorXLine {
   @include flexBox(column, "", "", 20);
 }
-.creatorBox{
-    height: 80px;
+
+.creatorBox {
+  height: 80px;
 }
+
 .xLine {
   width: 100%;
   border: 1px solid #adb0d9;
 }
-.xLineSave{
-    width: 740px;
-    border: 1px solid #adb0d9;
-    margin: 0 auto
+
+.xLineSave {
+  width: 740px;
+  border: 1px solid #adb0d9;
+  margin: 0 auto;
 }
+
 .userCreator {
   @include flexBox(column, space-between, "", "");
   height: 80px;
@@ -225,6 +252,7 @@ textarea::-webkit-scrollbar-thumb{
     @include fontStyle(24px, #535af1, 400);
   }
 }
+
 .channelLeaveButton {
   @include flexBox("", end, center, "");
   width: 100%;
@@ -242,35 +270,53 @@ textarea::-webkit-scrollbar-thumb{
     }
   }
 }
+
 @keyframes fadeInSlide {
-    0% {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
   }
-  
-  @keyframes fadeOutSlide {
-    0% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    100% {
-      opacity: 0;
-      transform: translateY(10px);
-    }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  .fade-in {
-    animation: fadeInSlide 200ms ease-out forwards;
+}
+
+@keyframes fadeOutSlide {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  .fade-out {
-    animation: fadeOutSlide 200ms ease-in forwards;
+  100% {
+    opacity: 0;
+    transform: translateY(10px);
   }
-  
-  
-  
+}
+
+.fade-in {
+  animation: fadeInSlide 200ms ease-out forwards;
+}
+
+.fade-out {
+  animation: fadeOutSlide 200ms ease-in forwards;
+}
+
+@media (max-width: 1000px) {
+  section{
+    width: 90%;
+  }
+  .saveBox{
+    width: 100%;
+  }
+  .xLineSave{
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  section{
+    width: 100%;
+    border-radius: 0px;
+    height: 100%;
+  }
+}

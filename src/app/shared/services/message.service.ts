@@ -18,7 +18,7 @@ import {
   doc,
   getDoc,
   serverTimestamp,
-  updateDoc,
+  updateDoc, getDocs,
   deleteDoc, 
 } from 'firebase/firestore';
 import { Reaction } from '../interfaces/reaction.interface';
@@ -242,4 +242,11 @@ export class MessageService {
     const parentRef = doc(this.firestore, 'messages', parentMessageId);
     await updateDoc(parentRef, { mThreadId: parentMessageId });
   }
+
+  getAllMessages(): Promise<Message[]> {
+    const messagesCollection = collection(this.firestore, 'messages');
+    return getDocs(messagesCollection).then(snap => snap.docs.map(doc => doc.data() as Message));
+  }
+  
+
 }

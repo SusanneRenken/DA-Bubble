@@ -1,0 +1,29 @@
+<div class="addInputField">
+    @if (memberAddElement) {
+      <div class="inputNamePush">
+        <div class="inputNameImgPush">
+          <img [src]="'/assets/img/' + memberInputImage" alt="" />
+          <span> {{ memberInputAdd }}</span>
+        </div>
+        <button (click)="inputNameClose()" class="inputNamePushClose">
+          <div class="material-symbols closeIcon">close</div>
+        </button>
+      </div>
+    }
+    @else {
+      <input (keyup)="onKey($event)" type="text" placeholder="Name eingeben">
+    }
+    @if (showMember) {
+      <div class="showMembers">
+        @for (member of filteredMembers; track $index) {
+          <button (click)="memberNameAdd(member.uName, member.uUserImage, member.uId)" class="memberItem">
+            <div class="user-img-status">
+              <img [src]="'/assets/img/' + member.uUserImage" alt="" />
+              <span [ngClass]="member.uStatus ? 'online' : 'offline'"></span>
+            </div>
+            <h3>{{ member.uName }}</h3>
+          </button>
+        }
+      </div>
+    }
+  </div>

@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output, inject, ChangeDetectorRef} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, inject} from '@angular/core';
 import { Channel } from '../../../shared/interfaces/channel.interface';
-import { Firestore, collection, collectionData } from '@angular/fire/firestore';
+import { Firestore} from '@angular/fire/firestore';
 import { map } from 'rxjs/operators';
 import { FormsModule } from '@angular/forms';
-import { doc, updateDoc } from '@angular/fire/firestore';
+import { UserService } from '../../../shared/services/user.service';
+import { User } from '../../../shared/interfaces/user.interface';
+import { ChannelService } from '../../../shared/services/channel.service';
 
 @Component({
   selector: 'app-channel-leave',
@@ -32,14 +34,13 @@ export class ChannelLeaveComponent implements OnInit {
 
   firestore = inject(Firestore);
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(private userService: UserService, private channelService: ChannelService) {}
 
 
   ngOnInit(): void {
-    const usersCollection = collection(this.firestore, 'users');
-    collectionData(usersCollection, { idField: 'uId' })
+    this.userService.getEveryUsers()
       .pipe(
-        map((users: any[]) =>
+        map((users: User[]) =>
           users.find((user) => user.uId === this.channelData?.cCreatedByUser)
         )
       )
@@ -84,28 +85,25 @@ export class ChannelLeaveComponent implements OnInit {
 
   saveNewName() {
     const newName = this.editedChannelName.trim();
-    if (!newName || !this.channelData?.cId) {
-      return;
-    }
-    const channelRef = doc(this.firestore, 'channels', this.channelData.cId);
-    updateDoc(channelRef, { cName: newName })
+    if (!newName || !this.channelData?.cId) return;
+    this.channelService.updateChannelName(this.channelData.cId, newName)
       .then(() => {
         this.channelData!.cName = newName;
         this.nameUpdated.emit(newName);
         this.toggleEdit();
       })
+      .catch(() => {});
   }
+  
 
 
   saveDescription() {
     const newDesc = this.editedDescription.trim();
-    if (!newDesc || !this.channelData?.cId) {
-      return;
-    }
-    const channelRef = doc(this.firestore, 'channels', this.channelData.cId);
-    updateDoc(channelRef, { cDescription: newDesc })
+    if (!newDesc || !this.channelData?.cId) return;
+    this.channelService.updateChannelDescription(this.channelData.cId, newDesc)
       .then(() => {
         this.channelData!.cDescription = newDesc;
       })
+      .catch(() => {});
   }
 }

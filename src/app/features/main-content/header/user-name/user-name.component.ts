@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostListener, ViewChild, Input} from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild, Input, inject} from '@angular/core';
 import { ProfilComponent } from '../../../general-components/profil/profil.component';
-import { ActivatedRoute } from '@angular/router';
-import { Firestore, collection, collectionData } from '@angular/fire/firestore';
-import { map } from 'rxjs/operators';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DeviceVisibleComponent } from '../../../../shared/services/responsive';
+import { AuthentificationService } from '../../../../shared/services/authentification.service';
+import { UserService } from '../../../../shared/services/user.service';
 
 @Component({
   selector: 'app-user-name',
@@ -15,44 +15,60 @@ import { DeviceVisibleComponent } from '../../../../shared/services/responsive';
 })
 
 export class UserNameComponent {
+  private authService = inject(AuthentificationService);
+  @Input() activeUserId!: string | null;
   isLogOutVisible: boolean = false;
   showProfil: boolean = false;
   userStatus: boolean | string = false;
-  @Input() activeUserId!: string | null;
   userName: string = '';
   userEmail: string = '';
   userImage: string = '';
+  animateOut = false;
+  windowSize = window.innerWidth
   @ViewChild('tabletToggleBtn') tabletToggleBtn?: ElementRef;
   @ViewChild('arrowToggleBtn') arrowToggleBtn?: ElementRef;
   @ViewChild('logOutBox') logOutBox?: ElementRef;
   @ViewChild('profilWrapper') profilWrapper?: ElementRef;
 
-  constructor(private route: ActivatedRoute, private firestore: Firestore) {}
+  constructor(private route: ActivatedRoute, private userService: UserService, private router: Router) {}
 
 
   ngOnInit(): void {
     const userId = this.route.snapshot.paramMap.get('activeUserId');
     if (!userId) return;
-    const usersCollection = collection(this.firestore, 'users');
-    collectionData(usersCollection, { idField: 'uId' })
-      .pipe(map((users: any[]) => users.find((user) => user.uId === userId)))
-      .subscribe((user) => {
-        if (user) {
-          this.userName = user.uName;
-          this.userEmail = user.uEmail;
-          this.userImage = user.uUserImage;
-          this.userStatus = user.uStatus;
-        }
-      });
+    this.userService.getUserById(userId).subscribe((user) => {
+      if (user) {
+        this.userName = user.uName;
+        this.userEmail = user.uEmail;
+        this.userImage = user.uUserImage;
+        this.userStatus = user.uStatus;
+      }
+    });
+  }
+  
+
+  toggleLogOut() {
+    if (this.isLogOutVisible) {
+      if ( this.windowSize <= 1000) {
+        console.log('bin drin');
+        
+        this.animateOut = true;
+      
+        setTimeout(() => {
+          this.isLogOutVisible = false;
+          this.animateOut = false;
+        }, 800);
+      }
+      else{
+        console.log('nicht drin');
+        this.isLogOutVisible = false;
+        this.animateOut = false;
+      }
+    } else {
+      this.isLogOutVisible = true;
+    }
   }
 
-
-  toggleLogOut() {    
-    this.isLogOutVisible = !this.isLogOutVisible;
-    setTimeout(() => {}, 0);
-    console.log(this.isLogOutVisible);
-    
-  }
 
   toggleImage(){
     this.toggleLogOut()
@@ -60,23 +76,34 @@ export class UserNameComponent {
 
 
   @HostListener('document:click', ['$event'])
-onDocumentClick(event: MouseEvent) {
-  const clickedInsideLogOut = this.logOutBox?.nativeElement?.contains(event.target);
-  const clickedToggleTablet = this.tabletToggleBtn?.nativeElement?.contains(event.target);
-  const clickedArrow = this.arrowToggleBtn?.nativeElement?.contains(event.target);
-  const clickedInsideProfil = this.profilWrapper?.nativeElement?.contains(event.target);
-  if (
-    !clickedInsideLogOut &&
-    !clickedToggleTablet &&
-    !clickedArrow &&
-    !clickedInsideProfil
-  ) {
-    this.isLogOutVisible = false;
+  onDocumentClick(event: MouseEvent) {
+    const clickedInsideLogOut = this.logOutBox?.nativeElement?.contains(event.target);
+    const clickedToggleTablet = this.tabletToggleBtn?.nativeElement?.contains(event.target);
+    const clickedArrow = this.arrowToggleBtn?.nativeElement?.contains(event.target);
+    const clickedInsideProfil = this.profilWrapper?.nativeElement?.contains(event.target);
+    const clickedOutside = !clickedInsideLogOut && !clickedToggleTablet && !clickedArrow && !clickedInsideProfil;
+    if (this.isLogOutVisible && clickedOutside) {
+      if ( this.windowSize <= 1000) {
+        this.animateOut = true;
+        setTimeout(() => {
+          this.isLogOutVisible = false;
+          this.animateOut = false;
+        }, 800);
+      }
+      else{
+        this.isLogOutVisible = false;
+      }
+    }
   }
-}
 
   
   openProfil() {
     this.showProfil = true;
+  }
+
+  
+  logOut(){
+    this.authService.logout();
+    this.router.navigate(['/access']); 
   }
 }

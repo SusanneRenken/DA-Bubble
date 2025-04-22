@@ -36,7 +36,7 @@
         </div>
 
         <span class="material-symbols add-person-icon">person_add</span>
-        <span class="material-symbols add-person-icon">person_remove</span>
+        <span (click)="removeMember()" class="material-symbols add-person-icon personIconHover">person_remove</span>
       </div>
     </div>
     } @else if(chatType === 'thread'){

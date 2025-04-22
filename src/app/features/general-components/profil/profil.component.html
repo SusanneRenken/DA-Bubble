@@ -17,6 +17,9 @@
                 <div class="nameEdit">
                     <span>{{ userName }}</span>
                     <a *ngIf="!showButton" (click)="onEditClick()">Bearbeiten</a>
+                    <button *ngIf="!showButton" (click)="onEditClick()" class="editIconShow">
+                        <div class="material-symbols editIcon">Edit</div>
+                    </button>
                 </div>
                 <div class="status" *ngIf="isActive">
                     <img src="/assets/img/green_point.png">
@@ -48,11 +51,21 @@
         }
         @if (showButton) {
             <div class="messageArea">
-                <button class="messageButton">
+                <button class="messageButton messageButtonBackgroundBlue">
                     <img src="/assets/icons/mode_comment.svg">
                     <span>Nachricht</span>
                 </button>
             </div>
+        }
+        @else {
+            @if (!showEditProfil) {
+                <div class="messageArea">
+                    <button (click)="deleteMember()" class="messageButton messageButtonBackgroundPink">
+                        <div class="material-symbols closeIcon">delete</div>
+                        <span>Löschen</span>
+                    </button>
+                </div>
+            }
         }
         @if (showEditProfil) {
             <div class="editSaveButtons">

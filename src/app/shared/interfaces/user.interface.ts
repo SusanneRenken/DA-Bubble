@@ -4,6 +4,7 @@ export interface UserInterface {
   uEmail: string;
   uUserImage: string;
   uStatus: boolean;
+  uLastReactions: string[];
 }
 
 export interface User {

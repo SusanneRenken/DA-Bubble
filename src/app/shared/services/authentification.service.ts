@@ -31,53 +31,65 @@ export class AuthentificationService {
   private firestore: Firestore = inject(Firestore);
 
   public currentUid: string | null = null;
-  public resetUser: UserInterface | null = null;
+  public registrationData: {
+    email: string;
+    password: string;
+    username: string;
+  } | null = null;
 
   constructor() {}
 
-  registerWithEmail(email: string, password: string, username: string): Promise<void | UserCredential> {
-    return createUserWithEmailAndPassword(this.auth, email, password).then(
-      (userCredential) => {
-        this.currentUid = userCredential.user.uid;
-        const userData: UserInterface = {
-          uId: this.currentUid,
-          uName: username,
-          uEmail: email,
-          uUserImage: '',
-          uStatus: false,
-        };
-        const userRef = collection(this.firestore, 'users');
-        const userDocRef = doc(userRef, this.currentUid);
-        return setDoc(userDocRef, userData);
-      }
-    );
-  }
-
-  updateProfilePicture(profilePictureUrl: string): Promise<void | UserCredential> {
-    if (!this.currentUid) {
-      return Promise.reject('No ongoing registration');
-    }
-    const userRef = collection(this.firestore, 'users');
-    const userDocRef = doc(userRef, this.currentUid);
-    return updateDoc(userDocRef, { uUserImage: profilePictureUrl }).then(() => {
-      this.currentUid = null;
+  async prepareRegistration(email: string, password: string, username: string): Promise<void | UserCredential> {
+    const usersCollection = collection(this.firestore, 'users');
+    const q = query(usersCollection, where('uEmail', '==', email));
+    return getDocs(q).then((querySnapshot) => {
+      if (!querySnapshot.empty) return Promise.reject('User with this email is found');
+      this.registrationData = {
+        email,
+        password,
+        username
+      };
+      return Promise.resolve();
     });
   }
 
-  loginWithEmail(email: string, password: string): Promise<void | UserCredential> {
-    return signInWithEmailAndPassword(this.auth, email, password).then(
-      (result) => {
-        this.currentUid = result.user.uid;
-        const userRef = collection(this.firestore, 'users');
-        const userDocRef = doc(userRef, this.currentUid);
-        return updateDoc(userDocRef, { uStatus: true }).then(() => result);
-      }
-    );
+  async completeRegistration(profilePictureUrl: string): Promise<void | UserCredential> {
+    if (!this.registrationData) return Promise.reject('No active registration available');  
+    const { email, password, username } = this.registrationData;
+    return createUserWithEmailAndPassword(this.auth, email, password)
+    .then((userCredential) => {
+      const uid = userCredential.user.uid;
+      const userData: UserInterface = {
+        uId: uid,
+        uName: username,
+        uEmail: email,
+        uUserImage: profilePictureUrl,
+        uStatus: false,
+        uLastReactions: ['👍', '😊']
+      };
+      const userRef = collection(this.firestore, 'users');
+      const userDocRef = doc(userRef, uid);
+      return setDoc(userDocRef, userData).then(() => {
+        this.registrationData = null;
+        return userCredential;
+      });
+    });
   }
 
-  loginWithGoogle(): Promise<void | UserCredential> {
+  async loginWithEmail(email: string, password: string): Promise<void | UserCredential> {
+    return signInWithEmailAndPassword(this.auth, email, password)
+    .then((result) => {
+      this.currentUid = result.user.uid;
+      const userRef = collection(this.firestore, 'users');
+      const userDocRef = doc(userRef, this.currentUid);
+      return updateDoc(userDocRef, { uStatus: true }).then(() => result);
+    });
+  }
+
+  async loginWithGoogle(): Promise<void | UserCredential> {
     const provider = new GoogleAuthProvider();
-    return signInWithPopup(this.auth, provider).then((result) => {
+    return signInWithPopup(this.auth, provider)
+    .then((result) => {
       this.currentUid = result.user.uid;
       const userData: UserInterface = {
         uId: this.currentUid,
@@ -85,6 +97,7 @@ export class AuthentificationService {
         uEmail: result.user.email || '',
         uUserImage: result.user.photoURL || '',
         uStatus: true,
+        uLastReactions: ['👍', '😊']
       };
       const userRef = collection(this.firestore, 'users');
       const userDocRef = doc(userRef, result.user.uid);
@@ -92,8 +105,9 @@ export class AuthentificationService {
     });
   }
 
-  loginAsGuest(): Promise<void | UserCredential> {
-    return signInAnonymously(this.auth).then((result) => {
+  async loginAsGuest(): Promise<void | UserCredential> {
+    return signInAnonymously(this.auth)
+    .then((result) => {
       this.currentUid = result.user.uid;
       const guestData: UserInterface = {
         uId: this.currentUid,
@@ -101,6 +115,7 @@ export class AuthentificationService {
         uEmail: '',
         uUserImage: 'default-guest.png',
         uStatus: false,
+        uLastReactions: ['👍', '😊']
       };
       const userRef = collection(this.firestore, 'users');
       const userDocRef = doc(userRef, this.currentUid);
@@ -108,31 +123,26 @@ export class AuthentificationService {
     });
   }
 
-  sendResetPasswordEmail(email: string): Promise<void> {
+  async sendResetPasswordEmail(email: string): Promise<void> {
     const actionCodeSettings = {
       url: 'http://localhost:4200/access',
       handleCodeInApp: true,
     };
-
     const usersCollection = collection(this.firestore, 'users');
     const q = query(usersCollection, where('uEmail', '==', email));
     return getDocs(q).then((querySnapshot) => {
-      if (querySnapshot.empty) {
-        return Promise.reject('No user with this email found');
-      }
-      const userDoc = querySnapshot.docs[0];
-      this.resetUser = userDoc.data() as UserInterface;
+      if (querySnapshot.empty) return Promise.reject('No user with this email found');
       return sendPasswordResetEmail(this.auth, email, actionCodeSettings);
     });
   }
 
-  confirmResetPassword(oobCode: string, newPassword: string): Promise<void> {
+  async confirmResetPassword(oobCode: string, newPassword: string): Promise<void> {
     return confirmPasswordReset(this.auth, oobCode, newPassword).then(() => {
-      this.resetUser = null;
+      console.log('Password has been changed!');
     });
   }
 
-  logout(): Promise<void> {
+  async logout(): Promise<void> {
     const uid = this.currentUid;
     const currentUser = this.auth.currentUser;
     let deletePromise: Promise<any>;

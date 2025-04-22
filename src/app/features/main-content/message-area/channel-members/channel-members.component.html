@@ -1,7 +1,11 @@
 <main (click)="onMainClick($event)">
   @if (newChannelMembers) {
     <div class="memberAdd" #memberAddWrapper>
-      <app-add-new-members     
+      <app-add-new-members 
+        [ngClass]="{
+          'slide-up': !animateOut,
+          'slide-down': animateOut
+        }"    
         [channelMembers]="channelMembers"
         [activeUserId]="activeUserId"
         [channelId]="channelId"

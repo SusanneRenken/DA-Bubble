@@ -1,0 +1,33 @@
+@use '../../../shared/scss/mixins' as mixin;
+@use '../../../shared/scss/variables' as vari;
+
+.background-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  /* background: linear-gradient(to bottom, #797EF3, #313AE5); */
+  pointer-events: none;
+
+  .logo-wrapper {
+    position: fixed;
+    z-index: 11;
+  }
+}
+
+.logo-container {
+  @include mixin.dFlex();
+
+  > svg {
+    flex-shrink: 0;
+  }
+
+  .logo-text {
+    font-size: 24px;
+    font-weight: bold;
+    overflow: hidden;
+    margin-left: 10px;
+  }
+}

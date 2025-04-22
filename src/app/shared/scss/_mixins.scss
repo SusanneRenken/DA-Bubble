@@ -38,3 +38,15 @@
   border-color: $bor-color;
   color: $text-color;
 }
+
+@mixin errMess($text-color) {
+  width: 100%;
+  position: relative;
+
+  > small {
+    position: absolute;
+    bottom: -20px;
+    color: $text-color;
+    font-size: 14px;
+  }
+}

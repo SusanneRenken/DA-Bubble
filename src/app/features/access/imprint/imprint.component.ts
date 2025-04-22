@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ComponentSwitcherService } from '../../../shared/services/component-switcher.service';
 
 @Component({
   selector: 'app-imprint',
@@ -7,5 +8,9 @@ import { Component } from '@angular/core';
   styleUrl: './imprint.component.scss'
 })
 export class ImprintComponent {
+  constructor(public componentSwitcher: ComponentSwitcherService) {}
 
+  goBack() {
+    this.componentSwitcher.setComponent('login');
+  }
 }

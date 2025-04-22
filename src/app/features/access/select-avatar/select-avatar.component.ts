@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { ButtonComponent } from '../../general-components/button/button.component';
 import { ComponentSwitcherService } from '../../../shared/services/component-switcher.service';
 import { AuthentificationService } from '../../../shared/services/authentification.service';
+import { SuccessIndicatorComponent } from '../../general-components/success-indicator/success-indicator.component';
 
 @Component({
   selector: 'app-select-avatar',
-  imports: [ButtonComponent],
+  imports: [ButtonComponent, SuccessIndicatorComponent],
   templateUrl: './select-avatar.component.html',
   styleUrl: './select-avatar.component.scss',
 })
@@ -18,16 +19,25 @@ export class SelectAvatarComponent {
     'avatar-5.png',
     'avatar-6.png',
   ];
-
   selectedAvatar: string | null = null;
+  username: string | undefined | null = null;
+  isConfirmationVisible: boolean = false;
 
   constructor(
     public componentSwitcher: ComponentSwitcherService,
     private authService: AuthentificationService
-  ) {}
+  ) {
+    this.username = this.authService.registrationData?.username;
+  }
+
+  goBack() {
+    this.authService.registrationData = null;
+    this.changeComponent('signin');
+  }
 
   selectAvatar(avatar: string): void {
     this.selectedAvatar = avatar;
+    console.log(this.selectedAvatar);
   }
 
   onNext(): void {
@@ -36,10 +46,15 @@ export class SelectAvatarComponent {
       return;
     }
     this.authService
-      .updateProfilePicture(this.selectedAvatar)
+      .completeRegistration(this.selectedAvatar)
       .then(() => {
-        console.log('Profile picture successfully added!');
-        this.changeComponent('login');
+        this.isConfirmationVisible = true;
+        setTimeout(() => {
+          this.isConfirmationVisible = false;
+        }, 2000);
+        setTimeout(() => {
+          this.changeComponent('login');
+        }, 3000);
       })
       .catch((error) => {
         console.error('Error when adding the profile picture: ', error);

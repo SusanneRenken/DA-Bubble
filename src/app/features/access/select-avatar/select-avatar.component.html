@@ -1,4 +1,4 @@
-<div class="arrow" (click)="changeComponent('signin')">
+<div class="arrow" (click)="goBack()">
   <svg
     width="16"
     height="16"
@@ -15,6 +15,9 @@
 
 <h1>Wähle deinen Avatar</h1>
 
+@if (selectedAvatar) {
+<img class="selected-avatar" [src]="'assets/img/' + selectedAvatar" alt="" />
+} @else if (!selectedAvatar) {
 <div class="img-contaier">
   <svg
     width="92"
@@ -29,10 +32,11 @@
     />
   </svg>
 </div>
+}
 
-<h2>Beispiel Name</h2>
+<h2>{{ username }}</h2>
 
-<span>Aus der Liste wählen</span>
+<span>Bitte wählen sie ihr Profilbild aus.</span>
 
 <div class="avatar-container">
   @for (avatar of avatars; track $index) {
@@ -46,5 +50,7 @@
 </div>
 
 <div class="btn-container">
-  <app-button (click)="onNext()">Weiter</app-button>
+  <app-button [disabled]="!selectedAvatar" (click)="onNext()">Weiter</app-button>
 </div>
+
+<app-success-indicator [visible]="isConfirmationVisible">Konto erfolgreich erstellt!</app-success-indicator>

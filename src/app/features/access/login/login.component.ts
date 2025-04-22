@@ -11,15 +11,18 @@ import { CommonModule } from '@angular/common';
 import { AuthentificationService } from '../../../shared/services/authentification.service';
 import { Router } from '@angular/router';
 import { CustomInputComponent } from '../../general-components/custom-input/custom-input.component';
+import { SuccessIndicatorComponent } from '../../general-components/success-indicator/success-indicator.component';
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, ButtonComponent, ReactiveFormsModule, CustomInputComponent],
+  imports: [CommonModule, ButtonComponent, ReactiveFormsModule, CustomInputComponent, SuccessIndicatorComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
+  authError: string = '';
+  isConfirmationVisible: boolean = false;
 
   constructor(
     public componentSwitcher: ComponentSwitcherService,
@@ -40,13 +43,26 @@ export class LoginComponent implements OnInit {
       this.authService.loginWithEmail(email, password)
       .then(result => {
         if (result) {
-          console.log('Login-Data: ', this.loginForm.value);
-          const uid = this.authService.currentUid;
-          this.router.navigate(['/home', uid]);
+          this.isConfirmationVisible = true;
+          setTimeout(() => {
+            this.isConfirmationVisible = false;
+          }, 2000);
+          setTimeout(() => {
+            const uid = this.authService.currentUid;
+            this.router.navigate(['/home', uid]);
+          }, 3000);
         }
       })
       .catch(error => {
         console.error('Login error:', error);
+        switch(error.code) {
+          case 'auth/invalid-credential':
+            this.authError = 'E-Mail oder Passwort ist nicht korrekt.';
+            break;
+          default:
+            this.authError = 'Ein Fehler ist aufgetreten. Bitte versuche es erneut.';
+            break;
+        }
       });
     }
   }

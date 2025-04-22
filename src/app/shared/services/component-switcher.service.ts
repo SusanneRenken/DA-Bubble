@@ -6,6 +6,7 @@ import { PrivacyComponent } from '../../features/access/privacy/privacy.componen
 import { SelectAvatarComponent } from '../../features/access/select-avatar/select-avatar.component';
 import { ConfirmEmailComponent } from '../../features/access/confirm-email/confirm-email.component';
 import { ConfirmPasswordComponent } from '../../features/access/confirm-password/confirm-password.component';
+import { GoToEmailComponent } from '../../features/access/go-to-email/go-to-email.component';
 
 @Injectable({
   providedIn: 'root'
@@ -37,6 +38,9 @@ export class ComponentSwitcherService {
         break;
       case 'conPassword':
         this.currentComponent.set(ConfirmPasswordComponent);
+        break;
+      case 'goToEmail':
+        this.currentComponent.set(GoToEmailComponent);
         break;
       default:
         this.currentComponent.set(LoginComponent);

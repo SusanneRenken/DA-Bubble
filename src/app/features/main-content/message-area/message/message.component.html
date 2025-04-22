@@ -6,7 +6,7 @@
 
   @if (isEditOpen && message.mSenderId === activeUserId) {
   <div class="edit-message">
-    <textarea #editTextarea type="text" [(ngModel)]="editText" ></textarea>
+    <textarea #editTextarea type="text" [(ngModel)]="editText"></textarea>
     <div>
       <button
         class="icon-button blue-hover"
@@ -16,7 +16,13 @@
       </button>
       <div>
         <button class="secondary-btn" (click)="toggleEdit()">Abbrechen</button>
-        <button class="primary-btn"(click)="saveEdit()" [disabled]="!editText.trim()" >Speichern</button>
+        <button
+          class="primary-btn"
+          (click)="saveEdit()"
+          [disabled]="!editText.trim()"
+        >
+          Speichern
+        </button>
       </div>
     </div>
   </div>

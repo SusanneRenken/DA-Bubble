@@ -103,6 +103,7 @@ button {
   cursor: pointer;
   width: 40px;
   height: 40px;
+  font-weight: 400;
   background-color: transparent;
   border: none;
   border-radius: 50px;
@@ -215,14 +216,30 @@ button {
   padding: 4px 16px 4px 20px;
   background-color: #ffffff;
   border: 1px solid #adb0d9;
-  border-radius: 25px 25px 0px 25px;
+  border-radius: 25px 25px 0 25px;
   @include flexBox(row, initial, center, 5);
-  display: none;
-  section:hover & {
-    display: flex;
-  }
+
+  opacity: 0;
+  transform: translateX(-50px);
+  pointer-events: none;
+  transition: opacity .25s ease, transform .25s ease;
+
+  section:hover &,
   &.always {
-    display: flex;
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+  }
+
+  &.user-message-actions {
+    right: initial;
+    left: 46px;
+    transform: translateX(50px);
+
+    section:hover &,
+    &.always {
+      transform: translateX(0);
+    }
   }
   > span {
     cursor: pointer;

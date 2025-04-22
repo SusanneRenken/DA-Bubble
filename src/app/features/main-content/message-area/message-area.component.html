@@ -61,6 +61,7 @@
       <p>2 Antworten</p>
       <span></span>
     </div>
+    
     } @if (messages && messages.length === 0) { @if(chatType === 'private'){
     <div class="empty-private-chat">
       <div>
@@ -68,7 +69,7 @@
         <h1>{{ chatPartner?.uName }}</h1>
       </div>
       <p>
-        Diese Unterhaltung findet nur Zwichen
+        Diese Unterhaltung findet nur zwischen
         <span>&#64;{{ chatPartner?.uName }}</span> und dir statt
       </p>
     </div>
@@ -149,7 +150,7 @@
         </button>
       </div>
 
-      <button class="icon-button">
+      <button class="icon-button" [disabled]="!newMessageText.trim()">
         <div class="material-symbols send-icon" (click)="sendMessage()">
           send
         </div>

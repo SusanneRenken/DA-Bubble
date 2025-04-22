@@ -1,7 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
-import { collection, doc, getDoc, getDocs, setDoc,updateDoc ,serverTimestamp} from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, setDoc,updateDoc ,serverTimestamp, onSnapshot} from 'firebase/firestore';
 import { Channel } from '../interfaces/channel.interface';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -20,6 +21,18 @@ export class ChannelService {
     });
 
     return allChannels;
+  }
+
+  getChannelRealtime(channelId: string): Observable<Channel> {
+    return new Observable<Channel>((observer) => {
+      const ref = doc(this.firestore, 'channels', channelId);
+      const unsub = onSnapshot(ref, (snap) => {
+        if (snap.exists()) {
+          observer.next(snap.data() as Channel);
+        }
+      });
+      return () => unsub();
+    });
   }
 
   async getChannel(channelId: string | null): Promise<Channel> {

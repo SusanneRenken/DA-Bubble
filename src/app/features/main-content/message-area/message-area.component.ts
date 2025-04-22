@@ -44,6 +44,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   private messageService = inject(MessageService);
 
   private messagesSubscription: Subscription | null = null;
+  private channelSubscription: Subscription | null = null;
   private lastListLength = 0;
 
   @Input() chatType: 'private' | 'channel' | 'thread' | 'new' = 'private';
@@ -105,9 +106,8 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.messagesSubscription) {
-      this.messagesSubscription.unsubscribe();
-    }
+    this.messagesSubscription?.unsubscribe();
+    this.channelSubscription?.unsubscribe();
   }
 
   scrollToBottom() {
@@ -132,6 +132,8 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
       return;
     }
 
+    this.messages = []; 
+
     this.messagesSubscription = this.messageService
       .getMessages(this.chatType, this.chatId, this.activeUserId)
       .subscribe((messages) => {
@@ -147,17 +149,28 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   }
 
   loadChatData(): void {
-    if (this.chatType === 'private') {
+    this.channelSubscription?.unsubscribe();
+  
+    this.chatPartner     = null;
+    this.channelData     = null;
+    this.channelMembers  = [];
+  
+    if (this.chatType === 'private' && this.chatId) {
       this.loadChatPartnerData();
-    } else {
-      this.chatPartner = null;
+      return;
     }
-
-    if (this.chatType === 'channel') {
-      this.loadChannelData();
-    } else {
-      this.channelData = null;
-      this.channelMembers = [];
+  
+    if (this.chatType === 'channel' && this.chatId) {
+      this.channelSubscription = this.channelService
+        .getChannelRealtime(this.chatId)
+        .subscribe({
+          next : (channel) => {
+            this.channelData = channel;
+            this.loadChannelMembers();
+          },
+          error: (err) => console.error('Channel‑Realtime‑Fehler', err),
+        });
+      return;
     }
   }
 
@@ -289,15 +302,22 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   }
 
   handleKeyDown(event: KeyboardEvent): void {
-    if (event.key === 'Enter' && !event.shiftKey) {
+    if (
+      event.key === 'Enter' &&
+      !event.shiftKey &&
+      this.newMessageText.trim()
+    ) {
       event.preventDefault();
       this.sendMessage();
     }
   }
 
   sendMessage(): void {
+    const text = this.newMessageText.trim();
+    if (!text) return;
+
     const newMessage: Message = {
-      mText: this.newMessageText,
+      mText: text,
       mReactions: [],
       mTime: '',
       mSenderId: this.activeUserId,
@@ -307,9 +327,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
     };
     this.messageService.createMessage(newMessage);
     this.newMessageText = '';
-    setTimeout(() => {
-      this.scrollToBottom();
-    }, 100);
+    setTimeout(() => this.scrollToBottom(), 100);
   }
 
   toggleEdit(): void {

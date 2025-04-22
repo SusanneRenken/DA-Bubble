@@ -219,6 +219,24 @@ export class MessageComponent implements OnInit {
 
   onEmojiPicked(e: any): void {
     const char = e.emoji?.native ?? e.emoji;
+
+    if (this.isEditOpen && this.editTextareaRef) {
+      const ta = this.editTextareaRef.nativeElement;
+      const pos = ta.selectionStart ?? this.editText.length;
+
+      const before = this.editText.slice(0, pos);
+      const after = this.editText.slice(pos);
+      this.editText = before + char + after;
+
+      setTimeout(() => {
+        const newPos = pos + char.length;
+        ta.setSelectionRange(newPos, newPos);
+        ta.focus();
+      });
+
+      return;
+    }
+
     this.addReaction(char);
     this.isEmojiPickerOpen = false;
   }
@@ -268,7 +286,7 @@ export class MessageComponent implements OnInit {
 
   openEdit(): void {
     this.editText = this.message.mText ?? '';
-    this.toggleEdit();  
+    this.toggleEdit();
     setTimeout(() => this.editTextareaRef?.nativeElement.focus());
   }
 
@@ -277,14 +295,14 @@ export class MessageComponent implements OnInit {
       console.error('Es existiert keine mId für diese Message.');
       return;
     }
-  
+
     const trimmed = this.editText.trim();
-  
+
     if (trimmed === (this.message.mText ?? '').trim()) {
       this.toggleEdit();
       return;
     }
-  
+
     this.messageService
       .editMessageText(this.message.mId, trimmed)
       .then(() => {

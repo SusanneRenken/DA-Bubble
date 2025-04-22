@@ -8,4 +8,4 @@ export interface Channel {
     cUserIds: string[];
     cTime: Timestamp | any;
 }
-  //Alex nutzt diese Ts!
+  //Alex und Susanne nutzen diese Ts!

@@ -1,9 +1,23 @@
 <main class="nunitoFont">
+<<<<<<< HEAD
     <app-header-bar></app-header-bar>
     <section>
         <app-channels (toggleMessage)="messageInToggle.emit($event)" [activeUserId]="activeUserId"  (openChat)="onChatOpen($event)"></app-channels>
         <app-direct-message (toggleMessage)="messageInToggle.emit($event)" [activeUserId]="activeUserId"  (openChat)="onChatOpen($event)"></app-direct-message>
     </section>
+=======
+  <app-header-bar></app-header-bar>
+  <section>
+    <app-channels
+      (toggleMessage)="messageInToggle.emit($event)"
+      [activeUserId]="activeUserId"
+      (openChat)="onChatOpen($event)"
+    ></app-channels>
+    <app-direct-message
+      (toggleMessage)="messageInToggle.emit($event)"
+      [activeUserId]="activeUserId"
+      (openChat)="onChatOpen($event)"
+    ></app-direct-message>
+  </section>
+>>>>>>> refs/remotes/origin/main
 </main>
-
-  

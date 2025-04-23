@@ -14,9 +14,9 @@ section {
   border-radius: 30px;
   @include flexBox(column, initial, initial, 0);
 
-  .new-chat{
+  .new-chat {
     height: 100%;
-  width: 100%;
+    width: 100%;
   }
 
   .chatbox-header {
@@ -331,6 +331,6 @@ emoji-mart {
   background-color: #eceefe;
 }
 
-.personIconHover:hover{
+.personIconHover:hover {
   color: rgb(237, 30, 121);
 }

@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, collectionData } from '@angular/fire/firestore';
+import { Firestore, collectionData, deleteDoc  } from '@angular/fire/firestore';
 import { collection, doc, getDoc, getDocs, setDoc,updateDoc ,serverTimestamp, onSnapshot} from 'firebase/firestore';
 import { Channel } from '../interfaces/channel.interface';
 import { Observable } from 'rxjs';
@@ -137,4 +137,9 @@ export class ChannelService {
     return getDocs(channelsCollection).then(snap => snap.docs.map(doc => doc.data() as Channel));
   }
   
+
+  deleteChannel(channelId: string): Promise<void> {
+    const channelRef = doc(this.firestore, 'channels', channelId);
+    return deleteDoc(channelRef);
+  }
 }

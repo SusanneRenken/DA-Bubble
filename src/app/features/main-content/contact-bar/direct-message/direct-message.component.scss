@@ -5,7 +5,7 @@ main{
     margin: 0 auto;
 }
 .directMessageButton{
-    @include flexBox('', left, center, 15);
+    @include flexBox('', left, center, 13);
     width: 260px;
     background-color: white;
     border: none;

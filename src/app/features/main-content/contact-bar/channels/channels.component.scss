@@ -83,8 +83,29 @@ section {
   }
 }
 
+.deleteChannel{
+  @include flexBox("", center, center, '');
+  height: 32px;
+  width: 32px;
+  border: none;
+  background-color: white;
+  border-radius: 50%;
+  &:hover{
+    background-color: rgb(237, 30, 121) !important;
+    color: white;
+  }
+}
+
+.closeIcon{
+  font-size: 24px;
+}
+
+.everyChannel:hover .deleteChannel{
+  background-color: #eceefe;
+}
+
 .everyChannel {
-  @include flexBox("", left, center, 15);
+  @include flexBox("", space-between, center, '');
   height: 35px;
   margin-left: 25px;
   width: 275px;
@@ -103,6 +124,9 @@ section {
 
 .tagImage {
   @include flexBox("", center, center, "");
+}
+.tagName{
+  @include flexBox("", left, center, 15);
 }
 
 .newChannels {

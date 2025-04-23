@@ -23,11 +23,17 @@
             <div class="newChannels">
                 @for (channel of channels$ | async; track channel.id) {
                     <button (click)="selectChannel(channel.id); someAction()" class="everyChannel">
-                      <div class="tagImage">
-                        <div class="material-symbols hashtagIcon">tag</div>
-                      </div>
-                      <span>{{ channel.name }}</span>
+                        <div class="tagName">
+                            <div class="tagImage">
+                                <div class="material-symbols hashtagIcon">tag</div>
+                              </div>
+                              <span>{{ channel.name }}</span>
+                        </div>
+                      <button class="deleteChannel" (click)="onDeleteClick(channel.id, $event)">
+                        <div class="material-symbols closeIcon" >close</div>
+                      </button>
                     </button>
+                    
                 }
             </div>
             <button class="addChannel" (click)="toggleAddChannel()">
@@ -38,3 +44,11 @@
     }
     <app-add-channel [activeUserId]="activeUserId" *ngIf="showAddChannel" (close)="toggleAddChannel()"></app-add-channel>
 </main>
+
+@if (isPermanentDeleteOpen && openChannelId) {
+    <app-permanent-delete
+      [target]="'channel'"
+      [id]="openChannelId"
+      (close)="isPermanentDeleteOpen = false"
+    ></app-permanent-delete>
+}

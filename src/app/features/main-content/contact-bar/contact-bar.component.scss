@@ -7,21 +7,26 @@ main{
     width: 366px;
     border-radius: 30px;
     padding: 0 30px 30px 30px;
-    overflow: auto;
+    overflow: hidden;
 }
 
-main::-webkit-scrollbar{
+section{
+  flex: 1;
+  overflow-y: auto;
+}
+
+section::-webkit-scrollbar{
   width: 10px;
 }
 
-main::-webkit-scrollbar-track{
+section::-webkit-scrollbar-track{
   background-color: white;
   border-radius: 8px;
   margin-top: 24px;
   margin-bottom: 64px;
 }
 
-main::-webkit-scrollbar-thumb{
+section::-webkit-scrollbar-thumb{
   background: linear-gradient(#ECEEFE, #ECEEFE);
   border-radius: 8px;
 }

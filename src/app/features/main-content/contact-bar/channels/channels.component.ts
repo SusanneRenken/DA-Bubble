@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { AddChannelComponent } from './add-channel/add-channel.component';
-import { inject, Component, Input, EventEmitter, Output} from '@angular/core';
-import { Firestore} from '@angular/fire/firestore';
+import { Component, Input, EventEmitter, Output} from '@angular/core';
 import { Observable, of } from 'rxjs';
+import { ChannelService } from '../../../../shared/services/channel.service';
+import { PermanentDeleteComponent } from '../../../general-components/permanent-delete/permanent-delete.component';
 
 @Component({
   selector: 'app-channels',
   standalone: true,
-  imports: [CommonModule, AddChannelComponent],
+  imports: [CommonModule, AddChannelComponent, PermanentDeleteComponent],
   templateUrl: './channels.component.html',
   styleUrl: './channels.component.scss'
 })
@@ -15,6 +16,8 @@ import { Observable, of } from 'rxjs';
 export class ChannelsComponent{
   showAddChannel = false;
   showChannels = false;
+  isPermanentDeleteOpen = false;
+  openChannelId: string | null = null;
   channels$: Observable<any[]> = of([]); 
   @Input() activeUserId!: string | null;
   @Output() openChat = new EventEmitter<{ chatType: 'private' | 'channel'; chatId: string }>();
@@ -56,5 +59,12 @@ export class ChannelsComponent{
       chatId: channelId
     });
   }
-}import { ChannelService } from '../../../../shared/services/channel.service';
+
+
+  onDeleteClick(channelId: string, event: MouseEvent) {
+    event.stopPropagation();
+    this.openChannelId = channelId;
+    this.isPermanentDeleteOpen = true;
+  }
+}
 

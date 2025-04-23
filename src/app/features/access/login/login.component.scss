@@ -2,20 +2,20 @@
 @use "../../../shared/scss/variables" as vari;
 
 form {
-  @include mixin.dFlex($gap: clamp(10px, 2.5vw, 30px), $direction: column);
+  @include mixin.dFlex($gap: clamp(10px, 5vw, 30px), $direction: column);
 
   > h1 {
     @include mixin.accHead(vari.$dark-blue);
   }
 
   > p {
-    font-size: clamp(16px, 2.5vw, 20px);
+    font-size: clamp(16px, 3vw, 20px);
     text-align: center;
   }
 
   > span {
     cursor: pointer;
-    font-size: clamp(14px, 2.5vw, 18px);
+    font-size: clamp(14px, 3vw, 18px);
     color: vari.$light-blue;
     padding: 5px 15px;
 
@@ -38,7 +38,7 @@ form {
 
   > span {
     position: relative;
-    font-size: clamp(14px, 2.5vw, 18px);
+    font-size: clamp(14px, 3vw, 18px);
     z-index: 5;
     padding: 0 15px;
     background-color: vari.$white;

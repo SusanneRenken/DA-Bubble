@@ -3,7 +3,7 @@
 
 :host {
   position: relative;
-  @include mixin.dFlex($gap: 25px, $direction: column);
+  @include mixin.dFlex($gap: clamp(10px, 1.5vw, 25px), $direction: column);
 }
 
 .arrow {
@@ -15,17 +15,11 @@
 
 h1 {
   @include mixin.accHead(vari.$dark-blue);
-  padding-bottom: 30px;
-}
-
-.img-contaier {
-  background-color: vari.$light-blue;
-  border-radius: 50%;
-  padding: 40px 40px 34px 40px;
+  padding-bottom: clamp(0px, 1vw, 30px);
 }
 
 .selected-avatar {
-  height: 172px;
+  height: clamp(100px, 23vw, 172px);
   border-radius: 50%;
 }
 
@@ -40,12 +34,12 @@ span {
 }
 
 .avatar-container {
-  display: flex;
-  gap: 12px;
+  @include mixin.dFlex($gap: clamp(5px, 1.5vw, 12px));
+  flex-wrap: wrap;
 
   > img {
-    width: 69px;
-    height: 69px;
+    width: auto;
+    height: clamp(50px, 10vw, 69px);
     cursor: pointer;
     object-fit: cover;
     border-radius: 50%;

@@ -24,6 +24,7 @@ label {
     background-color: transparent;
     border: none;
     outline: none;
+    font-size: clamp(16px, 3vw, 20px);
   }
 
   &:has(> input:focus) {

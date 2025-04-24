@@ -43,6 +43,7 @@
           [chatId]="chatId"
           [activeUserId]="activeUserId"
           (openThread)="openThread($event)"
+          (closeThread)="closeThread()"
         >
         </app-message-area>
 
@@ -53,6 +54,7 @@
           [chatId]="threadId"
           [activeUserId]="activeUserId"
           (openThread)="openThread($event)"
+          (closeThread)="closeThread()"
         >
         </app-message-area>
         }
@@ -68,6 +70,7 @@
       [chatId]="chatId"
       [activeUserId]="activeUserId"
       (openThread)="openThread($event)"
+      (closeThread)="closeThread()"
     >
     </app-message-area>
     @if (isThreadOpen) {
@@ -77,6 +80,7 @@
       [chatId]="threadId"
       [activeUserId]="activeUserId"
       (openThread)="openThread($event)"
+      (closeThread)="closeThread()"
     >
     </app-message-area>
     }

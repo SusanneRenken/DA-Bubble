@@ -209,6 +209,17 @@ button {
   }
 }
 
+.mar-r-12{
+  margin-right: 12px;
+}
+.thread-field {
+  cursor: pointer;
+  padding-top: 4px;
+  display: inline-flex;
+  flex-direction: column;
+  white-space: nowrap;
+}
+
 .message-actions {
   position: absolute;
   right: 46px;
@@ -222,7 +233,7 @@ button {
   opacity: 0;
   transform: translateX(-50px);
   pointer-events: none;
-  transition: opacity .25s ease, transform .25s ease;
+  transition: opacity 0.25s ease, transform 0.25s ease;
 
   section:hover &,
   &.always {
@@ -269,6 +280,11 @@ emoji-mart {
 .user-message-actions {
   right: initial;
   left: 46px;
+}
+
+.thread-emoji{
+  right: initial;
+  left: 68px;
 }
 
 .options-menu {

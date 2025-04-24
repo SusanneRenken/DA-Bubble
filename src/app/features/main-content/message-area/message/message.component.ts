@@ -54,6 +54,9 @@ export class MessageComponent implements OnInit {
   groupedReactions: GroupedReaction[] = [];
   shownReactionNumber: number = 7;
   editText = '';
+  private threadSub: Subscription | null = null;
+  replyCount = 0;
+  lastReplyTime: Timestamp | null = null;
 
   isEmojiPickerOpen = false;
   isOptionsOpen = false;
@@ -64,16 +67,21 @@ export class MessageComponent implements OnInit {
     this.loadSenderData();
     this.loadActiveUserData();
     this.regroupReactions();
+    this.loadThreadInfo();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['message'] && changes['message'].currentValue) {
       this.regroupReactions();
     }
+    if (changes['message']) {
+      this.loadThreadInfo();
+    }
   }
 
   ngOnDestroy() {
     this.userSubscription?.unsubscribe();
+    this.threadSub?.unsubscribe();
   }
 
   loadSenderData() {
@@ -120,7 +128,7 @@ export class MessageComponent implements OnInit {
     }
   }
 
-  getTimeInHours(timestamp: Timestamp): string | undefined {
+  getTimeInHours(timestamp: Timestamp | null): string | undefined {
     if (timestamp instanceof Timestamp) {
       const date = timestamp.toDate();
       return date.toLocaleTimeString('en-GB', {
@@ -161,7 +169,7 @@ export class MessageComponent implements OnInit {
     }));
   }
 
-  private buildNameLine(namesOriginal: string[], max = 3): string {
+  buildNameLine(namesOriginal: string[], max = 3): string {
     const names = [...namesOriginal];
     const duIdx = names.indexOf('Du');
     if (duIdx > 0) {
@@ -177,7 +185,25 @@ export class MessageComponent implements OnInit {
     return `${first} und ${rest === 1 ? 'ein weiterer' : rest + ' weitere'}`;
   }
 
-  private buildActionLine(names: string[], count: number): string {
+  loadThreadInfo() {
+    this.threadSub?.unsubscribe();
+    this.replyCount = 0;
+    this.lastReplyTime = null;
+
+    if (this.message.mThreadId && this.chatType !== 'thread') {
+      this.threadSub = this.messageService
+        .getThreadMessages(this.message.mThreadId)
+        .subscribe((msgs) => {
+          const replies = msgs.filter((m) => m.mId !== this.message.mId);
+          this.replyCount = replies.length;
+          if (replies.length) {
+            this.lastReplyTime = replies[replies.length - 1].mTime as Timestamp;
+          }
+        });
+    }
+  }
+
+  buildActionLine(names: string[], count: number): string {
     if (count === 1) {
       return names[0] === 'Du' ? 'hast reagiert' : 'hat reagiert';
     }

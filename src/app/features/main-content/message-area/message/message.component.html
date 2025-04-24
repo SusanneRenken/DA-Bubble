@@ -40,7 +40,7 @@
 
     <div>
       @if (groupedReactions && groupedReactions.length > 0) {
-      <span class="reaction-field">
+      <div class="reaction-field">
         @for (reaction of groupedReactions.slice(0,shownReactionNumber); track
         reaction.reaction) {
 
@@ -55,7 +55,6 @@
             >{{ reaction.reaction }} {{ reaction.count }}</span
           >
         </div>
-
         } @if (groupedReactions.length > shownReactionNumber) {
         <div (click)="setShownReactionNumber()">
           +{{ groupedReactions.length - shownReactionNumber }} weitere
@@ -64,13 +63,18 @@
         shownReactionNumber > 7) {
         <div (click)="setShownReactionNumber()">Weniger anzeigen</div>
         }
-        <span class="material-symbols" (click)="toggleEmojiPicker($event)"
+        <span
+          class="material-symbols mar-r-12"
+          (click)="toggleEmojiPicker($event)"
           >add_reaction</span
         >
-      </span>
-      } @if (message.mThreadId && chatType !== 'thread' && replyCount > 0) {
-      <h4>{{ replyCount }} Antwort{{ replyCount !== 1 ? 'en' : '' }}</h4>
-      <h5>Letzte Antwort {{ getTimeInHours(lastReplyTime) }} Uhr</h5>
+        @if (message.mThreadId && chatType !== 'thread' && replyCount > 0) {
+        <span class="thread-field" (click)="onThreadClick()">
+          <h4>{{ replyCount }} Antwort{{ replyCount !== 1 ? "en" : "" }}</h4>
+          <h5>Letzte Antwort {{ getTimeInHours(lastReplyTime) }} Uhr</h5>
+        </span>
+        }
+      </div>
       }
     </div>
   </div>
@@ -80,9 +84,10 @@
     [class.always]="isOptionsOpen"
     [class.user-message-actions]="message.mSenderId === activeUserId"
   >
-    @for (reaction of activeUserData?.uLastReactions; track reaction) {
+    @if ( chatType != 'thread' ) { @for (reaction of
+    activeUserData?.uLastReactions; track reaction) {
     <span (click)="addReaction(reaction)">{{ reaction }}</span>
-    }
+    } }
 
     <span
       #emojiBtn
@@ -92,7 +97,13 @@
       add_reaction
     </span>
 
-    <div class="material-symbols action-btn" (click)="onThreadClick()">comment</div>
+    <div
+      class="material-symbols action-btn"
+      [class.d-none]="chatType === 'thread'"
+      (click)="onThreadClick()"
+    >
+      comment
+    </div>
 
     <div
       #optionsBtn
@@ -114,12 +125,14 @@
     </div>
     }
   </div>
-  } @if(isEmojiPickerOpen) {<emoji-mart
+  } @if(isEmojiPickerOpen) {
+  <emoji-mart
     #emojiPicker
     (emojiClick)="onEmojiPicked($event)"
     [class.active-user-emoji]="message.mSenderId === activeUserId"
-  ></emoji-mart
-  >}
+    [class.thread-emoji]="chatType === 'thread'"
+  ></emoji-mart>
+  }
 </section>
 @if (isPermanentDeleteOpen) {
 <app-permanent-delete

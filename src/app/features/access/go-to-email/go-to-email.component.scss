@@ -3,7 +3,7 @@
 
 :host {
   position: relative;
-  @include mixin.dFlex($gap: 40px, $direction: column);
+  @include mixin.dFlex($gap: clamp(15px, 5vw, 40px), $direction: column);
 }
 
 h1 {
@@ -12,6 +12,6 @@ h1 {
 
 p {
   text-align: center;
-  font-size: 20px;
+  font-size: clamp(16px, 3vw, 20px);
   color: vari.$gray;
 }

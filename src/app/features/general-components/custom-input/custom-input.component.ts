@@ -16,14 +16,14 @@ import { ReactiveFormsModule } from '@angular/forms';
   selector: 'app-custom-input',
   imports: [CommonModule, ReactiveFormsModule],
   template: `
-    <label [for]="id">
+    <label>
       <ng-content select="[icon]"></ng-content>
       <input
         #inputElement
         [type]="type"
         [name]="name"
-        [id]="id"
         [placeholder]="placeholder"
+        [autocomplete]="autocomplete"
         [value]="value"
         (input)="onInputChange($event)"
         (blur)="onBlur()"
@@ -42,8 +42,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 export class CustomInputComponent implements ControlValueAccessor {
   @Input() type: string = 'text';
   @Input() name: string = '';
-  @Input() id: string = '';
   @Input() placeholder: string = '';
+  @Input() autocomplete: string = 'on';
 
   @ViewChild('inputElement') inputElement!: ElementRef;
 

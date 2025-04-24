@@ -1,5 +1,5 @@
-@use '../../shared/scss/mixins' as mixin;
-@use '../../shared/scss/variables' as vari;
+@use "../../shared/scss/mixins" as mixin;
+@use "../../shared/scss/variables" as vari;
 
 :host {
   width: 100vw;
@@ -10,30 +10,37 @@
 }
 
 .logo {
-  position: absolute;
-  top: 0;
-  left: 0;
   @include mixin.dFlex();
-  margin-top: 75px;
-  margin-left: 75px;
+  position: absolute;
+  top: 75px;
+  left: 75px;
+  transform: translate(0, 0) scale(1);
 
   > span {
     font-size: 24px;
     font-weight: bold;
     margin-left: 10px;
   }
+
+  @media (max-width: 700px) {
+    top: 30px;
+    left: 50%;
+    transform: translate(-50%, 0) scale(1);
+  }
 }
 
 .sign-in-container {
   @include mixin.dFlex($align: flex-end, $gap: 20px, $direction: column);
   position: absolute;
-  top: 0;
-  right: 0;
-  margin-top: 75px;
-  margin-right: 75px;
+  top: 75px;
+  right: 75px;
 
-  @media(max-width: 700px) {
-    @include mixin.dFlex($gap: 10px, $direction: column);
+  > p {
+    font-size: clamp(16px, 4vw, 18px);
+  }
+
+  @media (max-width: 700px) {
+    @include mixin.dFlex($gap: clamp(2px, 0.5vw, 10px), $direction: column);
     margin: 0;
     top: auto;
     right: auto;

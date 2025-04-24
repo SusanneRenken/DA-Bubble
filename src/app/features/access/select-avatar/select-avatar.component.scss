@@ -15,7 +15,6 @@
 
 h1 {
   @include mixin.accHead(vari.$dark-blue);
-  padding-bottom: clamp(0px, 1vw, 30px);
 }
 
 .selected-avatar {

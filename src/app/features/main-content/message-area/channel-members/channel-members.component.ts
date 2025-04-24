@@ -3,11 +3,12 @@ import { Component, Input, Output, EventEmitter, ElementRef, ViewChild, SimpleCh
 import { User } from '../../../../shared/interfaces/user.interface';
 import { ProfilComponent } from '../../../general-components/profil/profil.component';
 import { AddNewMembersComponent } from '../../../general-components/add-new-members/add-new-members.component';
+import { MemberListComponent } from '../../../general-components/member-list/member-list.component';
 
 
 @Component({
   selector: 'app-channel-members',
-  imports: [CommonModule, ProfilComponent, AddNewMembersComponent],
+  imports: [CommonModule, ProfilComponent, AddNewMembersComponent, MemberListComponent],
   templateUrl: './channel-members.component.html',
   styleUrl: './channel-members.component.scss'
 })
@@ -16,16 +17,16 @@ export class ChannelMembersComponent implements OnChanges {
   @Input() activeUserId: string | null = null;  
   @Input() channelId: any;
   @Input() channelName: any = '';
+  @Input() activChannelMemberProfil: User | null = null;
+  @Input() newChannelMembers: boolean = false;
+  @Input() isChannelMemberProfilOpen: boolean = false;
+
+  @Output() newChannelMembersChange = new EventEmitter<boolean>();
+  @Output() activChannelMemberProfilChange = new EventEmitter<User | null>();
+  @Output() isChannelMemberProfilOpenChange = new EventEmitter<boolean>();
   @Output() close = new EventEmitter<void>();
   @ViewChild('channelWrapper') channelWrapper?: ElementRef;
   @ViewChild('memberAddWrapper') memberAddWrapper?: ElementRef;
-
-  
-
-  activChannelMemberProfil: User | null = null;
-  newChannelMembers: boolean = false;
-  isChannelMemberProfilOpen: boolean = false;
-  animateOut = false;
 
   
   ngOnChanges(changes: SimpleChanges) {  
@@ -46,29 +47,21 @@ export class ChannelMembersComponent implements OnChanges {
     const clickedInsideAddMember = this.memberAddWrapper?.nativeElement?.contains(event.target);
   
     if (!insideSection && !clickedInsideAddMember) {
-      this.animateOut = true;
-  
-      setTimeout(() => {
-        this.newChannelMembers = false;
-        this.animateOut = false;
-      }, 800);
+      this.newChannelMembers = false;
     }
   }
+
 
   toggleMemberProfil(member?: User) {
-    console.log('Clicked on member:', member);
-    
-    this.isChannelMemberProfilOpen = !this.isChannelMemberProfilOpen;
-    if (member) {
-      this.activChannelMemberProfil = member;
-    }
-    else {
-      this.activChannelMemberProfil = null;
-    }
+    const isOpen = !this.isChannelMemberProfilOpen;
+    this.isChannelMemberProfilOpen = isOpen;
+    this.activChannelMemberProfil = member || null;
+    this.isChannelMemberProfilOpenChange.emit(isOpen);
+    this.activChannelMemberProfilChange.emit(this.activChannelMemberProfil);
   }
- 
-
-  addChannelMember(channelId: any) {
-    this.newChannelMembers = true;  
+    
+  addChannelMember() {
+    this.newChannelMembers = true;
+    this.newChannelMembersChange.emit(true);
   }
 }

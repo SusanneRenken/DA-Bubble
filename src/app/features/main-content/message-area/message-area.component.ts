@@ -518,4 +518,29 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
     if (!this.activeUserId || !this.chatId) return;
       await this.channelService.removeUserFromChannel(this.chatId, this.activeUserId);
   }
+
+
+
+  activChannelMemberProfil: User | null = null;
+  newChannelMembers: boolean = false;
+  isChannelMemberProfilOpen: boolean = false;
+
+  toggleMemberProfil(member?: User) {
+    console.log('Clicked on member:', member);
+    
+    this.isChannelMemberProfilOpen = !this.isChannelMemberProfilOpen;
+    if (member) {
+      this.activChannelMemberProfil = member;
+    }
+    else {
+      this.activChannelMemberProfil = null;
+    }
+  }
+ 
+
+  addChannelMember() {
+    console.log(this.newChannelMembers);
+    
+    this.newChannelMembers = true;  
+  }
 }

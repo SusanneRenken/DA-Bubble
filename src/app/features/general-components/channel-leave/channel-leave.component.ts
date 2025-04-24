@@ -7,16 +7,35 @@ import { FormsModule } from '@angular/forms';
 import { UserService } from '../../../shared/services/user.service';
 import { User } from '../../../shared/interfaces/user.interface';
 import { ChannelService } from '../../../shared/services/channel.service';
+import { DeviceVisibleComponent } from '../../../shared/services/responsive';
+import { MemberListComponent } from '../member-list/member-list.component';
+import { ProfilComponent } from '../profil/profil.component';
+import { AddNewMembersComponent } from '../add-new-members/add-new-members.component';
 
 @Component({
   selector: 'app-channel-leave',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DeviceVisibleComponent, MemberListComponent, ProfilComponent, AddNewMembersComponent],
   templateUrl: './channel-leave.component.html',
   styleUrl: './channel-leave.component.scss',
 })
 export class ChannelLeaveComponent implements OnInit {
   @Input() channelData: Channel | null = null;
+  @Input() channelMembers:  User[] = [];
+  @Input() activeUserId: string | null = null;  
+  @Input() activChannelMemberProfil: User | null = null;
+  @Input() newChannelMembers: boolean = false;
+  @Input() isChannelMemberProfilOpen: boolean = false;
+  animateOut = true;
+
+  
+ 
+  @Input() channelId: any;
+  @Input() channelName: string = '';
+
+
+  @Output() addMember = new EventEmitter<void>();
+  @Output() showProfil = new EventEmitter<User>();
   @Output() close = new EventEmitter<void>();
   @Output() nameUpdated = new EventEmitter<string>();
 
@@ -105,5 +124,10 @@ export class ChannelLeaveComponent implements OnInit {
         this.channelData!.cDescription = newDesc;
       })
       .catch(() => {});
+  }
+
+
+  closeAddMember(){
+    this.newChannelMembers = false
   }
 }

@@ -32,6 +32,8 @@ export class NewMembersPopUpComponent {
   
   onKey(event: KeyboardEvent) {
     const input = (event.target as HTMLInputElement).value.toLowerCase().trim();
+    console.log(input, this.channelMembers);
+    
     this.searchValue = input;
     this.charCount = input.length;
     if (this.charCount >= 3) {
@@ -52,6 +54,8 @@ export class NewMembersPopUpComponent {
 
 
   memberNameAdd(memberName: string, memberImage: string, memberId: any): void {
+    console.log(memberName, memberImage, memberId);
+    
     this.memberNameAddEvent.emit({ name: memberName, image: memberImage, id: memberId });
     this.showMember = false;
   }

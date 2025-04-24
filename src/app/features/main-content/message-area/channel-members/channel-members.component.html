@@ -2,10 +2,6 @@
   @if (newChannelMembers) {
     <div class="memberAdd" #memberAddWrapper>
       <app-add-new-members 
-        [ngClass]="{
-          'slide-up': !animateOut,
-          'slide-down': animateOut
-        }"    
         [channelMembers]="channelMembers"
         [activeUserId]="activeUserId"
         [channelId]="channelId"
@@ -20,31 +16,15 @@
       <div class="memberlist-header">
         <h1>Mitglieder</h1>
         <div class="material-symbols" (click)="closeChannelMembers()">close</div>
-      </div>
-  
-      <div class="memberlist">
-        <div class="members">
-          @for (member of channelMembers; track member) {
-          <div (click)="toggleMemberProfil(member)">
-            <div class="user-img-status">
-              <img src="/assets/img/{{ member?.uUserImage }}" alt="" />
-              <span [ngClass]="member?.uStatus ? 'online' : 'offline'"></span>
-            </div>
-            <span>{{ member?.uName }}
-              @if (member.uId === activeUserId) {
-                <span>(Du)</span>}
-            </span>
-          </div>
-          }
-        </div>
-        <div class="add-member" (click)="addChannelMember(channelId)">
-          <div class="material-symbols add-person-icon">person_add</div>
-          <span>Mitglieder hinzufügen</span>
-        </div>
-      </div>
+      </div>  
+      <app-member-list
+        [channelMembers]="channelMembers"
+        [activeUserId]="activeUserId"
+        (addMember)="addChannelMember()"
+        (showProfil)="toggleMemberProfil($event)"
+      ></app-member-list>
     </section>
   }
-
 </main>
 
 @if (isChannelMemberProfilOpen) {

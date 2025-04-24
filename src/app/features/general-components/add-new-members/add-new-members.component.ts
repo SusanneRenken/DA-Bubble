@@ -20,10 +20,12 @@ export class AddNewMembersComponent {
   @Input() channelMembers: User[] = [];
   @Input() activeUserId!: string | null;
   @Input() channelId: any = '';
-  @Input() channelName: string = '';
+  @Input() channelName: any = '';
   @Input() showInput: boolean = true;
   @Input() channelDescription: string = '';
   @Output() close = new EventEmitter<void>();
+  @Output() addMember = new EventEmitter<void>();
+  @Output() showProfil = new EventEmitter<User>();
   
   memberAddElement: boolean = false;
   memberInputId: string = '';

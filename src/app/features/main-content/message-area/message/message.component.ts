@@ -54,7 +54,7 @@ export class MessageComponent implements OnInit {
   groupedReactions: GroupedReaction[] = [];
   shownReactionNumber: number = 7;
   editText = '';
-  private threadSub: Subscription | null = null;
+  threadSub: Subscription | null = null;
   replyCount = 0;
   lastReplyTime: Timestamp | null = null;
 

@@ -100,6 +100,30 @@
   
     } @else {
       @if (messages && messages.length === 0) {
+        @if(chatType === 'private'){
+          <div class="empty-private-chat">
+            <div>
+              <img src="/assets/img/{{ chatPartner?.uUserImage }}" alt="" />
+              <h1>{{ chatPartner?.uName }}</h1>
+            </div>
+            <p>
+              Diese Unterhaltung findet nur zwischen
+              <span (click)="toggleProfile(chatPartner)">&#64;{{ chatPartner?.uName }}</span> und dir statt
+            </p>
+          </div>
+          } @else if(chatType === 'channel'){
+          <div class="empty-channel-chat">
+            <div>
+              <div class="material-symbols tag-icon">tag</div>
+              <h1>{{ channelData?.cName }}</h1>
+            </div>
+            <p>
+              Du hast diesen Channel heute erstellt. Das ist der Anfang des Channels
+              <span>&#64;{{ channelData?.cName }}.</span>
+            </p>
+          </div>
+          } 
+
       } @else {
         @for (message of messages; track message.mId; let i = $index) {
           @if (shouldShowDateSeparator(i)) {

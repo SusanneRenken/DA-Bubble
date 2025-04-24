@@ -55,6 +55,10 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
 
   @Output() openThread = new EventEmitter<string>();
   @Output() closeThread = new EventEmitter<string>();
+  @Output() openChat = new EventEmitter<{
+    chatType: 'private' | 'channel';
+    chatId: string;
+  }>();
 
   @ViewChild('scrollContainer')
   private scrollContainer!: ElementRef<HTMLDivElement>;
@@ -71,19 +75,24 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   channelData: Channel | null = null;
   channelMembers: User[] = [];
 
+  foundChannelsNew: Channel[] = [];
+  foundUsersNew: User[] = [];
+  newChatInput: string = '';
+
   newMessageText: string = '';
 
-  isNewChat: boolean = false;
   isLoading: boolean = true;
   isEditChannelOpen: boolean = false;
   isProfilOpen: boolean = false;
   isChannelMemberOpen: boolean = false;
   isEmojiPickerOpen: boolean = false;
+  showNewSuggestions: boolean = false;
 
   foundUsers: User[] = [];
   foundChannels: Channel[] = [];
   displaySuggestions: boolean = false;
   currentMentionPos: number = -1;
+  threadContextName: string = '';
   threadReplyCount = 0;
 
   ngAfterViewInit(): void {
@@ -146,7 +155,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
       .subscribe((messages) => {
         const hasNewMessage = messages.length > this.lastListLength;
 
-        this.messages = messages;        
+        this.messages = messages;
         this.lastListLength = messages.length;
 
         if (this.chatType === 'thread') {
@@ -155,6 +164,19 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
 
         if (hasNewMessage) {
           setTimeout(() => this.scrollToBottom(), 100);
+        }
+
+        if (this.chatType === 'thread' && messages.length > 0) {
+          const parent = messages[0];
+          if (parent.mChannelId) {
+            this.channelService.getChannel(parent.mChannelId).then((ch) => {
+              this.threadContextName = `#${ch.cName}`;
+            });
+          } else if (parent.mUserId) {
+            this.userService.getUser(parent.mUserId).then((u) => {
+              this.threadContextName = `@${u.uName}`;
+            });
+          }
         }
       });
   }
@@ -314,7 +336,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   async sendMessage(): Promise<void> {
     const text = this.newMessageText.trim();
     if (!text) return;
-  
+
     if (this.chatType === 'thread' && this.chatId) {
       await this.messageService.replyInThread(
         this.chatId,
@@ -332,7 +354,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
       };
       await this.messageService.createMessage(newMessage);
     }
-  
+
     this.newMessageText = '';
     setTimeout(() => this.scrollToBottom(), 100);
   }
@@ -540,28 +562,79 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
     );
   }
 
-
-
   activChannelMemberProfil: User | null = null;
   newChannelMembers: boolean = false;
   isChannelMemberProfilOpen: boolean = false;
 
   toggleMemberProfil(member?: User) {
     console.log('Clicked on member:', member);
-    
+
     this.isChannelMemberProfilOpen = !this.isChannelMemberProfilOpen;
     if (member) {
       this.activChannelMemberProfil = member;
-    }
-    else {
+    } else {
       this.activChannelMemberProfil = null;
     }
   }
- 
 
   addChannelMember() {
     console.log(this.newChannelMembers);
-    
-    this.newChannelMembers = true;  
+
+    this.newChannelMembers = true;
+  }
+
+  onNewInputChange(): void {
+    const val = this.newChatInput.trim();
+    this.showNewSuggestions = !!val;
+  
+    if (!val) {
+      this.foundUsersNew = [];
+      this.foundChannelsNew = [];
+      return;
+    }
+  
+    const first = val.charAt(0);
+    const query = val.slice(1).toLowerCase();
+  
+    if (first === '@') {
+      this.userService.getAllUsers().then(all => {
+        this.foundUsersNew = all.filter(u =>
+          u.uName.toLowerCase().includes(query)
+        );
+        this.foundChannelsNew = [];
+      });
+    } else if (first === '#') {
+      this.channelService.getAllChannels().then(all => {
+        this.foundChannelsNew = all.filter(c =>
+          c.cName.toLowerCase().includes(query)
+        );
+        this.foundUsersNew = [];
+      });
+    } else {
+      this.userService.getAllUsers().then(all => {
+        this.foundUsersNew = all.filter(u =>
+          u.uEmail.toLowerCase().includes(val.toLowerCase())
+        );
+        this.foundChannelsNew = [];
+      });
+    }
+  }
+
+  selectUserNew(u: User) {
+    this.newChatInput = '';
+    this.showNewSuggestions = false;
+    this.openChat.emit({ 
+      chatType: 'private',
+      chatId: u.uId!
+    });
+  }
+  
+  selectChannelNew(c: Channel) {
+    this.newChatInput = '';
+    this.showNewSuggestions = false;
+    this.openChat.emit({
+      chatType: 'channel',
+      chatId: c.cId!
+    });
   }
 }

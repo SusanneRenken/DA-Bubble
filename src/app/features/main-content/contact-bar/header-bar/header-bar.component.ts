@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { DeviceVisibleComponent } from '../../../../shared/services/responsive';
 
 @Component({
@@ -10,5 +10,16 @@ import { DeviceVisibleComponent } from '../../../../shared/services/responsive';
   styleUrl: './header-bar.component.scss'
 })
 export class HeaderBarComponent {
+  @Output() openChat = new EventEmitter<{
+    chatType: 'private' | 'channel' | 'new';
+    chatId: string | null;
+  }>();
+
+  openNewChat() {
+      this.openChat.emit({
+        chatType: 'new',
+        chatId: null,
+      });
+    }
 
 }

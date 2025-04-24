@@ -34,6 +34,7 @@ export class MessageComponent implements OnInit {
   private userService = inject(UserService);
   private messageService = inject(MessageService);
   private userSubscription: Subscription | null = null;
+  private threadSub: Subscription | null = null;
 
   @Input() chatType: 'private' | 'channel' | 'thread' | 'new' | null = null;
   @Input() message!: Message;
@@ -54,7 +55,6 @@ export class MessageComponent implements OnInit {
   groupedReactions: GroupedReaction[] = [];
   shownReactionNumber: number = 7;
   editText = '';
-  threadSub: Subscription | null = null;
   replyCount = 0;
   lastReplyTime: Timestamp | null = null;
 
@@ -360,5 +360,29 @@ export class MessageComponent implements OnInit {
     });
   }
 
+  getDayLabel(timestamp: Timestamp): string {
+    const date = timestamp.toDate();
+    const today = new Date();
+    const todayMid = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate()
+    ).getTime();
+    const msgMid = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate()
+    ).getTime();
 
+    if (msgMid === todayMid) {
+      return 'heute';
+    } else if (msgMid === todayMid - 86400000) {
+      return 'gestern';
+    } else {
+      const d = String(date.getDate()).padStart(2, '0');
+      const m = String(date.getMonth() + 1).padStart(2, '0');
+      const y = date.getFullYear();
+      return `${d}.${m}.${y}`;
+    }
+  }
 }

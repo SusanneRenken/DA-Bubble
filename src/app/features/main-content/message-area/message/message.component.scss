@@ -30,6 +30,10 @@ section {
   }
 }
 
+.thread{
+  padding: 10px 40px 10px 40px;
+}
+
 .edit-open {
   background-color: #eceefe;
 }
@@ -170,6 +174,7 @@ button {
 
 .reaction-field {
   @include flexBox(row, initial, center, 10);
+  flex-wrap: wrap;
   > div {
     cursor: pointer;
     height: 34px;

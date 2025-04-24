@@ -28,7 +28,7 @@ export class MainContentComponent {
   messageIn: boolean = false;
   activeUserId: string | null = null;
 
-  chatType: 'private' | 'channel' | 'thread' | 'new' = 'channel';
+  chatType: 'private' | 'channel' | 'thread' | 'new' = 'new';
   
   // muss später getauscht werden:
   chatId: string | null = 'KV14uSorBJhrWW92IeDS'; //ENTWICKLER
@@ -64,7 +64,7 @@ export class MainContentComponent {
     this.messageIn = state;
   }
 
-  handleOpenChat(eventData: { chatType: 'private' | 'channel'; chatId: string }) {
+  handleOpenChat(eventData: { chatType: 'private' | 'channel' | 'new'; chatId: string | null }) {
     this.chatType = eventData.chatType;
     this.chatId = eventData.chatId;
     this.isThreadOpen = false;

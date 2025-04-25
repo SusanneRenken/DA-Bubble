@@ -15,9 +15,15 @@ import { DeviceVisibleComponent } from '../../../shared/services/responsive';
 export class HeaderComponent {
   @Input() activeUserId!: string | null;
   @Input() messageIn!: boolean;
+ 
   @Output() messageInToggle = new EventEmitter<boolean>();
+  @Output() onChatOpen = new EventEmitter<{ chatType: 'private' | 'channel'; chatId: string }>();
 
   toggleMessageInView() {
     this.messageInToggle.emit(false);
+  }
+
+  openChat(eventData: { chatType: 'private' | 'channel'; chatId: string }): void {
+    this.onChatOpen.emit(eventData);
   }
 }

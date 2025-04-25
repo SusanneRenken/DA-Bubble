@@ -26,13 +26,14 @@ export class ChannelLeaveComponent implements OnInit {
   @Input() activChannelMemberProfil: User | null = null;
   @Input() newChannelMembers: boolean = false;
   @Input() isChannelMemberProfilOpen: boolean = false;
-  animateOut = true;
+  animateOut = false;
 
   
  
   @Input() channelId: any;
   @Input() channelName: string = '';
 
+  @Output() newChannelMembersChange = new EventEmitter<boolean>();
 
   @Output() addMember = new EventEmitter<void>();
   @Output() showProfil = new EventEmitter<User>();
@@ -98,6 +99,8 @@ export class ChannelLeaveComponent implements OnInit {
 
 
   closeWindow() {
+    console.log('versuch');
+    
     this.close.emit();
   }
 
@@ -127,7 +130,13 @@ export class ChannelLeaveComponent implements OnInit {
   }
 
 
-  closeAddMember(){
-    this.newChannelMembers = false
+  closeAddMember() {
+    this.animateOut = true;
+    setTimeout(() => {
+      this.newChannelMembers = false;
+      this.animateOut = false;
+      this.newChannelMembersChange.emit(this.newChannelMembers);
+    }, 800);
   }
+  
 }

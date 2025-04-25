@@ -2,6 +2,7 @@
   <app-header
     [messageIn]="messageIn"
     (messageInToggle)="handleMessageInToggle($event)"
+    (onChatOpen)="handleOpenChat($event)"
     [activeUserId]="activeUserId"
   ></app-header>
   @if (!messageIn) {

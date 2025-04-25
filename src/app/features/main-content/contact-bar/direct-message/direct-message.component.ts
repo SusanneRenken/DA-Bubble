@@ -37,8 +37,10 @@ export class DirectMessageComponent implements OnInit {
   ngOnInit(): void {
     if (this.activeUserId) {
       this.loadUsers();
+  
     }
   }
+
 
 
   loadUsers(): void {

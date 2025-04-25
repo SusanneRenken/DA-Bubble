@@ -213,7 +213,7 @@
   } @if (isEditChannelOpen) {
   <app-channel-leave
     [activChannelMemberProfil]="activChannelMemberProfil"
-    [newChannelMembers]="newChannelMembers"
+    [(newChannelMembers)]="newChannelMembers"
     [isChannelMemberProfilOpen]="isChannelMemberProfilOpen"
     [channelMembers]="channelMembers"
     [activeUserId]="activeUserId"

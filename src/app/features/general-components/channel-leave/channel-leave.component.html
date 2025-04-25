@@ -14,7 +14,10 @@
                 <div [ngClass]="{ 'fade-in': hasInteractedName && isVisibleName, 'fade-out': hasInteractedName && !isVisibleName }" class="nameBox">
                     <div class="boxEdit">
                         <h3>Channel-Name</h3>
-                        <button (click)="toggleEdit()">Bearbeiten</button>
+                        <button class="editOverMobil editButton" (click)="toggleEdit()">Bearbeiten</button>
+                        <button class="editOverTablet editButton" (click)="toggleEdit()">
+                            <div class="material-symbols closeIcon">edit</div>
+                        </button>
                     </div>
                     <div class="channelHashtagName">
                         <img src="/assets/icons/hashtag.svg">
@@ -26,7 +29,10 @@
                 <div [ngClass]="{ 'fade-in': hasInteractedName && isVisibleName, 'fade-out': hasInteractedName && !isVisibleName }"  class="nameSaveBox">
                     <div class="saveBox">
                         <h3>Channel-Name</h3>
-                        <button (click)="saveNewName()">Speichern</button>
+                        <button class="editOverMobil editButton" (click)="saveNewName()">Speichern</button>
+                        <button class="editOverTablet editButton" (click)="saveNewName()">
+                            <div class="material-symbols closeIcon">check_circle</div>
+                        </button>
                     </div>
                     <div class="editChannelName" >
                         <img src="/assets/icons/hashtag.svg">
@@ -39,7 +45,10 @@
                     <div class="descriptionText">
                         <div class="boxEdit">
                             <h3>Beschreibung</h3>
-                            <button (click)="toggleDescription()">Bearbeiten</button>
+                            <button class="editOverMobil editButton" (click)="toggleDescription()">Bearbeiten</button>
+                            <button class="editOverTablet editButton" (click)="toggleDescription()">
+                                <div class="material-symbols closeIcon">edit</div>
+                            </button>
                         </div>
                         <div class="descriptionBoxText">{{ channelData?.cDescription}}</div>
                     </div>
@@ -58,7 +67,10 @@
                         <div class="descriptionText">
                             <div class="saveBox">
                                 <h3>Beschreibung</h3>
-                                <button (click)="toggleDescription(); saveDescription()">Speichern</button>
+                                <button class="editOverMobil editButton" (click)="toggleDescription(); saveDescription()">Speichern</button>
+                                <button class="editOverTablet editButton" (click)="toggleDescription(); saveDescription()">
+                                    <div class="material-symbols closeIcon">check_circle</div>
+                                </button>
                             </div>
                             <div class="inputDescription">
                                 <textarea [(ngModel)]="editedDescription" placeholder="Dein Text hier" type="text"></textarea>
@@ -109,6 +121,10 @@
 @if (newChannelMembers) {
     <div (click)="closeAddMember()" class="memberAdd" #memberAddWrapper>
         <app-add-new-members 
+        [ngClass]="{ 
+            'slide-up': !animateOut, 
+            'slide-down': animateOut 
+        }"
         [channelMembers]="channelMembers"
         [activeUserId]="activeUserId"
         [channelId]="channelId"

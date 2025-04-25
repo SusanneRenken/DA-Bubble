@@ -10,17 +10,22 @@
     <div class="searchButton">
       <img src="/assets/icons/search.svg" />
     </div>
-    <app-search-information
-    *ngIf="showInformation"
-    [searchText]="searchValue"
-    (close)="closeSearchInfo()"
-  >
-  </app-search-information>
+    @if (showInformation) {
+      <app-search-information
+      [searchText]="searchValue"
+      (close)="closeSearchInfo()"
+      (openChat)="onChatOpen($event)">
+    </app-search-information>
+    }
+  
 </main>
+
+@if (showInformation) {
   <div 
-    *ngIf="showInformation"
-    class="backdrop" 
-    (click)="closeSearchInfo()">
-  </div>
+  class="backdrop" 
+  (click)="closeSearchInfo()">
+</div>
+}
+ 
 
 

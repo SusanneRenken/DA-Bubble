@@ -32,7 +32,7 @@ export class DeviceVisibleComponent implements OnInit {
         this.shouldShow =  width < 1000;
         break;
       case 'desktopBig':
-        this.shouldShow = width >= 1000;
+        this.shouldShow = width > 1000;
         break;
     }
   }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild, Output, EventEmitter } from '@angular/core';
 import { SearchInformationComponent } from '../../search-information/search-information.component';
 import { DeviceVisibleComponent } from '../../../../shared/services/responsive';
 import { FormsModule } from '@angular/forms';
@@ -19,6 +19,7 @@ export class SearchBarComponent{
   showInformation: boolean = false;
   @ViewChild('searchWrapper', { static: false }) searchWrapper?: ElementRef;
 
+  @Output() openChat = new EventEmitter<{ chatType: 'private' | 'channel'; chatId: string }>();
 
   @HostListener('document:click', ['$event'])
   onGlobalClick(event: MouseEvent) {
@@ -45,5 +46,9 @@ export class SearchBarComponent{
   closeSearchInfo() {
     this.searchValue = '';
     this.showInformation = false;
+  }
+
+  onChatOpen(eventData: { chatType: 'private' | 'channel'; chatId: string }): void {
+    this.openChat.emit(eventData);
   }
 }

@@ -53,7 +53,7 @@ export class ChannelsComponent{
   }
 
 
-  selectChannel(channelId: string): void {
+  selectChannel(channelId: string): void {    
     this.openChat.emit({
       chatType: 'channel',
       chatId: channelId

@@ -37,6 +37,14 @@ header {
   }
 }
 
+.scrollContainer{
+  @include flexBox(column, "", "", 20);
+}
+
+.memberListMobile{
+  display: none;
+}
+
 .channelHashtagName {
   @include flexBox("", left, center, 10);
   width: auto;
@@ -71,7 +79,7 @@ header {
 }
 
 .nameBox {
-  @include flexBox(column, space-between, "", "");
+  @include flexBox(column, space-between, "", 20);
   height: 110px;
   width: 100%;
   border-radius: 20px;
@@ -80,7 +88,7 @@ header {
 }
 
 .nameSaveBox {
-  @include flexBox(column, space-between, "", "");
+  @include flexBox(column, space-between, "", 15);
   height: 110px;
   width: 100%;
   border: none;
@@ -89,17 +97,6 @@ header {
 .boxEdit {
   @include flexBox("", space-between, center, "");
   height: 25px;
-  button {
-    @include fontStyle(18px, #535af1, 600);
-    background-color: white;
-    border: none;
-    padding: 4px 8px;
-    border-radius: 50px;
-    cursor: pointer;
-    &:hover {
-      background-color: #eceefe;
-    }
-  }
 }
 
 .saveBox {
@@ -185,6 +182,32 @@ header {
     border: none;
     resize: none;
   }
+}
+
+.editOverMobil{
+  @include flexBox("", "", "", "");
+}
+
+.editButton{
+  @include fontStyle(18px, #535af1, 600);
+  background-color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 50px;
+
+  cursor: pointer;
+  &:hover {
+    background-color: #eceefe;
+  }
+}
+
+.editOverTablet{
+  display: none;
+}
+
+.editOverTablet{
+  height: 40px;
+  width: 40px; 
 }
 
 textarea::-webkit-scrollbar {
@@ -325,20 +348,23 @@ textarea::-webkit-scrollbar-thumb {
     min-height: 0;
   }
 
-  .scrollContainer::-webkit-scrollbar {
-    width: 10px;
+  .saveBox{
+    height: 40px
+  }
+
+  .editOverTablet{
+    @include flexBox("", center, center, "");
+    height: 40px;
+    width: 40px; 
+  }
+
+  .editOverMobil{
+   display: none;
   }
 
   .scrollContainer::-webkit-scrollbar-track {
-    background-color: white;
-    border-radius: 8px;
     margin-top: 40px;
     margin-bottom: 40px;
-  }
-
-  .scrollContainer::-webkit-scrollbar-thumb {
-    background: linear-gradient(#eceefe, #eceefe);
-    border-radius: 8px;
   }
 
   section {
@@ -399,5 +425,22 @@ textarea::-webkit-scrollbar-thumb {
     border: 1px solid #adb0d9;
     border-radius: 20px;
     padding: 30px 20px;
+  }
+}
+
+@media (max-width: 450px) {
+  .scrollContainer {
+    padding: 0 8px;
+  }
+  header{
+    padding: 0 8px;
+  }
+  .memberListMobile{
+    @include flexBox("", center, center, "");
+   
+    padding: 20px 0;
+  }
+  .mobileHeadlineMember{
+    padding: 0 20px;
   }
 }

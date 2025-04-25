@@ -17,10 +17,10 @@ app-search-bar {
 
 app-device-visible {
   width: 100%;
-  margin-left: 76px;
+  margin-left: 96px;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 999px) {
     header{
         padding-inline: 12px
     }

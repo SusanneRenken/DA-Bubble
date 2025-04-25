@@ -12,7 +12,7 @@
         <img src="/assets/img/logo.png">
     }
     <app-device-visible mode="desktopBig">
-        <app-search-bar></app-search-bar>
+        <app-search-bar (openChat)="openChat($event)"></app-search-bar>
     </app-device-visible>
     <app-user-name [activeUserId]="activeUserId"></app-user-name>
 </header>

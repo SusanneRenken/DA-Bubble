@@ -1,6 +1,7 @@
 <section
   [class.row-reverse]="message.mSenderId === activeUserId"
   [class.edit-open]="isEditOpen"
+  [class.thread]="chatType === 'thread'"
 >
   <img src="/assets/img/{{ senderData?.uUserImage }}" alt="" />
 
@@ -31,14 +32,14 @@
     class="message"
     [class.user-message]="message.mSenderId === activeUserId"
   >
-    <div>
+    <div class="message-header">
       <h3 (click)="openProfil()">{{ senderData?.uName }}</h3>
       <h5>{{ getTimeInHours(message.mTime) }} Uhr</h5>
     </div>
 
     <div class="message-text">{{ message.mText }}</div>
 
-    <div>
+    <div class="message-attachments">
       @if (groupedReactions && groupedReactions.length > 0) {
       <div class="reaction-field">
         @for (reaction of groupedReactions.slice(0,shownReactionNumber); track
@@ -63,17 +64,17 @@
         shownReactionNumber > 7) {
         <div (click)="setShownReactionNumber()">Weniger anzeigen</div>
         }
-        <span
-          class="material-symbols mar-r-12"
-          (click)="toggleEmojiPicker($event)"
+        <span class="material-symbols" (click)="toggleEmojiPicker($event)"
           >add_reaction</span
         >
-        @if (message.mThreadId && chatType !== 'thread' && replyCount > 0) {
-        <span class="thread-field" (click)="onThreadClick()">
-          <h4>{{ replyCount }} Antwort{{ replyCount !== 1 ? "en" : "" }}</h4>
-          <h5>Letzte Antwort {{ getTimeInHours(lastReplyTime) }} Uhr</h5>
-        </span>
-        }
+      </div>
+      }@if (message.mThreadId && chatType !== 'thread' && replyCount > 0) {
+      <div class="thread-field" (click)="onThreadClick()">
+        <h4>{{ replyCount }} Antwort{{ replyCount !== 1 ? "en" : "" }}</h4>
+        <h5>
+          Letzte Antwort {{ getDayLabel(lastReplyTime!) }} um
+          {{ getTimeInHours(lastReplyTime!) }} Uhr
+        </h5>
       </div>
       }
     </div>
@@ -140,5 +141,4 @@
   [id]="message.mId"
   (close)="isPermanentDeleteOpen = false"
 ></app-permanent-delete>
-
 }

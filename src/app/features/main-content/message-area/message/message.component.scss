@@ -1,5 +1,14 @@
 @import "../../../../../styles.scss";
 
+button {
+  cursor: pointer;
+  font-family: "Nunito", sans-serif;
+  font-weight: 700;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 50px;
+}
+
 section {
   position: relative;
   width: 100%;
@@ -30,6 +39,10 @@ section {
   }
 }
 
+.thread{
+  padding: 10px 40px 10px 40px;
+}
+
 .edit-open {
   background-color: #eceefe;
 }
@@ -51,53 +64,6 @@ section {
   }
 }
 
-button {
-  cursor: pointer;
-  font-family: "Nunito", sans-serif;
-  font-weight: 700;
-  border: none;
-  padding: 12px 25px;
-  border-radius: 50px;
-}
-
-.primary-btn {
-  background-color: #444df2;
-  color: #ffffff;
-  border: 1px solid #444df2;
-  &:hover {
-    background-color: #797ef3;
-    border: 1px solid #797ef3;
-  }
-  &:active {
-    background-color: #444df2;
-    border: 1px solid #444df2;
-  }
-  &:disabled {
-    background-color: #686868;
-    border: 1px solid #686868;
-    cursor: not-allowed;
-  }
-}
-
-.secondary-btn {
-  background-color: #ffffff;
-  color: #444df2;
-  border: 1px solid #797ef3;
-  &:hover {
-    background-color: #535AF1;
-    color: #ffffff;
-    border: 1px solid #535AF1;
-  }
-  &:active {
-    background-color: #444df2;
-    border: 1px solid #444df2;
-  }
-  &:disabled {
-    color: #686868;
-    border: 1px solid #686868;
-    cursor: not-allowed;
-  }
-}
 
 .icon-button {
   cursor: pointer;
@@ -124,14 +90,13 @@ button {
 .message {
   @include flexBox(column, initial, initial, 8);
 
-  > div {
+  .message-header {
     @include flexBox(row, initial, center, 20);
-  }
-
-  h3 {
-    cursor: pointer;
-    &:hover {
-      color: #444df2;
+    h3 {
+      cursor: pointer;
+      &:hover {
+        color: #444df2;
+      }
     }
   }
 
@@ -143,6 +108,10 @@ button {
     word-break: break-word;
     white-space: pre-wrap;
     font-size: 18px;
+  }
+
+  .message-attachments{
+    @include flexBox(column, initial, flex-start, 8);
   }
 }
 
@@ -158,6 +127,10 @@ button {
     color: #ffffff;
     background-color: #797ef3;
     border-radius: 30px 0px 30px 30px;
+  }
+
+  .message-attachments{
+    @include flexBox(column, initial, flex-end, 8);
   }
 }
 
@@ -209,15 +182,9 @@ button {
   }
 }
 
-.mar-r-12{
-  margin-right: 12px;
-}
 .thread-field {
   cursor: pointer;
-  padding-top: 4px;
-  display: inline-flex;
-  flex-direction: column;
-  white-space: nowrap;
+  @include flexBox(row, initial, center, 12);  
 }
 
 .message-actions {
@@ -282,7 +249,7 @@ emoji-mart {
   left: 46px;
 }
 
-.thread-emoji{
+.thread-emoji {
   right: initial;
   left: 68px;
 }

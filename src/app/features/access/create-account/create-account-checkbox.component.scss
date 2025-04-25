@@ -2,17 +2,21 @@
 @use "../../../shared/scss/variables" as vari;
 
 .checkbox-container {
-  padding-left: 10px;
-  display: flex;
-  gap: 10px;
+  @include mixin.dFlex($justify: flex-start, $gap: 10px);
+  padding-left: clamp(0px, 0.01vw, 10px);
 
-  > p span {
-    cursor: pointer;
-    color: vari.$light-blue;
-    transition: color 0.2s ease;
+  > p {
+    font-size: clamp(14px, 2.5vw, 18px);
 
-    &:hover {
-      color: vari.$dark-blue;
+    > span {
+      cursor: pointer;
+      font-size: clamp(14px, 2.5vw, 18px);
+      color: vari.$light-blue;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: vari.$dark-blue;
+      }
     }
   }
 }
@@ -31,8 +35,8 @@
   .checkbox {
     appearance: none;
     position: relative;
-    width: 18px;
-    height: 18px;
+    width: clamp(14px, 2.5vw, 18px);
+    height: clamp(14px, 2.5vw, 18px);
     border: 2px solid vari.$light-blue;
     border-radius: 2px;
     background-color: transparent;
@@ -44,8 +48,8 @@
       position: absolute;
       top: 3px;
       left: 2px;
-      width: 8px;
-      height: 4px;
+      width: clamp(4px, 1vw, 8px);
+      height: clamp(2px, 0.5vw, 4px);
       border-bottom: 2px solid;
       border-left: 2px solid;
       border-color: vari.$light-blue;

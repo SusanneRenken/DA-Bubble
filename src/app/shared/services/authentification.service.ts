@@ -95,7 +95,7 @@ export class AuthentificationService {
         uId: this.currentUid,
         uName: result.user.displayName || '',
         uEmail: result.user.email || '',
-        uUserImage: result.user.photoURL || '',
+        uUserImage: result.user.photoURL || 'profile.png',
         uStatus: true,
         uLastReactions: ['👍', '😊']
       };
@@ -113,8 +113,8 @@ export class AuthentificationService {
         uId: this.currentUid,
         uName: 'Guest',
         uEmail: '',
-        uUserImage: 'default-guest.png',
-        uStatus: false,
+        uUserImage: 'profile.png',
+        uStatus: true,
         uLastReactions: ['👍', '😊']
       };
       const userRef = collection(this.firestore, 'users');

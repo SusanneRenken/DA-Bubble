@@ -10,7 +10,6 @@
     <app-custom-input
       type="email"
       name="email"
-      id="email"
       placeholder="beispielname@email.com"
       formControlName="email"
     >
@@ -59,7 +58,6 @@
     <app-custom-input
       type="password"
       name="password"
-      id="password"
       placeholder="Passwort"
       formControlName="password"
     >
@@ -113,8 +111,7 @@
 
   <app-button color="gray" (clicked)="onLoginWithGoogle()">
     <svg
-      width="38"
-      height="38"
+      class="google"
       viewBox="0 0 38 38"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -136,7 +133,7 @@
         fill="#1976D2"
       />
     </svg>
-    <span> Anmelden mit Google </span>
+    Anmelden mit Google
   </app-button>
 
   <div class="btn-container">

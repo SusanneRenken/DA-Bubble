@@ -1,20 +1,21 @@
-@use '../../../shared/scss/mixins' as mixin;
-@use '../../../shared/scss/variables' as vari;
+@use "../../../shared/scss/mixins" as mixin;
+@use "../../../shared/scss/variables" as vari;
 
 form {
-  @include mixin.dFlex($gap: 30px, $direction: column);
+  @include mixin.dFlex($gap: clamp(10px, 2.5vw, 30px), $direction: column);
 
   > h1 {
     @include mixin.accHead(vari.$dark-blue);
   }
 
   > p {
-    font-size: 20px;
+    font-size: clamp(16px, 3vw, 20px);
     text-align: center;
   }
 
   > span {
     cursor: pointer;
+    font-size: clamp(14px, 3vw, 18px);
     color: vari.$light-blue;
     padding: 5px 15px;
 
@@ -37,6 +38,7 @@ form {
 
   > span {
     position: relative;
+    font-size: clamp(14px, 3vw, 18px);
     z-index: 5;
     padding: 0 15px;
     background-color: vari.$white;
@@ -44,7 +46,7 @@ form {
 
   &::before {
     content: "";
-    background-color: #ADB0D9;
+    background-color: #adb0d9;
     height: 1px;
     width: 100%;
     position: absolute;
@@ -56,5 +58,10 @@ form {
 }
 
 .btn-container {
-  @include mixin.dFlex($gap: 30px);
+  @include mixin.dFlex($gap: clamp(20px, 2.5vw, 30px));
+}
+
+.google {
+  width: clamp(24px, 2.5vw, 38px);
+  height: clamp(24px, 2.5vw, 38px);
 }

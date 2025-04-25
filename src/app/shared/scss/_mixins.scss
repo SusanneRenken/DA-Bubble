@@ -11,7 +11,7 @@
 
 @mixin arrow($bg-color, $icon-color) {
   position: absolute;
-  top: 10px;
+  top: 0;
   left: -20px;
   cursor: pointer;
   padding: 11px 12px 5px 12px;
@@ -29,7 +29,9 @@
 
 @mixin accHead($head-color) {
   color: $head-color;
-  font-size: 46px;
+  padding: 0 20px;
+  text-align: center;
+  font-size: clamp(28px, 5vw, 46px);
   font-weight: 700;
 }
 

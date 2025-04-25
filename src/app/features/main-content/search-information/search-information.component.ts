@@ -1,8 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, Output, EventEmitter, OnInit, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Message } from '../../../shared/interfaces/message.interface';
-import { Channel } from '../../../shared/interfaces/channel.interface';
 import { User } from '../../../shared/interfaces/user.interface';
 import { ChannelService } from '../../../shared/services/channel.service';
 import { MessageService } from '../../../shared/services/message.service';

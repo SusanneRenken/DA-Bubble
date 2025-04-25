@@ -258,6 +258,10 @@ textarea {
   @include flexBox(row, center, center, 0);
 }
 
+button{
+  font-family: "Nunito", sans-serif;
+}
+
 .primary-btn {
   background-color: #444df2;
   color: #ffffff;

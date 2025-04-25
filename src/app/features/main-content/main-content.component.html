@@ -68,6 +68,7 @@
   <div class="messageIn">
     <app-message-area
       class="chat-message-area"
+      [class.d-none]="isThreadOpen"
       [chatType]="chatType"
       [chatId]="chatId"
       [activeUserId]="activeUserId"

@@ -89,6 +89,10 @@ section{
   }
 }
 
+.d-none{
+  display: none;
+}
+
 @media(max-width: 1000px){
   app-header {
     background-color: #ECEEFE;

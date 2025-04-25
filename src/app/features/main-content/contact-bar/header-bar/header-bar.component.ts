@@ -14,12 +14,20 @@ export class HeaderBarComponent {
     chatType: 'private' | 'channel' | 'new';
     chatId: string | null;
   }>();
+  @Output() toggleMessage = new EventEmitter<boolean>();
 
   openNewChat() {
       this.openChat.emit({
         chatType: 'new',
         chatId: null,
       });
+  }
+
+  someAction() {
+    const screenWidth = window.innerWidth;
+    if (screenWidth < 1000) {
+      this.toggleMessage.emit(true);
     }
+  }
 
 }

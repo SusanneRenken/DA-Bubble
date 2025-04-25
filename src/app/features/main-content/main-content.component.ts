@@ -28,14 +28,8 @@ export class MainContentComponent {
   messageIn: boolean = false;
   activeUserId: string | null = null;
 
-  chatType: 'private' | 'channel' | 'thread' | 'new' = 'new';
-  
-  // muss später getauscht werden:
-  chatId: string | null = 'KV14uSorBJhrWW92IeDS'; //ENTWICKLER
-  // chatId: string | null = 'SsuHUPJxACsAfBVbJPn6'; //TEST
-  // chatId: string | null = 'sEg8GcSNNZ6YWhxRs4SE'; //NOAH
-  // chatId: string | null = '8nmFp28ZO3TOeDohgGQSqR0niUj1'; //BISASAM
-  // chatId: string | null = null;
+  chatType: 'private' | 'channel' | 'thread' | 'new' = 'private';
+  chatId: string | null = null;
 
   threadId: string | null = null;
   isThreadOpen: boolean = false;
@@ -43,11 +37,9 @@ export class MainContentComponent {
   sectionVisible = true;
 
   ngOnInit(): void {
-    this.activeUserId = this.route.snapshot.paramMap.get('activeUserId');    
-
-    // muss später aktiviert werden:
-    // this.chatId = this.activeUserId;
-
+    this.activeUserId = this.route.snapshot.paramMap.get('activeUserId');   
+    this.chatId = this.activeUserId;
+    this.chatType = 'private';
     this.checkScreenSize();
     window.addEventListener('resize', this.checkScreenSize.bind(this));
   }

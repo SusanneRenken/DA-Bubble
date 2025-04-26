@@ -57,10 +57,7 @@
       @if (confirmForm.get('conEmail')?.errors?.['required']) {
         <small>*E-Mail ist erforderlich.</small>
       }
-      @if (confirmForm.get('conEmail')?.errors?.['email']) {
-        <small>*Bitte gib eine gültige E-Mail-Adresse ein.</small>
-      }
-      @if (confirmForm.get('conEmail')?.errors?.['pattern']) {
+      @if (confirmForm.get('conEmail')?.errors?.['email'] || confirmForm.get('conEmail')?.errors?.['pattern']) {
         <small>*Bitte gib eine gültige E-Mail-Adresse ein.</small>
       }
     }

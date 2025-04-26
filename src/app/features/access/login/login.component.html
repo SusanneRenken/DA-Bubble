@@ -45,10 +45,7 @@
       @if (loginForm.get('email')?.errors?.['required']) {
         <small>*E-Mail ist erforderlich.</small>
       }
-      @if (loginForm.get('email')?.errors?.['email']) {
-        <small>*Bitte gib eine gültige E-Mail-Adresse ein.</small>
-      }
-      @if (loginForm.get('email')?.errors?.['pattern']) {
+      @if (loginForm.get('email')?.errors?.['email'] || loginForm.get('email')?.errors?.['pattern']) {
         <small>*Bitte gib eine gültige E-Mail-Adresse ein.</small>
       }
     }

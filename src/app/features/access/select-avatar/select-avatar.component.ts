@@ -37,7 +37,6 @@ export class SelectAvatarComponent {
 
   selectAvatar(avatar: string): void {
     this.selectedAvatar = avatar;
-    console.log(this.selectedAvatar);
   }
 
   onNext(): void {
@@ -45,16 +44,11 @@ export class SelectAvatarComponent {
       console.error('No avatar selected!');
       return;
     }
-    this.authService
-      .completeRegistration(this.selectedAvatar)
+    this.authService.completeRegistration(this.selectedAvatar)
       .then(() => {
         this.isConfirmationVisible = true;
-        setTimeout(() => {
-          this.isConfirmationVisible = false;
-        }, 2000);
-        setTimeout(() => {
-          this.changeComponent('login');
-        }, 3000);
+        setTimeout(() => this.isConfirmationVisible = false, 2000);
+        setTimeout(() => this.changeComponent('login'), 3000);
       })
       .catch((error) => {
         console.error('Error when adding the profile picture: ', error);

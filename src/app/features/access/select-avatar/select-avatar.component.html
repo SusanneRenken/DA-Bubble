@@ -13,31 +13,33 @@
   </svg>
 </div>
 
-<h1>Wähle deinen Avatar</h1>
-
-@if (selectedAvatar) {
-<img class="selected-avatar" [src]="'assets/img/' + selectedAvatar" alt="Avatar"/>
-} @else if (!selectedAvatar) {
-  <img class="selected-avatar" src="assets/img/profile.png" alt="profil">
-}
-
-<h2>{{ username }}</h2>
-
-<span>Bitte wählen sie ihr Profilbild aus.</span>
-
-<div class="avatar-container">
-  @for (avatar of avatars; track $index) {
-  <img
-    (click)="selectAvatar(avatar)"
-    [class.selected]="selectedAvatar === avatar"
-    [src]="'assets/img/' + avatar"
-    [alt]="avatar"
-  />
+<div class="select-container">
+  <h1>Wähle deinen Avatar</h1>
+  
+  @if (selectedAvatar) {
+  <img class="selected-avatar" [src]="'assets/img/' + selectedAvatar" alt="Avatar"/>
+  } @else if (!selectedAvatar) {
+    <img class="selected-avatar" src="assets/img/profile.png" alt="profil">
   }
-</div>
-
-<div class="btn-container">
-  <app-button [disabled]="!selectedAvatar" (click)="onNext()">Weiter</app-button>
+  
+  <h2>{{ username }}</h2>
+  
+  <span>Bitte wählen sie ihr Profilbild aus.</span>
+  
+  <div class="avatar-container">
+    @for (avatar of avatars; track $index) {
+    <img
+      (click)="selectAvatar(avatar)"
+      [class.selected]="selectedAvatar === avatar"
+      [src]="'assets/img/' + avatar"
+      [alt]="avatar"
+    />
+    }
+  </div>
+  
+  <div class="btn-container">
+    <app-button [disabled]="!selectedAvatar" (click)="onNext()">Weiter</app-button>
+  </div>
 </div>
 
 <app-success-indicator [visible]="isConfirmationVisible">Konto erfolgreich erstellt!</app-success-indicator>

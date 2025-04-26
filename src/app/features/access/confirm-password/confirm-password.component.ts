@@ -47,8 +47,8 @@ export class ConfirmPasswordComponent implements OnInit {
   ngOnInit(): void {
     this.oobCode = this.route.snapshot.queryParamMap.get('oobCode');
     this.newPassword = new FormGroup({
-      newPassword: new FormControl('', [Validators.required, Validators.minLength(6),]),
-      conPassword: new FormControl('', [Validators.required, Validators.minLength(6),]),
+      newPassword: new FormControl('', [Validators.required, Validators.minLength(8),]),
+      conPassword: new FormControl('', [Validators.required, Validators.minLength(8),]),
     },
     { validators: ConfirmPasswordComponent.passwordMatchValidator }
     );
@@ -70,9 +70,7 @@ export class ConfirmPasswordComponent implements OnInit {
           .confirmResetPassword(this.oobCode, newPassword)
           .then(() => {
             this.isConfirmationVisible = true;
-            setTimeout(() => {
-              this.isConfirmationVisible = false;
-            }, 2000);
+            setTimeout(() => this.isConfirmationVisible = false, 2000);
             setTimeout(() => {
               this.router.navigate(['/access']);
               this.changeComponent('login');

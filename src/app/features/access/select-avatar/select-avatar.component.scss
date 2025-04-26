@@ -3,7 +3,6 @@
 
 :host {
   position: relative;
-  @include mixin.dFlex($gap: clamp(10px, 1.5vw, 25px), $direction: column);
 }
 
 .arrow {
@@ -11,6 +10,10 @@
     $bg-color: vari.$sky-grey,
     $icon-color: vari.$purple
   );
+}
+
+.select-container {
+  @include mixin.dFlex($gap: clamp(5px, 1.5vw, 25px), $direction: column);
 }
 
 h1 {

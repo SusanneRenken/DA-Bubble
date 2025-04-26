@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ButtonComponent } from '../../general-components/button/button.component';
 import { ComponentSwitcherService } from '../../../shared/services/component-switcher.service';
 import {
@@ -12,6 +12,7 @@ import { AuthentificationService } from '../../../shared/services/authentificati
 import { Router } from '@angular/router';
 import { CustomInputComponent } from '../../general-components/custom-input/custom-input.component';
 import { SuccessIndicatorComponent } from '../../general-components/success-indicator/success-indicator.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -19,10 +20,11 @@ import { SuccessIndicatorComponent } from '../../general-components/success-indi
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
   loginForm!: FormGroup;
   authError: string = '';
   isConfirmationVisible: boolean = false;
+  private sub?: Subscription;
 
   constructor(
     public componentSwitcher: ComponentSwitcherService,
@@ -33,8 +35,18 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.loginForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email, Validators.pattern('[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}')]),
-      password: new FormControl('', [Validators.required, Validators.minLength(6)]),
+      password: new FormControl('', [Validators.required, Validators.minLength(8)]),
     });
+
+    this.sub = this.loginForm.valueChanges.subscribe(() => {
+      if (this.authError) {
+        this.authError = '';
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.sub?.unsubscribe();
   }
 
   onSubmit() {
@@ -44,9 +56,7 @@ export class LoginComponent implements OnInit {
       .then(result => {
         if (result) {
           this.isConfirmationVisible = true;
-          setTimeout(() => {
-            this.isConfirmationVisible = false;
-          }, 2000);
+          setTimeout(() => this.isConfirmationVisible = false, 2000);
           setTimeout(() => {
             const uid = this.authService.currentUid;
             this.router.navigate(['/home', uid]);

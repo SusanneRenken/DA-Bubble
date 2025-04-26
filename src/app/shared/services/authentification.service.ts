@@ -63,7 +63,7 @@ export class AuthentificationService {
         uId: uid,
         uName: username,
         uEmail: email,
-        uUserImage: profilePictureUrl,
+        uUserImage: 'assets/img/' + profilePictureUrl,
         uStatus: false,
         uLastReactions: ['👍', '😊']
       };
@@ -95,7 +95,7 @@ export class AuthentificationService {
         uId: this.currentUid,
         uName: result.user.displayName || '',
         uEmail: result.user.email || '',
-        uUserImage: result.user.photoURL || 'profile.png',
+        uUserImage: result.user.photoURL || 'assets/img/profile.png',
         uStatus: true,
         uLastReactions: ['👍', '😊']
       };
@@ -113,7 +113,7 @@ export class AuthentificationService {
         uId: this.currentUid,
         uName: 'Guest',
         uEmail: '',
-        uUserImage: 'profile.png',
+        uUserImage: 'assets/img/profile.png',
         uStatus: true,
         uLastReactions: ['👍', '😊']
       };
@@ -137,9 +137,7 @@ export class AuthentificationService {
   }
 
   async confirmResetPassword(oobCode: string, newPassword: string): Promise<void> {
-    return confirmPasswordReset(this.auth, oobCode, newPassword).then(() => {
-      console.log('Password has been changed!');
-    });
+    return confirmPasswordReset(this.auth, oobCode, newPassword);
   }
 
   async logout(): Promise<void> {
@@ -157,6 +155,15 @@ export class AuthentificationService {
       deletePromise = Promise.resolve();
     }
     return deletePromise.then(() => {
+      const oldUid = this.currentUid;
+      if (oldUid) {
+        const userRef = collection(this.firestore, 'users');
+        const userDocRef = doc(userRef, oldUid);
+        return updateDoc(userDocRef, { uStatus: false });
+      } else {
+        return Promise.resolve();
+      }
+    }).then(() => {
       this.currentUid = null;
       return this.auth.signOut();
     });

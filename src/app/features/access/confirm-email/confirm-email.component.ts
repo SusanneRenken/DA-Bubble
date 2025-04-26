@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ButtonComponent } from '../../general-components/button/button.component';
 import {
   FormControl,
@@ -10,6 +10,7 @@ import { ComponentSwitcherService } from '../../../shared/services/component-swi
 import { AuthentificationService } from '../../../shared/services/authentification.service';
 import { CustomInputComponent } from '../../general-components/custom-input/custom-input.component';
 import { SuccessIndicatorComponent } from '../../general-components/success-indicator/success-indicator.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-confirm-email',
@@ -17,10 +18,11 @@ import { SuccessIndicatorComponent } from '../../general-components/success-indi
   templateUrl: './confirm-email.component.html',
   styleUrl: './confirm-email.component.scss',
 })
-export class ConfirmEmailComponent implements OnInit {
+export class ConfirmEmailComponent implements OnInit, OnDestroy {
   confirmForm!: FormGroup;
   findEmail: string = '';
   isConfirmationVisible: boolean = false;
+  private sub?: Subscription;
 
   constructor(
     public componentSwitcher: ComponentSwitcherService,
@@ -31,6 +33,16 @@ export class ConfirmEmailComponent implements OnInit {
     this.confirmForm = new FormGroup({
       conEmail: new FormControl('', [Validators.required, Validators.email]),
     });
+
+    this.sub = this.confirmForm.valueChanges.subscribe(() => {
+      if (this.findEmail) {
+        this.findEmail = '';
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.sub?.unsubscribe();
   }
 
   onSubmit() {
@@ -49,7 +61,7 @@ export class ConfirmEmailComponent implements OnInit {
       })
       .catch(error => {
         console.error('Error when sending the reset email:', error);
-        if (error) this.findEmail = 'Es wurde keine E-Mail gefunden. Bitte geben sie iher richtige E-Mail-Adresse ein.';
+        if (error) this.findEmail = 'Es wurde keine übereinstimmende E-Mail gefunden.';
       });
     }
   }

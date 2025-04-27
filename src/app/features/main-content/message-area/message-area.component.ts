@@ -25,6 +25,7 @@ import { ProfilComponent } from '../../general-components/profil/profil.componen
 import { ChannelMembersComponent } from './channel-members/channel-members.component';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { HostListener } from '@angular/core';
+import { AddNewMembersComponent } from '../../general-components/add-new-members/add-new-members.component';
 
 @Component({
   selector: 'app-message-area',
@@ -36,6 +37,7 @@ import { HostListener } from '@angular/core';
     ProfilComponent,
     ChannelMembersComponent,
     PickerComponent,
+    AddNewMembersComponent
   ],
   templateUrl: './message-area.component.html',
   styleUrls: ['./message-area.component.scss'],
@@ -94,6 +96,12 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   currentMentionPos: number = -1;
   threadContextName: string = '';
   threadReplyCount = 0;
+
+  activChannelMemberProfil: User | null = null;
+  newChannelMembers: boolean = false;
+  isChannelMemberProfilOpen: boolean = false;
+  addMemberPopUp: boolean = false;
+  
 
   ngAfterViewInit(): void {
     setTimeout(() => {
@@ -554,21 +562,12 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
     }
   }
 
-  async removeMember() {
-    if (!this.activeUserId || !this.chatId) return;
-    await this.channelService.removeUserFromChannel(
-      this.chatId,
-      this.activeUserId
-    );
-  }
+  
 
-  activChannelMemberProfil: User | null = null;
-  newChannelMembers: boolean = false;
-  isChannelMemberProfilOpen: boolean = false;
+  
 
   toggleMemberProfil(member?: User) {
-    console.log('Clicked on member:', member);
-
+  
     this.isChannelMemberProfilOpen = !this.isChannelMemberProfilOpen;
     if (member) {
       this.activChannelMemberProfil = member;
@@ -578,9 +577,16 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   }
 
   addChannelMember() {
-    console.log(this.newChannelMembers);
-
     this.newChannelMembers = true;
+  }
+
+
+  openAddMemberPopUp(){  
+    this.addMemberPopUp = true;
+  }
+
+  closeAddMember(){
+    this.addMemberPopUp = false;
   }
 
   onNewInputChange(): void {

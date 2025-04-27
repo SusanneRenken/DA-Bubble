@@ -33,12 +33,39 @@ app-add-new-members{
   @include flexBox(column, initial, initial, 20);
 }
 
+.closeChannelMember{
+  @include flexBox('', center, center, '');
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  background-color: white;
+  border: none;
+  &:hover{
+    background-color: #eceefe;
+  }
+}
+
+.closeChannelMember:hover .closeButton{
+  color: #535AF1;
+}
+
 .memberlist-header {
   width: 100%;
   @include flexBox(row, space-between, center, 0);
 }
 
+@media (max-width: 600px) {
+  section {
+    right: 50%;
+    transform: translateX(50%);
+  }
+}
 
-
-
+@media (max-width: 450px) {
+  section{
+    border-radius: 0px;
+    width: 100%;
+    padding: 40px 20px;
+  }
+}
 

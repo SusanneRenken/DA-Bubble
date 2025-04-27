@@ -15,7 +15,9 @@
     <section #channelWrapper>
       <div class="memberlist-header">
         <h1>Mitglieder</h1>
-        <div class="material-symbols" (click)="closeChannelMembers()">close</div>
+        <button class="closeChannelMember" (click)="closeChannelMembers()">
+          <div class="material-symbols closeButton" >close</div>
+        </button>
       </div>  
       <app-member-list
         [channelMembers]="channelMembers"

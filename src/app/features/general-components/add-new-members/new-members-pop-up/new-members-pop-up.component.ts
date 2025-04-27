@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { UserService } from '../../../../shared/services/user.service';
 import { User } from '../../../../shared/interfaces/user.interface';
 import { FormsModule } from '@angular/forms';
@@ -12,10 +12,10 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './new-members-pop-up.component.scss',
 })
 
-export class NewMembersPopUpComponent {
+export class NewMembersPopUpComponent implements OnInit{
   @Input() channelMembers: User[] = [];
   @Input() memberAddElement: boolean = false;
-  @Input() memberInputId: string = '';
+  @Input() memberInputId: any;
   @Input() showMember: boolean = false;
   @Input() memberInputAdd: string = '';
   @Input() memberInputImage: string = '';
@@ -29,39 +29,54 @@ export class NewMembersPopUpComponent {
 
   constructor(private userService: UserService) {}
 
+
+
+  async ngOnInit() {
+    // alle User aus Firestore laden
+    this.channelMembers = await this.userService.allUsers();
+    // für den ersten Fokus schon mal bereitstellen
+    this.filteredMembers = [...this.channelMembers];
+  }
+
+  onInputFocus() {
+    this.filteredMembers = [...this.channelMembers];
+    this.showMember = this.filteredMembers.length > 0;
+  }
+
+
   
   onKey(event: KeyboardEvent) {
     const input = (event.target as HTMLInputElement).value.toLowerCase().trim();
-    console.log(input, this.channelMembers);
-    
     this.searchValue = input;
     this.charCount = input.length;
-    if (this.charCount >= 3) {
-      this.userService.getEveryUsers().subscribe((users: User[]) => {
-        const memberIds = new Set( this.channelMembers.map((member) => member.uId) );
-        this.filteredMembers = users.filter(
-          (user) =>
-            !memberIds.has(user.uId) &&
-            user.uName.toLowerCase().includes(this.searchValue)
-        );
-        this.showMember = this.filteredMembers.length > 0;
-      });
+
+    if (this.charCount === 0) {
+      this.filteredMembers = [...this.channelMembers];
+      this.showMember = true;
+    } else if (this.charCount >= 3) {
+      this.filteredMembers = this.channelMembers.filter(u =>
+        u.uName.toLowerCase().includes(this.searchValue)
+      );
+      this.showMember = this.filteredMembers.length > 0;
     } else {
       this.filteredMembers = [];
       this.showMember = false;
     }
   }
 
+  onInputBlur() {
+    setTimeout(() => this.showMember = false, 100);
+  }
 
-  memberNameAdd(memberName: string, memberImage: string, memberId: any): void {
-    console.log(memberName, memberImage, memberId);
+  memberNameAdd(name: string, image: string, id: string) {
+    console.log(name, image, id);
     
-    this.memberNameAddEvent.emit({ name: memberName, image: memberImage, id: memberId });
     this.showMember = false;
   }
-  
-
   inputNameClose(): void {
     this.inputNameCloseEvent.emit();
   }
+
+  trackById(_: number, u: User) { return u.uId; }
 }
+

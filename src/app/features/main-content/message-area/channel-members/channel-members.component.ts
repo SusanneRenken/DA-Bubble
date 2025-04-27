@@ -31,10 +31,7 @@ export class ChannelMembersComponent implements OnChanges {
   
   ngOnChanges(changes: SimpleChanges) {  
     if (changes['channelMembers']) {
-      console.log(
-        'Channel Members in ngOnChanges:',
-        changes['channelMembers'].currentValue
-      );
+      //console.log( 'Channel Members in ngOnChanges:', changes['channelMembers'].currentValu );
     }
   }
 

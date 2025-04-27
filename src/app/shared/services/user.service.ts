@@ -20,6 +20,7 @@ import { Channel } from '../interfaces/channel.interface';
 export class UserService {
   private firestore = inject(Firestore);
 
+
   getUserRealtime(userId: string): Observable<User | null> {
     return new Observable<User | null>((subscriber) => {
       const userDocRef = doc(this.firestore, 'users', userId);
@@ -169,6 +170,12 @@ export class UserService {
     const usersCollection = collection(this.firestore, 'users');
     return getDocs(usersCollection).then(snap => snap.docs.map(doc => doc.data() as User));
   }
-  
+ 
+
+
+  updateUserImage(userId: string, imageFileName: string): Promise<void> {
+    const userDocRef = doc(this.firestore, 'users', userId);
+    return updateDoc(userDocRef, { uUserImage: imageFileName });
+  }
   
 }

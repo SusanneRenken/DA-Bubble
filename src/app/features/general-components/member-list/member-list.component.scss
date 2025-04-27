@@ -15,6 +15,9 @@
 
 .members {
   width: 100%;
+  height: 200px;
+  padding: 8px 4px;
+  overflow-y: auto;
   @include flexBox(column, initial, initial, 16);
   div {
     cursor: pointer;

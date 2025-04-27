@@ -25,16 +25,11 @@ export class ChannelLeaveComponent implements OnInit {
   @Input() activeUserId: string | null = null;  
   @Input() activChannelMemberProfil: User | null = null;
   @Input() newChannelMembers: boolean = false;
-  @Input() isChannelMemberProfilOpen: boolean = false;
-  animateOut = false;
-
-  
- 
   @Input() channelId: any;
   @Input() channelName: string = '';
+  @Input() isChannelMemberProfilOpen: boolean = false;
 
   @Output() newChannelMembersChange = new EventEmitter<boolean>();
-
   @Output() addMember = new EventEmitter<void>();
   @Output() showProfil = new EventEmitter<User>();
   @Output() close = new EventEmitter<void>();
@@ -50,6 +45,7 @@ export class ChannelLeaveComponent implements OnInit {
   editedDescription: string = '';
   isVisible: boolean = false;
   hasInteracted: boolean = false;
+  animateOut = false;
   createdByUserName: string = 'Unbekannt';
 
   firestore = inject(Firestore);
@@ -97,10 +93,15 @@ export class ChannelLeaveComponent implements OnInit {
     }, 200);
   }
 
+  async removeMember() {
+    if (!this.activeUserId || !this.channelData?.cId) return;
+    await this.channelService.removeUserFromChannel(
+      this.channelData?.cId,
+      this.activeUserId
+    );
+  }
 
-  closeWindow() {
-    console.log('versuch');
-    
+  closeWindow() {  
     this.close.emit();
   }
 

@@ -11,7 +11,25 @@
                 <div class="material-symbols closeIcon">close</div>
             </button>
         </header>
-        <img [src]="'/assets/img/' + userImage">
+        @if (!showEditProfil) {
+            <img [src]="'/assets/img/' + userImage">
+        }
+        @else {
+            <div class="avatarsMain">
+                <button class="buttonImg" (click)="bigUserImg()">
+                    <img [src]="'/assets/img/' + userImage">
+                </button>
+                @if (showAvatarChoice) {
+                    <div class="avatarChoice">
+                        @for (item of items; track $index) {
+                            <button (click)="selectAvatar(item)" class="avatarButtons">
+                                <img [src]="'/assets/img/avatar-' + item + '.png'">
+                            </button>
+                        }
+                    </div>
+                }
+            </div>
+        }
         @if (!showEditProfil) {
             <div class="nameActive">
                 <div class="nameEdit">
@@ -70,7 +88,7 @@
         @if (showEditProfil) {
             <div class="editSaveButtons">
                 <button (click)="closeProfil()" class="editButton stopButton">Abbrechen</button>
-                <button (click)="changeUserName(); closeProfil()" class="editButton saveButton">Speichern</button>
+                <button (click)="changeUserName(); closeProfil(); saveAvatarChange()" class="editButton saveButton">Speichern</button>
             </div>
         }
     </section>

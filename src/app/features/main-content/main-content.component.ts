@@ -63,6 +63,16 @@ export class MainContentComponent {
     this.threadId = '';
   }
 
+  handleOpenThread(event: { chatType: 'channel'|'private'; chatId: string; threadId: string }) {
+    
+    this.chatType = event.chatType;
+    this.chatId   = event.chatId;
+
+    this.isThreadOpen = true;
+    this.threadId     = event.threadId;
+    
+  }
+
   openThread(threadId: string) {
     this.isThreadOpen = true;
     this.threadId = threadId;

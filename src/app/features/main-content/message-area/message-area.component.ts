@@ -2,42 +2,47 @@ import {
   Component,
   ElementRef,
   EventEmitter,
-  inject,
+  HostListener,
   Input,
   OnChanges,
   OnDestroy,
   Output,
   SimpleChanges,
   ViewChild,
+  inject,
 } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { MessageService } from '../../../shared/services/message.service';
-import { Message } from '../../../shared/interfaces/message.interface';
 import { CommonModule } from '@angular/common';
-import { MessageComponent } from './message/message.component';
-import { User } from '../../../shared/interfaces/user.interface';
-import { UserService } from '../../../shared/services/user.service';
-import { Channel } from '../../../shared/interfaces/channel.interface';
-import { ChannelService } from '../../../shared/services/channel.service';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
+
+import { MessageService } from '../../../shared/services/message.service';
+import { UserService } from '../../../shared/services/user.service';
+import { ChannelService } from '../../../shared/services/channel.service';
+
+import { Message } from '../../../shared/interfaces/message.interface';
+import { User } from '../../../shared/interfaces/user.interface';
+import { Channel } from '../../../shared/interfaces/channel.interface';
+
+import { MessageComponent } from './message/message.component';
 import { ChannelLeaveComponent } from '../../general-components/channel-leave/channel-leave.component';
 import { ProfilComponent } from '../../general-components/profil/profil.component';
 import { ChannelMembersComponent } from './channel-members/channel-members.component';
-import { PickerComponent } from '@ctrl/ngx-emoji-mart';
-import { HostListener } from '@angular/core';
 import { AddNewMembersComponent } from '../../general-components/add-new-members/add-new-members.component';
+
+import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 
 @Component({
   selector: 'app-message-area',
+  standalone: true,
   imports: [
     CommonModule,
-    MessageComponent,
     FormsModule,
+    MessageComponent,
     ChannelLeaveComponent,
     ProfilComponent,
     ChannelMembersComponent,
+    AddNewMembersComponent,
     PickerComponent,
-    AddNewMembersComponent
   ],
   templateUrl: './message-area.component.html',
   styleUrls: ['./message-area.component.scss'],
@@ -46,12 +51,10 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   private userService = inject(UserService);
   private channelService = inject(ChannelService);
   private messageService = inject(MessageService);
-
-  private messagesSubscription: Subscription | null = null;
-  private channelSubscription: Subscription | null = null;
+  private messagesSub?: Subscription;
+  private channelSub?: Subscription;
   private chatPartnerSub?: Subscription;
-  private channelMemberSubs: Subscription[] = []; 
-  private lastListLength = 0;
+  private channelMemberSubs: Subscription[] = [];
 
   @Input() chatType: 'private' | 'channel' | 'thread' | 'new' = 'private';
   @Input() chatId: string | null = null;
@@ -64,46 +67,43 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
     chatId: string;
   }>();
 
-  @ViewChild('scrollContainer')
-  private scrollContainer!: ElementRef<HTMLDivElement>;
+  @ViewChild('scrollContainer') private scrollCont!: ElementRef<HTMLDivElement>;
   @ViewChild('messageInput')
-  private messageInputRef!: ElementRef<HTMLTextAreaElement>;
-  @ViewChild('emojiPicker', { read: ElementRef }) emojiPickerRef?: ElementRef;
-  @ViewChild('emojiButton', { read: ElementRef }) emojiButtonRef?: ElementRef;
+  private msgInputRef!: ElementRef<HTMLTextAreaElement>;
+  @ViewChild('emojiPicker', { read: ElementRef })
+  private emojiPickerRef?: ElementRef;
+  @ViewChild('emojiButton', { read: ElementRef })
+  private emojiBtnRef?: ElementRef;
 
   messages: Message[] = [];
-
   chatPartner: User | null = null;
-  userProfil: User | null = null;
-
   channelData: Channel | null = null;
   channelMembers: User[] = [];
+  userProfil: User | null = null;
+  newMessageText = '';
+  isLoading = true;
+  isEditChannelOpen = false;
+  isProfilOpen = false;
+  isChannelMemberOpen = false;
+  isEmojiPickerOpen = false;
 
-  foundChannelsNew: Channel[] = [];
-  foundUsersNew: User[] = [];
-  newChatInput: string = '';
-
-  newMessageText: string = '';
-
-  isLoading: boolean = true;
-  isEditChannelOpen: boolean = false;
-  isProfilOpen: boolean = false;
-  isChannelMemberOpen: boolean = false;
-  isEmojiPickerOpen: boolean = false;
-  showNewSuggestions: boolean = false;
-
-  foundUsers: User[] = [];
-  foundChannels: Channel[] = [];
-  displaySuggestions: boolean = false;
-  currentMentionPos: number = -1;
-  threadContextName: string = '';
+  threadContextName = '';
   threadReplyCount = 0;
 
+  displaySuggestions = false;
+  currentMentionPos = -1;
+  foundUsers: User[] = [];
+  foundChannels: Channel[] = [];
+
+  showNewSuggestions = false;
+  foundUsersNew: User[] = [];
+  foundChannelsNew: Channel[] = [];
+  newChatInput = '';
+
   activChannelMemberProfil: User | null = null;
-  newChannelMembers: boolean = false;
-  isChannelMemberProfilOpen: boolean = false;
-  addMemberPopUp: boolean = false;
-  
+  isChannelMemberProfilOpen = false;
+  newChannelMembers = false;
+  addMemberPopUp = false;
 
   ngAfterViewInit(): void {
     setTimeout(() => {
@@ -115,219 +115,179 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
     }, 500);
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['chatType'] || changes['chatId'] || changes['activeUserId']) {
-      this.isLoading = true;
-      this.lastListLength = 0;
+  ngOnChanges(ch: SimpleChanges): void {
+    if (ch['chatType'] || ch['chatId'] || ch['activeUserId']) {
+      this.prepareForReload();
       this.loadMessages();
       this.loadChatData();
-      setTimeout(() => {
-        this.isLoading = false;
-        setTimeout(() => {
-          this.scrollToBottom();
-          this.focusMessageInput();
-        }, 500);
-      }, 500);
     }
   }
 
   ngOnDestroy(): void {
-    this.messagesSubscription?.unsubscribe();
-    this.channelSubscription?.unsubscribe();
-    this.channelMemberSubs.forEach(s => s.unsubscribe());
+    this.messagesSub?.unsubscribe();
+    this.channelSub?.unsubscribe();
+    this.chatPartnerSub?.unsubscribe();
+    this.channelMemberSubs.forEach((s) => s.unsubscribe());
   }
 
-  scrollToBottom() {
-    if (!this.scrollContainer) return;
-    this.scrollContainer.nativeElement.scrollTop =
-      this.scrollContainer.nativeElement.scrollHeight;
+  private prepareForReload() {
+    this.isLoading = true;
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 500);
   }
 
-  private focusMessageInput(): void {
-    if (this.messageInputRef && this.messageInputRef.nativeElement) {
-      this.messageInputRef.nativeElement.focus();
-      this.messageInputRef.nativeElement.value = '';
-    }
-  }
-
-  loadMessages(): void {
-    this.messagesSubscription?.unsubscribe();
+  private loadMessages() {
+    this.messagesSub?.unsubscribe();
 
     if (!this.chatType || !this.chatId || !this.activeUserId) {
-      this.messages = [];
-      this.lastListLength = 0;
+      this.resetMessages();
       return;
     }
 
-    this.messages = [];
-
-    this.messagesSubscription = this.messageService
+    this.messagesSub = this.messageService
       .getMessages(this.chatType, this.chatId, this.activeUserId)
-      .subscribe((messages) => {
-        const hasNewMessage = messages.length > this.lastListLength;
-
-        this.messages = messages;
-        this.lastListLength = messages.length;
-
-        if (this.chatType === 'thread') {
-          this.threadReplyCount = messages.length > 0 ? messages.length - 1 : 0;
-        }
-
-        if (hasNewMessage) {
-          setTimeout(() => this.scrollToBottom(), 100);
-        }
-
-        if (this.chatType === 'thread' && messages.length > 0) {
-          const parent = messages[0];
-          if (parent.mChannelId) {
-            this.channelService.getChannel(parent.mChannelId).then((ch) => {
-              this.threadContextName = `#${ch.cName}`;
-            });
-          } else if (parent.mUserId) {
-            this.userService.getUser(parent.mUserId).then((u) => {
-              this.threadContextName = `@${u.uName}`;
-            });
-          }
-        }
-      });
+      .subscribe((msgs) => this.handleIncomingMessages(msgs));
   }
 
-  loadChatData(): void {
-    this.channelSubscription?.unsubscribe();
+  private resetMessages() {
+    this.messages = [];
+    this.threadReplyCount = 0;
+  }
+
+  private handleIncomingMessages(msgs: Message[]) {
+    const hasNew = msgs.length > this.messages.length;
+    this.messages = msgs;
+
+    if (this.chatType === 'thread') {
+      this.threadReplyCount = Math.max(0, msgs.length - 1);
+      this.setThreadContextName(msgs[0]);
+    }
+
+    if (hasNew) setTimeout(() => this.scrollToBottom(), 100);
+  }
+
+  private setThreadContextName(parent: Message) {
+    if (parent.mChannelId) {
+      this.channelService
+        .getChannel(parent.mChannelId)
+        .then((ch) => (this.threadContextName = `#${ch.cName}`));
+    } else if (parent.mUserId) {
+      this.userService
+        .getUser(parent.mUserId)
+        .then((u) => (this.threadContextName = `@${u.uName}`));
+    }
+  }
+
+  private loadChatData() {
+    this.channelSub?.unsubscribe();
+    this.chatPartnerSub?.unsubscribe();
+    this.channelMemberSubs.forEach((s) => s.unsubscribe());
 
     this.chatPartner = null;
     this.channelData = null;
     this.channelMembers = [];
 
-    if (this.chatType === 'private' && this.chatId) {
-      this.loadChatPartnerData();
-      return;
-    }
-
-    if (this.chatType === 'channel' && this.chatId) {
-      this.channelSubscription = this.channelService
-        .getChannelRealtime(this.chatId)
-        .subscribe({
-          next: (channel) => {
-            this.channelData = channel;
-            this.loadChannelMembers();
-          },
-          error: (err) => console.error('Channel‑Realtime‑Fehler', err),
-        });
-      return;
-    }
+    if (this.chatType === 'private' && this.chatId)
+      return this.loadChatPartnerData();
+    if (this.chatType === 'channel' && this.chatId)
+      return this.subscribeChannelRealtime();
   }
 
-  loadChatPartnerData(): void {
-    this.chatPartnerSub?.unsubscribe();
+  private loadChatPartnerData() {
     if (!this.chatId) return;
-  
     this.chatPartnerSub = this.userService
       .getUserRealtime(this.chatId)
       .subscribe({
-        next : u  => this.chatPartner = u,
-        error: err => console.error('User-Live', err)
+        next: (u) => (this.chatPartner = u),
+        error: (err) => console.error('User-Live', err),
       });
   }
 
-  loadChannelMembers(): void {
-    this.channelMemberSubs.forEach(s => s.unsubscribe());
+  private subscribeChannelRealtime() {
+    this.channelSub = this.channelService
+      .getChannelRealtime(this.chatId!)
+      .subscribe({
+        next: (ch) => {
+          this.channelData = ch;
+          this.loadChannelMembers();
+        },
+        error: (err) => console.error('Channel-Realtime', err),
+      });
+  }
+
+  private loadChannelMembers() {
+    this.channelMemberSubs.forEach((s) => s.unsubscribe());
     this.channelMemberSubs = [];
     this.channelMembers = [];
-  
+
     if (!this.channelData?.cUserIds?.length) return;
-  
+
     for (const uid of this.channelData.cUserIds) {
-      const sub = this.userService
-        .getUserRealtime(uid)
-        .subscribe({
-          next: user => {
-            if (!user) return;
-            const idx = this.channelMembers.findIndex(u => u.uId === uid);
-            if (idx > -1) {
-              this.channelMembers[idx] = user;
-            } else {
-              this.channelMembers.push(user);
-            }
-  
-            this.channelMembers.sort((a, b) => {
-              if (a.uId === this.activeUserId) return -1;
-              if (b.uId === this.activeUserId) return 1;
-              return 0;
-            });
-          },
-          error: err => console.error('User-Realtime-Fehler', err)
-        });
-  
+      const sub = this.userService.getUserRealtime(uid).subscribe({
+        next: (u) => this.mergeMember(u),
+        error: (err) => console.error('User-Realtime', err),
+      });
       this.channelMemberSubs.push(sub);
     }
   }
-  
 
-  shouldShowDateSeparator(index: number): boolean {
-    if (index === 0) {
-      return true;
-    }
-
-    const current = this.messages[index];
-    const prev = this.messages[index - 1];
-
-    if (!current || !prev) {
-      return false;
-    }
-
-    const currentDate = this.extractDateOnly(current.mTime);
-    const prevDate = this.extractDateOnly(prev.mTime);
-
-    return currentDate.getTime() !== prevDate.getTime();
+  private mergeMember(user: User | null) {
+    if (!user) return;
+    const idx = this.channelMembers.findIndex((u) => u.uId === user.uId);
+    idx > -1
+      ? (this.channelMembers[idx] = user)
+      : this.channelMembers.push(user);
+    this.sortMembers();
+  }
+  private sortMembers() {
+    this.channelMembers.sort((a, b) => {
+      if (a.uId === this.activeUserId) return -1;
+      if (b.uId === this.activeUserId) return 1;
+      return 0;
+    });
   }
 
-  extractDateOnly(mTime: any): Date {
-    let dateObj: Date;
+  private scrollToBottom() {
+    if (this.scrollCont)
+      this.scrollCont.nativeElement.scrollTop =
+        this.scrollCont.nativeElement.scrollHeight;
+  }
 
-    if (mTime && typeof mTime.toDate === 'function') {
-      dateObj = mTime.toDate();
-    } else if (mTime instanceof Date) {
-      dateObj = mTime;
-    } else {
-      dateObj = new Date(mTime);
+  private focusMessageInput() {
+    const ta = this.msgInputRef?.nativeElement;
+    if (ta) {
+      ta.focus();
+      ta.value = '';
     }
+  }
 
-    const d = new Date(
-      dateObj.getFullYear(),
-      dateObj.getMonth(),
-      dateObj.getDate()
+  shouldShowDateSeparator(i: number): boolean {
+    if (i === 0) return true;
+    return (
+      this.getDay(this.messages[i].mTime) !==
+      this.getDay(this.messages[i - 1].mTime)
     );
-    return d;
+  }
+  private getDay(t: any): number {
+    const d = t?.toDate?.() ?? t ?? new Date(t);
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
   }
 
-  getDateString(mTime: any): string {
-    const date = this.extractDateOnly(mTime);
-
-    const now = new Date();
-    const todayMidnight = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate()
-    ).getTime();
-    const checkDate = date.getTime();
-
-    if (checkDate === todayMidnight) {
-      return 'Heute';
-    } else if (checkDate === todayMidnight - 86400000) {
-      return 'Gestern';
-    } else {
-      return date.toLocaleDateString('de-DE', {
-        weekday: 'long',
-        day: 'numeric',
-        month: 'long',
-      });
-    }
+  getDateString(t: any): string {
+    const d = t?.toDate?.() ?? t ?? new Date(t);
+    const diff = this.getDay(d) - this.getDay(new Date());
+    if (diff === 0) return 'Heute';
+    if (diff === -86400000) return 'Gestern';
+    return d.toLocaleDateString('de-DE', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+    });
   }
 
   getPlaceholder(): string {
-    const chatType = this.chatType;
-    switch (chatType) {
+    switch (this.chatType) {
       case 'private':
         return `Nachricht an ${this.chatPartner?.uName || 'unbekannter User'}`;
       case 'channel':
@@ -336,24 +296,19 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
         }`;
       case 'thread':
         return 'Antworten...';
-      case 'new':
       default:
         return 'Starte eine neue Nachricht';
     }
   }
 
-  handleKeyDown(event: KeyboardEvent): void {
-    if (
-      event.key === 'Enter' &&
-      !event.shiftKey &&
-      this.newMessageText.trim()
-    ) {
-      event.preventDefault();
+  handleKeyDown(ev: KeyboardEvent) {
+    if (ev.key === 'Enter' && !ev.shiftKey && this.newMessageText.trim()) {
+      ev.preventDefault();
       this.sendMessage();
     }
   }
 
-  async sendMessage(): Promise<void> {
+  async sendMessage() {
     const text = this.newMessageText.trim();
     if (!text) return;
 
@@ -364,7 +319,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
         this.activeUserId!
       );
     } else {
-      const newMessage: Partial<Message> = {
+      const newMsg: Partial<Message> = {
         mText: text,
         mReactions: [],
         mSenderId: this.activeUserId!,
@@ -372,265 +327,201 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
         mChannelId: this.chatType === 'channel' ? this.chatId! : '',
         mThreadId: '',
       };
-      await this.messageService.createMessage(newMessage);
+      await this.messageService.createMessage(newMsg);
     }
-
     this.newMessageText = '';
     setTimeout(() => this.scrollToBottom(), 100);
   }
 
-  toggleEdit(): void {
-    this.isEditChannelOpen = !this.isEditChannelOpen;
+  handleThreadClick(id: string) {
+    this.openThread.emit(id);
   }
-
-  toggleProfile(user: User | null): void {
-    this.userProfil = user;
-    this.isProfilOpen = !this.isProfilOpen;
-  }
-
-  openUserProfil(userId: string): void {
-    this.userService
-      .getUser(userId)
-      .then((userProfilData) => {
-        this.userProfil = userProfilData;
-      })
-      .catch((error) => {
-        console.error('Fehler beim Laden des Users:', error);
-      });
-
-    this.isProfilOpen = true;
-  }
-
-  toggleChannelMembers(): void {
-    this.isChannelMemberOpen = !this.isChannelMemberOpen;
-  }
-
-  onTextChange(event: Event): void {
-    const txtArea = event.target as HTMLTextAreaElement;
-    if (!txtArea) return;
-
-    const message = txtArea.value;
-    const caretPos = txtArea.selectionStart || 0;
-
-    const atPos = message.lastIndexOf('@');
-    const hashPos = message.lastIndexOf('#');
-    const mentionPos = Math.max(atPos, hashPos);
-    this.currentMentionPos =
-      mentionPos !== -1 && mentionPos < caretPos ? mentionPos : -1;
-
-    if (mentionPos !== -1 && mentionPos < caretPos) {
-      const mentionText = message.slice(mentionPos + 1, caretPos);
-
-      if (mentionText.includes(' ')) {
-        this.displaySuggestions = false;
-        this.foundUsers = [];
-        this.foundChannels = [];
-        return;
-      }
-
-      if (message[mentionPos] === '@') {
-        this.searchUsers(mentionText);
-      } else if (message[mentionPos] === '#') {
-        this.searchChannels(mentionText);
-      }
-    } else {
-      this.displaySuggestions = false;
-      this.foundUsers = [];
-      this.foundChannels = [];
-    }
-  }
-
-  handleThreadClick(threadId: string) {
-    this.openThread.emit(threadId);
-  }
-
   handleCloseThread() {
     this.closeThread.emit();
   }
 
-  openUserSuggestions(): void {
-    const txtArea = this.messageInputRef?.nativeElement;
-    if (!txtArea) return;
+  toggleEdit() {
+    this.isEditChannelOpen = !this.isEditChannelOpen;
+  }
 
-    const caretPos = txtArea.selectionStart || 0;
-    const prefix = this.newMessageText.slice(0, caretPos);
-    const suffix = this.newMessageText.slice(caretPos);
-    const newText = prefix + '@' + suffix;
-    this.newMessageText = newText;
-    txtArea.value = newText;
+  toggleProfile(u: User | null) {
+    this.userProfil = u;
+    this.isProfilOpen = !this.isProfilOpen;
+  }
 
-    const newCaretPos = caretPos + 1;
-    txtArea.setSelectionRange(newCaretPos, newCaretPos);
+  openUserProfil(id: string) {
+    this.userService
+      .getUser(id)
+      .then((u) => (this.userProfil = u))
+      .catch(console.error);
+    this.isProfilOpen = true;
+  }
 
-    this.currentMentionPos = prefix.length;
+  toggleChannelMembers() {
+    this.isChannelMemberOpen = !this.isChannelMemberOpen;
+  }
+
+  onTextChange(ev: Event) {
+    const ta = ev.target as HTMLTextAreaElement;
+    if (!ta) return;
+
+    const caret = ta.selectionStart || 0;
+    const val = ta.value;
+    const aPos = val.lastIndexOf('@');
+    const hPos = val.lastIndexOf('#');
+    const pos = Math.max(aPos, hPos);
+
+    this.currentMentionPos = pos !== -1 && pos < caret ? pos : -1;
+    if (this.currentMentionPos === -1) {
+      this.hideSuggestions();
+      return;
+    }
+
+    const word = val.slice(pos + 1, caret);
+    if (word.includes(' ')) {
+      this.hideSuggestions();
+      return;
+    }
+
+    val[pos] === '@' ? this.searchUsers(word) : this.searchChannels(word);
+  }
+
+  openUserSuggestions() {
+    const ta = this.msgInputRef?.nativeElement;
+    if (!ta) return;
+    const caret = ta.selectionStart || 0;
+    this.newMessageText =
+      this.newMessageText.slice(0, caret) +
+      '@' +
+      this.newMessageText.slice(caret);
+    ta.value = this.newMessageText;
+    ta.setSelectionRange(caret + 1, caret + 1);
+    this.currentMentionPos = caret;
     this.searchUsers('');
     this.displaySuggestions = true;
-    txtArea.focus();
   }
 
-  searchUsers(input: string): void {
-    this.userService
-      .getAllUsers()
-      .then((allUsers) => {
-        this.foundUsers = allUsers.filter((user) =>
-          user.uName.toLowerCase().includes(input.toLowerCase())
-        );
-        this.displaySuggestions = this.foundUsers.length > 0;
-      })
-      .catch((error) => {
-        console.error('Fehler beim Laden der User:', error);
-        this.displaySuggestions = false;
-        this.foundUsers = [];
-      });
+  private searchUsers(q: string) {
+    this.userService.getAllUsers().then((list) => {
+      this.foundUsers = list.filter((u) =>
+        u.uName.toLowerCase().includes(q.toLowerCase())
+      );
+      this.displaySuggestions = !!this.foundUsers.length;
+    });
+  }
+  private searchChannels(q: string) {
+    this.channelService.getAllChannels().then((list) => {
+      this.foundChannels = list.filter((c) =>
+        c.cName.toLowerCase().includes(q.toLowerCase())
+      );
+      this.displaySuggestions = !!this.foundChannels.length;
+    });
   }
 
-  searchChannels(input: string): void {
-    this.channelService
-      .getAllChannels()
-      .then((allChannels) => {
-        this.foundChannels = allChannels.filter((channel) =>
-          channel.cName.toLowerCase().includes(input.toLowerCase())
-        );
-        this.displaySuggestions = this.foundChannels.length > 0;
-      })
-      .catch((error) => {
-        console.error('Fehler beim Laden der Channels:', error);
-        this.displaySuggestions = false;
-        this.foundChannels = [];
-      });
+  insertUserSuggestion(u: User) {
+    if (u?.uName) this.insertSuggestion(u.uName);
+  }
+  insertChannelSuggestion(c: Channel) {
+    if (c?.cName) this.insertSuggestion(c.cName);
   }
 
-  insertUserSuggestion(user: User): void {
-    if (user && user.uName) {
-      this.insertSuggestion(user.uName);
-    }
+  private insertSuggestion(text: string) {
+    const ta = this.msgInputRef?.nativeElement;
+    if (!ta || this.currentMentionPos === -1) return;
+    const full = this.newMessageText;
+    const caret = ta.selectionStart;
+    const newT =
+      full.slice(0, this.currentMentionPos + 1) +
+      text +
+      ' ' +
+      full.slice(caret);
+    this.newMessageText = newT;
+    ta.value = newT;
+    const newPos = this.currentMentionPos + 1 + text.length + 1;
+    ta.setSelectionRange(newPos, newPos);
+    ta.focus();
+    this.hideSuggestions();
   }
 
-  insertChannelSuggestion(channel: any): void {
-    if (channel && channel.cName) {
-      this.insertSuggestion(channel.cName);
-    }
-  }
-
-  insertSuggestion(suggestion: string): void {
-    const txtArea = this.messageInputRef?.nativeElement;
-    if (!txtArea || this.currentMentionPos === -1) return;
-
-    const fullText = this.newMessageText;
-    const caretPos = txtArea.selectionStart;
-    const prefix = fullText.slice(0, this.currentMentionPos + 1);
-    const suffix = fullText.slice(caretPos);
-    const newText = prefix + suggestion + ' ' + suffix;
-
-    this.newMessageText = newText;
-    txtArea.value = newText;
-
-    const newCaretPos = prefix.length + suggestion.length + 1;
-    txtArea.setSelectionRange(newCaretPos, newCaretPos);
-
+  private hideSuggestions() {
     this.displaySuggestions = false;
     this.foundUsers = [];
     this.foundChannels = [];
-    this.currentMentionPos = -1;
-
-    txtArea.focus();
   }
 
-  toggleEmojiPicker(event: MouseEvent): void {
-    event.stopPropagation();
+  toggleEmojiPicker(ev: MouseEvent) {
+    ev.stopPropagation();
     this.isEmojiPickerOpen = !this.isEmojiPickerOpen;
-
-    if (this.isEmojiPickerOpen) {
-      setTimeout(() => {
-        this.emojiPickerRef?.nativeElement.focus?.();
-      });
-    }
+    if (this.isEmojiPickerOpen)
+      setTimeout(() => this.emojiPickerRef?.nativeElement.focus?.());
   }
 
-  addEmoji(emoji: any): void {
-    console.log('Emoji:', emoji.emoji.native);
-    const txtArea = this.messageInputRef.nativeElement;
-    const caretPos = txtArea.selectionStart;
-    const textBefore = this.newMessageText.slice(0, caretPos);
-    const textAfter = this.newMessageText.slice(caretPos);
-    this.newMessageText = textBefore + emoji.emoji.native + textAfter;
-    txtArea.value = this.newMessageText;
-    const newCaretPos = caretPos + emoji.emoji.native.length;
-    txtArea.setSelectionRange(newCaretPos, newCaretPos);
-    txtArea.focus();
+  addEmoji(e: any) {
+    const char = e.emoji.native;
+    const ta = this.msgInputRef.nativeElement;
+    const pos = ta.selectionStart;
+    this.newMessageText =
+      this.newMessageText.slice(0, pos) + char + this.newMessageText.slice(pos);
+    ta.value = this.newMessageText;
+    ta.setSelectionRange(pos + char.length, pos + char.length);
+    ta.focus();
     this.isEmojiPickerOpen = false;
   }
 
   @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent): void {
+  onDocumentClick(ev: MouseEvent) {
     if (!this.isEmojiPickerOpen) return;
-
-    const target = event.target as HTMLElement;
-    const insidePicker = this.emojiPickerRef?.nativeElement.contains(target);
-    const onIcon = this.emojiButtonRef?.nativeElement.contains(target);
-
-    if (!insidePicker && !onIcon) {
-      this.isEmojiPickerOpen = false;
-    }
+    const t = ev.target as HTMLElement;
+    const inside = this.emojiPickerRef?.nativeElement.contains(t);
+    const onBtn = this.emojiBtnRef?.nativeElement.contains(t);
+    if (!inside && !onBtn) this.isEmojiPickerOpen = false;
   }
 
-  
-
-  
-
-  toggleMemberProfil(member?: User) {
-  
+  toggleMemberProfil(u?: User) {
     this.isChannelMemberProfilOpen = !this.isChannelMemberProfilOpen;
-    if (member) {
-      this.activChannelMemberProfil = member;
-    } else {
-      this.activChannelMemberProfil = null;
-    }
+    this.activChannelMemberProfil = u ?? null;
   }
 
   addChannelMember() {
     this.newChannelMembers = true;
   }
 
-
-  openAddMemberPopUp(){  
+  openAddMemberPopUp() {
     this.addMemberPopUp = true;
   }
-
-  closeAddMember(){
+  closeAddMember() {
     this.addMemberPopUp = false;
   }
 
-  onNewInputChange(): void {
+  onNewInputChange() {
     const val = this.newChatInput.trim();
     this.showNewSuggestions = !!val;
-  
     if (!val) {
       this.foundUsersNew = [];
       this.foundChannelsNew = [];
       return;
     }
-  
+
     const first = val.charAt(0);
     const query = val.slice(1).toLowerCase();
-  
+
     if (first === '@') {
-      this.userService.getAllUsers().then(all => {
-        this.foundUsersNew = all.filter(u =>
+      this.userService.getAllUsers().then((all) => {
+        this.foundUsersNew = all.filter((u) =>
           u.uName.toLowerCase().includes(query)
         );
         this.foundChannelsNew = [];
       });
     } else if (first === '#') {
-      this.channelService.getAllChannels().then(all => {
-        this.foundChannelsNew = all.filter(c =>
+      this.channelService.getAllChannels().then((all) => {
+        this.foundChannelsNew = all.filter((c) =>
           c.cName.toLowerCase().includes(query)
         );
         this.foundUsersNew = [];
       });
     } else {
-      this.userService.getAllUsers().then(all => {
-        this.foundUsersNew = all.filter(u =>
+      this.userService.getAllUsers().then((all) => {
+        this.foundUsersNew = all.filter((u) =>
           u.uEmail.toLowerCase().includes(val.toLowerCase())
         );
         this.foundChannelsNew = [];
@@ -639,20 +530,15 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   }
 
   selectUserNew(u: User) {
-    this.newChatInput = '';
-    this.showNewSuggestions = false;
-    this.openChat.emit({ 
-      chatType: 'private',
-      chatId: u.uId!
-    });
+    this.finishNewTarget('private', u.uId!);
   }
-  
   selectChannelNew(c: Channel) {
+    this.finishNewTarget('channel', c.cId!);
+  }
+
+  private finishNewTarget(type: 'private' | 'channel', id: string) {
     this.newChatInput = '';
     this.showNewSuggestions = false;
-    this.openChat.emit({
-      chatType: 'channel',
-      chatId: c.cId!
-    });
+    this.openChat.emit({ chatType: type, chatId: id });
   }
 }

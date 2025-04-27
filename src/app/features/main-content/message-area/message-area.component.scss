@@ -362,7 +362,7 @@ emoji-mart {
   background-color: #eceefe;
 }
 
-main{
+main {
   position: absolute;
   top: 0;
   left: 0;
@@ -379,7 +379,7 @@ main{
   animation: slideDownToBottom 0.8s ease-out forwards;
 }
 
-.memberAdd{
+.memberAdd {
   position: absolute;
   top: 0;
   left: 0;
@@ -390,7 +390,7 @@ main{
 }
 
 app-add-new-members {
-  @include flexBox(column, '', '',  20);
+  @include flexBox(column, "", "", 20);
   position: absolute;
   right: 20px;
   top: 192px;
@@ -399,11 +399,11 @@ app-add-new-members {
   border-radius: 30px 0px 30px 30px;
   background-color: white;
   z-index: 100;
-  padding: 40px
+  padding: 40px;
 }
 
-.openAddMemberPopUpButton{
-  @include flexBox('', center, center,  '');
+.openAddMemberPopUpButton {
+  @include flexBox("", center, center, "");
   border: none;
   width: 40px;
   height: 40px;
@@ -411,20 +411,20 @@ app-add-new-members {
   border: none;
   border-radius: 50px;
 }
-.openAddMemberPopUpButton:hover span{
-  color: #535AF1;
+.openAddMemberPopUpButton:hover span {
+  color: #535af1;
 }
 
 .personIconHover:hover {
   color: rgb(237, 30, 121);
 }
 
-.addButtonAfter{
+.addButtonAfter {
   display: none;
 }
 
-.addButtonBefore{
-  @include flexBox(column, '', '',  '');
+.addButtonBefore {
+  @include flexBox(column, "", "", "");
 }
 
 @media (max-width: 1000px) {
@@ -433,7 +433,11 @@ app-add-new-members {
     .chatbox-header {
       height: clamp(60px, calc(60px + 36 * (100vw - 450px) / 550), 96px);
       padding-block: clamp(10px, calc(10px + 14 * (100vw - 450px) / 550), 24px);
-      padding-inline: clamp(16px, calc(16px + 16 * (100vw - 450px) / 550), 32px);
+      padding-inline: clamp(
+        16px,
+        calc(16px + 16 * (100vw - 450px) / 550),
+        32px
+      );
     }
     .chatbox-textfield {
       position: relative;
@@ -454,16 +458,16 @@ app-add-new-members {
     }
   }
   .date-separator {
-    padding-inline: clamp(16px, calc(16px + 20 * (100vw - 450px) / 550), 36px);    
+    padding-inline: clamp(16px, calc(16px + 20 * (100vw - 450px) / 550), 36px);
   }
 }
 
 @media (max-width: 600px) {
-  .addButtonBefore{
+  .addButtonBefore {
     display: none;
   }
-  .addButtonAfter{
-    @include flexBox(column, '', '',  '');
+  .addButtonAfter {
+    @include flexBox(column, "", "", "");
   }
   .channel-header {
     .channel-members {

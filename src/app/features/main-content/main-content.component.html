@@ -40,6 +40,7 @@
       <div class="messageOut">
         <app-message-area
           class="chat-message-area"
+          [class.hide-chat]="isThreadOpen"
           [chatType]="chatType"
           [chatId]="chatId"
           [activeUserId]="activeUserId"

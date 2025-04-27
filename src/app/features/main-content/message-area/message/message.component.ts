@@ -360,24 +360,24 @@ export class MessageComponent implements OnInit {
     });
   }
 
-  getDayLabel(timestamp: Timestamp): string {
-    const date = timestamp.toDate();
-    const today = new Date();
-    const todayMid = new Date(
-      today.getFullYear(),
-      today.getMonth(),
-      today.getDate()
-    ).getTime();
-    const msgMid = new Date(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate()
-    ).getTime();
-
+  getDayLabel(mTime: any): string {
+    let date: Date;
+    if (mTime instanceof Date) {
+      date = mTime;
+    } else if (mTime && typeof mTime.toDate === 'function') {
+      date = mTime.toDate();
+    } else {
+      date = new Date(mTime);
+    }
+  
+    const today     = new Date();
+    const todayMid  = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
+    const msgMid    = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+  
     if (msgMid === todayMid) {
-      return 'heute';
+      return 'Heute';
     } else if (msgMid === todayMid - 86400000) {
-      return 'gestern';
+      return 'Gestern';
     } else {
       const d = String(date.getDate()).padStart(2, '0');
       const m = String(date.getMonth() + 1).padStart(2, '0');

@@ -51,7 +51,7 @@
         <div class="material-symbols tag-icon">keyboard_arrow_down</div>
       </a>
       <div class="channel-members">
-        <div (click)="toggleChannelMembers()">
+        <div class="channel-every-member" (click)="toggleChannelMembers()">
           @for (member of channelMembers.slice(0,3); track member) {
           <img src="/assets/img/{{ member.uUserImage }}" alt="" />
           } @if (channelMembers.length > 3) {
@@ -59,12 +59,13 @@
           }
           <h2>{{ channelMembers.length }}</h2>
         </div>
-        <span class="material-symbols add-person-icon">person_add</span>
-        <span
-          (click)="removeMember()"
-          class="material-symbols add-person-icon personIconHover"
-          >person_remove</span
-        >
+          <button class="addButtonBefore openAddMemberPopUpButton" (click)="openAddMemberPopUp()">
+            <span class="material-symbols add-person-icon" >person_add</span>
+          </button>
+          <button class="addButtonAfter openAddMemberPopUpButton" (click)="toggleChannelMembers()">
+            <span class="material-symbols add-person-icon" >person_add</span>
+          </button>
+        
       </div>
     </div>
     } @else if (chatType === 'thread') {
@@ -251,3 +252,19 @@
   }
 </section>
 }
+@if (addMemberPopUp) {
+  <div (click)="closeAddMember()" class="memberAdd" #memberAddWrapper>
+    <app-add-new-members 
+    (click)="$event.stopPropagation()"
+    [activeUserId]="activeUserId"
+    [channelId]="chatId"
+    [channelMembers]="channelMembers"
+    [channelName]="channelData?.cName"
+    [showInput]="true"
+    [showXLine]="false"  
+    (close)="closeAddMember()"
+  ></app-add-new-members>
+</div>
+}
+ 
+

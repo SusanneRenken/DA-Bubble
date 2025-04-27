@@ -23,6 +23,7 @@ export class AddNewMembersComponent {
   @Input() channelName: any = '';
   @Input() showInput: boolean = true;
   @Input() channelDescription: string = '';
+  @Input() showXLine: boolean = false; 
   @Output() close = new EventEmitter<void>();
   @Output() addMember = new EventEmitter<void>();
   @Output() showProfil = new EventEmitter<User>();

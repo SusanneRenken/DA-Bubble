@@ -1,5 +1,6 @@
-<div class="addInputField">
-    @if (memberAddElement) {
+
+  <div class="addInputField">
+    <ng-container *ngIf="memberAddElement; else inputBlock">
       <div class="inputNamePush">
         <div class="inputNameImgPush">
           <img [src]="'/assets/img/' + memberInputImage" alt="" />
@@ -9,21 +10,22 @@
           <div class="material-symbols closeIcon">close</div>
         </button>
       </div>
-    }
-    @else {
-      <input (keyup)="onKey($event)" type="text" placeholder="Name eingeben">
-    }
-    @if (showMember) {
-      <div class="showMembers">
-        @for (member of filteredMembers; track $index) {
-          <button (click)="memberNameAdd(member.uName, member.uUserImage, member.uId)" class="memberItem">
-            <div class="user-img-status">
-              <img [src]="'/assets/img/' + member.uUserImage" alt="" />
-              <span [ngClass]="member.uStatus ? 'online' : 'offline'"></span>
-            </div>
-            <h3>{{ member.uName }}</h3>
-          </button>
-        }
-      </div>
-    }
+    </ng-container>
+    <ng-template #inputBlock>
+      <input (keyup)="onKey($event)" (focus)="onInputFocus()" (blur)="onInputBlur()" type="text" placeholder="Name eingeben">
+    </ng-template>
+    <div class="showMembers" *ngIf="showMember">
+      <button
+        *ngFor="let member of filteredMembers; trackBy: trackById"
+        (mousedown)="memberNameAdd(member.uName, member.uUserImage, member.uId!)"
+        class="memberItem" >
+        <div class="user-img-status">
+          <img [src]="'/assets/img/' + member.uUserImage" alt="" />
+          <span [ngClass]="member.uStatus ? 'online' : 'offline'"></span>
+        </div>
+        <h3>{{ member.uName }}</h3>
+      </button>
+    </div>
   </div>
+
+  

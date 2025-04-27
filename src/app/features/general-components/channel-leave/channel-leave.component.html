@@ -98,7 +98,7 @@
                 </app-device-visible>
             </div>
             <div class="channelLeaveButton">
-                <button (click)="closeWindow()">Channel verlassen</button>
+                <button (click)="closeWindow(); removeMember()">Channel verlassen</button>
             </div>
         </div>
     </section>
@@ -130,6 +130,7 @@
         [channelId]="channelId"
         [channelName]="channelData?.cName"
         [showInput]="true"
+        [showXLine]="true"  
       ></app-add-new-members>
     </div>
   }

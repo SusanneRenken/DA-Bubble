@@ -55,8 +55,6 @@ export class AddChannelComponent{
     if (!name || !this.activeUserId) return;
     this.channelName = name;
     this.channelDescription = description;
-    this.showAddMember = false;
-    console.log(this.channelName, this.channelId, this.activeUserId);
-    
+    this.showAddMember = false;    
   }
 } 

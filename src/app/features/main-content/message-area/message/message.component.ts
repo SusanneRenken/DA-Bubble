@@ -35,6 +35,7 @@ export class MessageComponent implements OnInit {
   private messageService = inject(MessageService);
   private userSubscription: Subscription | null = null;
   private threadSub: Subscription | null = null;
+  private senderSub?: Subscription;
 
   @Input() chatType: 'private' | 'channel' | 'thread' | 'new' | null = null;
   @Input() message!: Message;
@@ -85,13 +86,13 @@ export class MessageComponent implements OnInit {
   }
 
   loadSenderData() {
-    this.userService
-      .getUser(this.message.mSenderId)
-      .then((userData) => {
-        this.senderData = userData;
-      })
-      .catch((error) => {
-        console.error('Fehler beim Laden des Users:', error);
+    this.senderSub?.unsubscribe();
+  
+    this.senderSub = this.userService
+      .getUserRealtime(this.message.mSenderId!)
+      .subscribe({
+        next : u  => this.senderData = u,
+        error: err => console.error('Sender-Live', err)
       });
   }
 

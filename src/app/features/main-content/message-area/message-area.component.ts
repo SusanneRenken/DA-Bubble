@@ -49,6 +49,8 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
 
   private messagesSubscription: Subscription | null = null;
   private channelSubscription: Subscription | null = null;
+  private chatPartnerSub?: Subscription;
+  private channelMemberSubs: Subscription[] = []; 
   private lastListLength = 0;
 
   @Input() chatType: 'private' | 'channel' | 'thread' | 'new' = 'private';
@@ -132,6 +134,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   ngOnDestroy(): void {
     this.messagesSubscription?.unsubscribe();
     this.channelSubscription?.unsubscribe();
+    this.channelMemberSubs.forEach(s => s.unsubscribe());
   }
 
   scrollToBottom() {
@@ -216,41 +219,50 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   }
 
   loadChatPartnerData(): void {
-    this.userService
-      .getUser(this.chatId)
-      .then((chatPartnerData) => {
-        this.chatPartner = chatPartnerData;
-      })
-      .catch((error) => {
-        console.error('Fehler beim Laden des Users:', error);
+    this.chatPartnerSub?.unsubscribe();
+    if (!this.chatId) return;
+  
+    this.chatPartnerSub = this.userService
+      .getUserRealtime(this.chatId)
+      .subscribe({
+        next : u  => this.chatPartner = u,
+        error: err => console.error('User-Live', err)
       });
   }
 
-  loadChannelMembers() {
-    if (!this.channelData || !this.channelData.cUserIds) {
-      this.channelMembers = [];
-      return;
-    }
-
-    const userIds = this.channelData.cUserIds;
-    if (!Array.isArray(userIds) || userIds.length === 0) {
-      this.channelMembers = [];
-      return;
-    }
-
-    this.userService
-      .getFilteredUsers(userIds)
-      .then((users) => {
-        this.channelMembers = users.sort((a, b) => {
-          if (a.uId === this.activeUserId) return -1;
-          if (b.uId === this.activeUserId) return 1;
-          return 0;
+  loadChannelMembers(): void {
+    this.channelMemberSubs.forEach(s => s.unsubscribe());
+    this.channelMemberSubs = [];
+    this.channelMembers = [];
+  
+    if (!this.channelData?.cUserIds?.length) return;
+  
+    for (const uid of this.channelData.cUserIds) {
+      const sub = this.userService
+        .getUserRealtime(uid)
+        .subscribe({
+          next: user => {
+            if (!user) return;
+            const idx = this.channelMembers.findIndex(u => u.uId === uid);
+            if (idx > -1) {
+              this.channelMembers[idx] = user;
+            } else {
+              this.channelMembers.push(user);
+            }
+  
+            this.channelMembers.sort((a, b) => {
+              if (a.uId === this.activeUserId) return -1;
+              if (b.uId === this.activeUserId) return 1;
+              return 0;
+            });
+          },
+          error: err => console.error('User-Realtime-Fehler', err)
         });
-      })
-      .catch((error) => {
-        console.error('Fehler beim Laden der Channel-Mitglieder:', error);
-      });
+  
+      this.channelMemberSubs.push(sub);
+    }
   }
+  
 
   shouldShowDateSeparator(index: number): boolean {
     if (index === 0) {

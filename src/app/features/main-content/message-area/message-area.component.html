@@ -59,13 +59,18 @@
           }
           <h2>{{ channelMembers.length }}</h2>
         </div>
-          <button class="addButtonBefore openAddMemberPopUpButton" (click)="openAddMemberPopUp()">
-            <span class="material-symbols add-person-icon" >person_add</span>
-          </button>
-          <button class="addButtonAfter openAddMemberPopUpButton" (click)="toggleChannelMembers()">
-            <span class="material-symbols add-person-icon" >person_add</span>
-          </button>
-        
+        <button
+          class="addButtonBefore openAddMemberPopUpButton"
+          (click)="openAddMemberPopUp()"
+        >
+          <span class="material-symbols add-person-icon">person_add</span>
+        </button>
+        <button
+          class="addButtonAfter openAddMemberPopUpButton"
+          (click)="toggleChannelMembers()"
+        >
+          <span class="material-symbols add-person-icon">person_add</span>
+        </button>
       </div>
     </div>
     } @else if (chatType === 'thread') {
@@ -251,20 +256,17 @@
 
   }
 </section>
-}
-@if (addMemberPopUp) {
-  <div (click)="closeAddMember()" class="memberAdd" #memberAddWrapper>
-    <app-add-new-members 
+} @if (addMemberPopUp) {
+<div (click)="closeAddMember()" class="memberAdd" #memberAddWrapper>
+  <app-add-new-members
     (click)="$event.stopPropagation()"
     [activeUserId]="activeUserId"
     [channelId]="chatId"
     [channelMembers]="channelMembers"
     [channelName]="channelData?.cName"
     [showInput]="true"
-    [showXLine]="false"  
+    [showXLine]="false"
     (close)="closeAddMember()"
   ></app-add-new-members>
 </div>
 }
- 
-

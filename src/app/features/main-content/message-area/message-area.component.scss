@@ -114,7 +114,7 @@ section {
 
   div {
     @include flexBox(row, initial, center, 10);
-    a {
+    span {
       color: rgb(121, 126, 243);
       font-size: 14px;
       text-decoration: none;
@@ -430,6 +430,21 @@ app-add-new-members {
 @media (max-width: 1000px) {
   section {
     border-radius: 0px;
+    .chatbox-header {
+      height: clamp(60px, calc(60px + 36 * (100vw - 450px) / 550), 96px);
+      padding-block: clamp(10px, calc(10px + 14 * (100vw - 450px) / 550), 24px);
+      padding-inline: clamp(16px, calc(16px + 16 * (100vw - 450px) / 550), 32px);
+    }
+    .chatbox-textfield {
+      position: relative;
+      flex-shrink: 0;
+      width: calc(
+        100% - 2 * clamp(16px, calc(16px + 16 * (100vw - 450px) / 550), 32px)
+      );
+      margin-block: clamp(16px, calc(16px + 24 * (100vw - 450px) / 550), 40px);
+      margin-inline: clamp(16px, calc(16px + 16 * (100vw - 450px) / 550), 32px);
+      padding: clamp(12px, calc(12px + 8 * (100vw - 450px) / 550), 20px);
+    }
   }
   .channel-header {
     .channel-members {
@@ -437,6 +452,9 @@ app-add-new-members {
         display: none;
       }
     }
+  }
+  .date-separator {
+    padding-inline: clamp(16px, calc(16px + 20 * (100vw - 450px) / 550), 36px);    
   }
 }
 

@@ -12,7 +12,7 @@ button {
 section {
   position: relative;
   width: 100%;
-  padding: 10px clamp(32px, calc(120px + 16 * (100vw - 1000px) / 920), 136px)
+  padding: 10px clamp(120px, calc(120px + 16 * (100vw - 1000px) / 920), 136px)
     10px clamp(32px, calc(32px + 16 * (100vw - 1000px) / 920), 48px);
   @include flexBox(row, initial, initial, 20);
   img {
@@ -31,7 +31,7 @@ section {
 
 .row-reverse {
   padding: 10px clamp(32px, calc(32px + 16 * (100vw - 1000px) / 920), 48px) 10px
-    clamp(32px, calc(120px + 16 * (100vw - 1000px) / 920), 136px);
+    clamp(120px, calc(120px + 16 * (100vw - 1000px) / 920), 136px);
   flex-direction: row-reverse;
   &:hover {
     .message-text {
@@ -282,4 +282,16 @@ emoji-mart {
 
 .d-none {
   display: none;
+}
+
+@media (max-width: 1000px) {
+  section {
+    padding: 10px clamp(50px, calc(50px + 70 * (100vw - 450px) / 550), 120px)
+      10px clamp(16px, calc(16px + 16 * (100vw - 450px) / 550), 32px);
+  }
+
+  .row-reverse {
+    padding: 10px clamp(16px, calc(16px + 16 * (100vw - 450px) / 550), 32px)
+      10px clamp(50px, calc(50px + 70 * (100vw - 450px) / 550), 120px);
+  }
 }

@@ -101,10 +101,8 @@ export class UserNameComponent {
   }
 
   
-  logOut() {
-    this.authService.logout();
-    setTimeout(() => {
-      this.router.navigate(['/access']);
-    }, 600);
+  async logOut() {
+    await this.authService.logout();
+    await this.router.navigate(['/access']);
   }
 }

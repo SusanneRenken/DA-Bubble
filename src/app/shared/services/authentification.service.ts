@@ -111,7 +111,7 @@ export class AuthentificationService {
       this.currentUid = result.user.uid;
       const guestData: UserInterface = {
         uId: this.currentUid,
-        uName: 'Guest',
+        uName: 'Gast',
         uEmail: '',
         uUserImage: 'assets/img/profile.png',
         uStatus: true,
@@ -138,30 +138,38 @@ export class AuthentificationService {
 
   async logout(): Promise<void> {
     const uid = this.currentUid;
-    const currentUser = this.auth.currentUser;
-    let deletePromise: Promise<any>;
-    if (currentUser && currentUser.isAnonymous && uid) {
-      const userRef = collection(this.firestore, 'users');
-      const userDocRef = doc(userRef, uid);
-      deletePromise = deleteDoc(userDocRef)
-      .then(() => {
-        return currentUser.delete();
-      });
-    } else {
-      deletePromise = Promise.resolve();
-    }
-    return deletePromise.then(() => {
-      const oldUid = this.currentUid;
-      if (oldUid) {
-        const userRef = collection(this.firestore, 'users');
-        const userDocRef = doc(userRef, oldUid);
-        return updateDoc(userDocRef, { uStatus: false });
-      } else {
-        return Promise.resolve();
+    const user = this.auth.currentUser;
+    
+    await this.handleAnonymousGuest(user, uid);
+    await this.updateUserStatus(uid);
+    await this.signOutUser();
+  }
+
+  private async handleAnonymousGuest(user: any | null, uid: string | null): Promise<void> {
+    if (user?.isAnonymous && uid) {
+      const userDocRef = doc(collection(this.firestore, 'users'), uid);
+      try {
+        await deleteDoc(userDocRef);
+        await user.delete();
+      } catch (deleteErr) {
+        console.warn('Gast-Löschen fehlgeschlagen, weiter mit Sign-Out', deleteErr);
       }
-    }).then(() => {
-      this.currentUid = null;
-      return this.auth.signOut();
-    });
+    }
+  }
+
+  private async updateUserStatus(uid: string | null): Promise<void> {
+    if (!uid) return;
+
+    const userDoc = doc(collection(this.firestore, 'users'), uid);
+    try {
+      await updateDoc(userDoc, { uStatus: false });
+    } catch (err) {
+      console.warn('Status-Update fehlgeschlagen (Dokument evtl. gelöscht)', err);
+    }
+  }
+
+  private async signOutUser(): Promise<void> {
+    await this.auth.signOut();
+    this.currentUid = null;
   }
 }

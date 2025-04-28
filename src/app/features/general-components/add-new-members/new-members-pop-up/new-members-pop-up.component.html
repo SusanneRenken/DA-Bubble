@@ -6,7 +6,7 @@
         @for (member of selectedMembers | slice:0:displayCount; track trackById) {
           <div class="containerDelete">
             <div class="inputNameImgPush">
-              <img [src]="'/assets/img/' + member.uUserImage" alt="{{member.uName}}" />
+              <img src="{{ member.uUserImage }}" alt="{{member.uName}}" />
               <span>{{ member.uName }}</span>
             </div>
             <button class="inputNamePushClose" (click)="removeMember(member)">
@@ -40,7 +40,7 @@
         @for(member of filteredMembers; track trackById) {
           <button (mousedown)="toggleMember(member)" [ngClass]="{ 'selected': isSelected(member) }" class="memberItem">
           <div class="user-img-status">
-            <img [src]="'/assets/img/' + member.uUserImage" alt="" />
+            <img src="{{ member.uUserImage }}" alt="" />
             <span [ngClass]="member.uStatus ? 'online' : 'offline'"></span>
           </div>
           <h3>{{ member.uName }}</h3>

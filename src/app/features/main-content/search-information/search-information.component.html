@@ -1,6 +1,5 @@
 <main>
   <section>
-    <!-- Gefundene Nutzer -->
     <div class="everyContactButton">
       <h1>Gefundene Nutzer</h1>
       <ng-container *ngIf="users.length > 0; else noUsers">
@@ -10,7 +9,7 @@
           class="userPhoto"
         >
           <img
-            [src]="'/assets/img/' + user.uUserImage"
+            [src]="user.uUserImage"
             alt="{{ user.uName }}"
           />
           <h3>{{ user.uName }}</h3>
@@ -21,7 +20,6 @@
       </ng-template>
     </div>
 
-    <!-- Gefundene Channels -->
     <div class="everyChannelButton">
       <h1>Gefundene Channels und Nutzer in Channels</h1>
       <ng-container *ngIf="channelsWithNames.length > 0; else noCh">
@@ -38,7 +36,6 @@
       </ng-template>
     </div>
 
-    <!-- Gefundene Nachrichten in Channels -->
     <div>
       <h1>Gefundene Nachrichten in Channels</h1>
       <ng-container *ngIf="matchedMessages.length > 0; else noChanMsgs">
@@ -58,7 +55,6 @@
       </ng-template>
     </div>
 
-    <!-- Gefundene private Nachrichten -->
     <div>
       <h1>Gefundene private Nachrichten</h1>
       <ng-container *ngIf="directMessages.length > 0; else noDirect">
@@ -78,7 +74,6 @@
       </ng-template>
     </div>
 
-    <!-- Gefundene Nachrichten in Threads -->
     <div>
       <h1>Gefundene Nachrichten in Threads</h1>
       <ng-container *ngIf="threadMessages.length > 0; else noThread">

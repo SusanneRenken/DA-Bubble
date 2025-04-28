@@ -24,7 +24,7 @@
       } @for (u of foundUsersNew; track u.uId) {
       <div (click)="selectUserNew(u)">
         <div class="user-img-status">
-          <img src="/assets/img/{{ u.uUserImage }}" alt="" />
+          <img src="{{ u.uUserImage }}" alt="" />
           <span [ngClass]="u.uStatus ? 'online' : 'offline'"></span>
         </div>
         <span>{{ u.uName }}</span>
@@ -38,7 +38,7 @@
     @if (chatType === 'private') {
     <div class="private-header" (click)="toggleProfile(chatPartner)">
       <div class="user-img-status">
-        <img src="/assets/img/{{ chatPartner?.uUserImage }}" alt="" />
+        <img src="{{ chatPartner?.uUserImage }}" alt="" />
         <span [ngClass]="chatPartner?.uStatus ? 'online' : 'offline'"></span>
       </div>
       <h1>{{ chatPartner?.uName }}</h1>
@@ -53,7 +53,7 @@
       <div class="channel-members">
         <div class="channel-every-member" (click)="toggleChannelMembers()">
           @for (member of channelMembers.slice(0,3); track member) {
-          <img src="/assets/img/{{ member.uUserImage }}" alt="" />
+          <img src="{{ member.uUserImage }}" alt="" />
           } @if (channelMembers.length > 3) {
           <div>...</div>
           }
@@ -122,7 +122,7 @@
     'private'){
     <div class="empty-private-chat">
       <div>
-        <img src="/assets/img/{{ chatPartner?.uUserImage }}" alt="" />
+        <img src="{{ chatPartner?.uUserImage }}" alt="" />
         <h1>{{ chatPartner?.uName }}</h1>
       </div>
       <p>

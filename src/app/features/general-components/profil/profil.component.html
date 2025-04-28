@@ -12,12 +12,12 @@
             </button>
         </header>
         @if (!showEditProfil) {
-            <img [src]="'/assets/img/' + userImage">
+            <img [src]="userImage">
         }
         @else {
             <div class="avatarsMain">
                 <button class="buttonImg" (click)="bigUserImg()">
-                    <img [src]="'/assets/img/' + userImage">
+                    <img [src]="userImage">
                 </button>
                 @if (showAvatarChoice) {
                     <div class="avatarChoice">

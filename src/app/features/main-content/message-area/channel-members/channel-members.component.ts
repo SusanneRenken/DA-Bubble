@@ -38,6 +38,7 @@ export class ChannelMembersComponent implements OnChanges {
   @Output() activChannelMemberProfilChange = new EventEmitter<User | null>();
   @Output() isChannelMemberProfilOpenChange = new EventEmitter<boolean>();
   @Output() close = new EventEmitter<void>();
+  @Output() openChat = new EventEmitter<{chatType: 'private'; chatId: string}>();
   @ViewChild('channelWrapper') channelWrapper?: ElementRef;
   @ViewChild('memberAddWrapper') memberAddWrapper?: ElementRef;
 

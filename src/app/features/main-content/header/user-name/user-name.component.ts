@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostListener, ViewChild, Input, inject} from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild, Input, inject, EventEmitter, Output} from '@angular/core';
 import { ProfilComponent } from '../../../general-components/profil/profil.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DeviceVisibleComponent } from '../../../../shared/services/responsive';
@@ -23,12 +23,15 @@ export class UserNameComponent {
   userName: string = '';
   userEmail: string = '';
   userImage: string = '';
+  userId: string | undefined = '';
   animateOut = false;
   windowSize = window.innerWidth
   @ViewChild('tabletToggleBtn') tabletToggleBtn?: ElementRef;
   @ViewChild('arrowToggleBtn') arrowToggleBtn?: ElementRef;
   @ViewChild('logOutBox') logOutBox?: ElementRef;
   @ViewChild('profilWrapper') profilWrapper?: ElementRef;
+
+  @Output() openChat = new EventEmitter<{chatType: 'private'; chatId: string}>();
 
   constructor(private route: ActivatedRoute, private userService: UserService, private router: Router) {}
 
@@ -42,6 +45,7 @@ export class UserNameComponent {
         this.userEmail = user.uEmail;
         this.userImage = user.uUserImage;
         this.userStatus = user.uStatus;
+        this.userId = user.uId;
       }
     });
   }

@@ -17,5 +17,8 @@
       >></app-search-bar
     >
   </app-device-visible>
-  <app-user-name [activeUserId]="activeUserId"></app-user-name>
+  <app-user-name
+    [activeUserId]="activeUserId"
+    (openChat)="openChat.emit($event)"
+  ></app-user-name>
 </header>

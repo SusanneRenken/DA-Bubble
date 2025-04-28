@@ -77,7 +77,7 @@
         }
         @if (showButton) {
             <div class="messageArea">
-                <button class="messageButton messageButtonBackgroundBlue">
+                <button (click)="onStartChat()" class="messageButton messageButtonBackgroundBlue">
                     <img src="assets/icons/mode_comment.svg">
                     <span>Nachricht</span>
                 </button>

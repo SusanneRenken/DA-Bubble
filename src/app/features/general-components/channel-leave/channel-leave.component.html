@@ -125,11 +125,13 @@
       [userImage]="activChannelMemberProfil?.uUserImage"
       [userName]="activChannelMemberProfil?.uName"
       [userEmail]="activChannelMemberProfil?.uEmail"
-      [userStatus]="activChannelMemberProfil?.uStatus"
+      [userStatus]="activChannelMemberProfil?.uStatus"    
+      [userId]="activChannelMemberProfil?.uId"
       #profilRef
       size="big"
       [showButton]="activeUserId !== activChannelMemberProfil?.uId"
       (close)="showProfil.emit()"
+      (openChat)="openChat.emit($event)" 
     ></app-profil>
 }
 @if (newChannelMembers) {

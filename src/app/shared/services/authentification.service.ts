@@ -125,7 +125,7 @@ export class AuthentificationService {
 
   async sendResetPasswordEmail(email: string): Promise<void> {
     const actionCodeSettings = {
-      url: 'http://localhost:4200/access',
+      url: 'https://dabubble-402.developerakademie.net/access',
       handleCodeInApp: true,
     };
     const usersCollection = collection(this.firestore, 'users');

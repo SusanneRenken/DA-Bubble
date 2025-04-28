@@ -11,9 +11,8 @@ import { NewMembersPopUpComponent } from './new-members-pop-up/new-members-pop-u
   standalone: true,
   imports: [CommonModule, FormsModule, NewMembersPopUpComponent],
   templateUrl: './add-new-members.component.html',
-  styleUrl: './add-new-members.component.scss'
+  styleUrl: './add-new-members.component.scss',
 })
-
 export class AddNewMembersComponent {
   selectedOption: string = '';
   @Input() channelMembers: User[] = [];
@@ -22,39 +21,40 @@ export class AddNewMembersComponent {
   @Input() channelName: any = '';
   @Input() showInput: boolean = true;
   @Input() channelDescription: string = '';
-  @Input() showXLine: boolean = false; 
+  @Input() showXLine: boolean = false;
   @Output() close = new EventEmitter<void>();
   @Output() addMember = new EventEmitter<void>();
   @Output() showProfil = new EventEmitter<User>();
-  
+
   memberAddElement: boolean = false;
   memberInputId: string = '';
   memberInputAdd: string = '';
   memberInputImage: string = '';
   showMember: boolean = false;
   selectedUserIds: string[] = [];
- 
 
-  constructor(private channelService: ChannelService, private userService: UserService) {}
+  constructor(
+    private channelService: ChannelService,
+    private userService: UserService
+  ) {}
 
   emitClose() {
     this.close.emit();
   }
 
   memberNameAdd(memberName: string, memberImage: string, memberId: string) {
-    this.memberInputAdd   = memberName;
+    this.memberInputAdd = memberName;
     this.memberInputImage = memberImage;
-    this.memberInputId    = memberId;
+    this.memberInputId = memberId;
     console.log(this.memberInputId);
-    
+
     if (!this.selectedUserIds.includes(memberId)) {
       this.selectedUserIds.push(memberId);
     }
-  
+
     this.memberAddElement = true;
-    this.showMember       = false;
+    this.showMember = false;
   }
-  
 
   inputNameClose(): void {
     this.memberAddElement = false;
@@ -62,7 +62,6 @@ export class AddNewMembersComponent {
     this.memberInputImage = '';
     this.memberInputId = '';
   }
-
 
   async addNewChannelMembers() {
     if (!this.channelId || this.selectedUserIds.length === 0) return;
@@ -74,32 +73,43 @@ export class AddNewMembersComponent {
       this.selectedUserIds = [];
       this.close.emit();
     } catch (err) {}
-  }  
+  }
 
   async createNewChannel(name: string, description: string) {
     if (!name || !this.activeUserId) return;
-    const ids = [...this.selectedUserIds];
+
+    let ids: string[];
+
+    if (this.selectedOption === 'option1') {
+      const allUsers = await this.userService.allUsers();
+
+      ids = allUsers
+        .map((u) => u.uId)
+        .filter((id): id is string => typeof id === 'string');
+    } else {
+      ids = [...this.selectedUserIds];
+    }
+
     if (!ids.includes(this.activeUserId)) {
       ids.unshift(this.activeUserId);
     }
-    const newChannelId = await this.userService.createChannelWithUsers(
+
+    await this.userService.createChannelWithUsers(
       name,
       description,
       this.activeUserId,
       ids
     );
-    this.emitClose()
+    this.emitClose();
   }
-  
 
   onMemberAdded(userId: string) {
     if (!this.selectedUserIds.includes(userId)) {
       this.selectedUserIds.push(userId);
     }
   }
-  
 
   onMemberRemoved(userId: string) {
-    this.selectedUserIds = this.selectedUserIds.filter(id => id !== userId);
+    this.selectedUserIds = this.selectedUserIds.filter((id) => id !== userId);
   }
 }

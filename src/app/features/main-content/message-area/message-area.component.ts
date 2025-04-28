@@ -64,6 +64,8 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   }>();
 
   @ViewChild('scrollContainer') private scrollCont!: ElementRef<HTMLDivElement>;
+  @ViewChild('composer')
+  private composerRef?: MessageComposerComponent;
 
   isLoading = true;
   isEditChannelOpen = false;
@@ -88,7 +90,10 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   ngAfterViewInit(): void {
     setTimeout(() => {
       this.isLoading = false;
-      setTimeout(() => this.scrollToBottom(), 2000);
+      setTimeout(() => {
+        this.scrollToBottom();
+        this.composerRef?.focus();
+      }, 2000);
     }, 500);
   }
 
@@ -97,6 +102,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
       this.prepareForReload();
       this.loadMessages();
       this.loadChatData();
+      setTimeout(() => this.composerRef?.focus(), 500);
     }
   }
 
@@ -131,7 +137,8 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   }
 
   private handleIncomingMessages(msgs: Message[]) {
-    const hasNew = msgs.length > this.messages.length;
+    const initial = this.messages.length === 0;
+    const more    = msgs.length > this.messages.length;
     this.messages = msgs;
 
     if (this.chatType === 'thread') {
@@ -139,7 +146,8 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
       this.setThreadContextName(msgs[0]);
     }
 
-    if (hasNew) setTimeout(() => this.scrollToBottom(), 1000);
+    if (more)    setTimeout(() => this.scrollToBottom(), 100);
+    if (initial) setTimeout(() => this.composerRef?.focus(), 0);
   }
 
   private setThreadContextName(parent: Message) {

@@ -46,6 +46,10 @@ export class MessageComposerComponent {
   private userService = inject(UserService);
   private channelService = inject(ChannelService);
 
+  focus(): void {
+    setTimeout(() => this.messageInputRef?.nativeElement.focus());
+  }
+
   handleKeyDown(event: KeyboardEvent) {
     if (
       event.key === 'Enter' &&

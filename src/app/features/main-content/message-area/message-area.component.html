@@ -172,6 +172,7 @@
   @if (chatType != 'new') {
   <div class="chatbox-textfield thread-margin">
     <app-message-composer
+    #composer
       [placeholder]="getPlaceholder()"
       (messageSend)="sendMessageFromComposer($event)"
       >>

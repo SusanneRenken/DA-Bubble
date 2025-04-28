@@ -82,3 +82,11 @@ footer {
     border-radius: 30px;
   }
 }
+
+@media (min-width: 1920px) {
+  :host {
+    width: 1770px;
+    margin-inline: auto;
+  }
+  
+}

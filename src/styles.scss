@@ -109,7 +109,7 @@ textarea {
   font-family: "Nunito";
   font-style: normal;
   font-weight: 400;
-  src: url("/assets/font/nunito-v26-latin-regular.woff2") format("woff2");
+  src: url("assets/font/nunito-v26-latin-regular.woff2") format("woff2");
 }
 
 @font-face {
@@ -117,7 +117,7 @@ textarea {
   font-family: "Nunito";
   font-style: normal;
   font-weight: 600;
-  src: url("/assets/font/nunito-v26-latin-600.woff2") format("woff2");
+  src: url("assets/font/nunito-v26-latin-600.woff2") format("woff2");
 }
 
 @font-face {
@@ -125,7 +125,7 @@ textarea {
   font-family: "Nunito";
   font-style: normal;
   font-weight: 700;
-  src: url("/assets/font/nunito-v26-latin-700.woff2") format("woff2");
+  src: url("assets/font/nunito-v26-latin-700.woff2") format("woff2");
 }
 
 /* figtree-regular - latin */
@@ -134,7 +134,7 @@ textarea {
   font-family: "Figtree";
   font-style: normal;
   font-weight: 400;
-  src: url("/assets/font/figtree-v7-latin-regular.woff2") format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+  src: url("assets/font/figtree-v7-latin-regular.woff2") format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
 /* figtree-500 - latin */
 @font-face {
@@ -142,7 +142,7 @@ textarea {
   font-family: "Figtree";
   font-style: normal;
   font-weight: 500;
-  src: url("/assets/font/figtree-v7-latin-500.woff2") format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+  src: url("assets/font/figtree-v7-latin-500.woff2") format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
 
 .font-figtree {
@@ -156,7 +156,7 @@ textarea {
 @font-face {
   font-family: "MaterialSymbols";
   font-style: normal;
-  src: url("/assets/font/MaterialSymbolsRounded.woff2") format("woff");
+  src: url("assets/font/MaterialSymbolsRounded.woff2") format("woff");
 }
 
 .material-symbols {

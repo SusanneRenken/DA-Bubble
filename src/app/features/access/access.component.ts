@@ -35,7 +35,7 @@ export class AccessComponent implements OnInit {
 
   handleResetMode() {
     const mode = this.route.snapshot.queryParamMap.get('mode');
-    if (mode === 'reset') {
+    if (mode === 'resetPassword') {
       this.changeComponent('conPassword');
     }
   }

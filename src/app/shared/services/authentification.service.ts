@@ -124,15 +124,11 @@ export class AuthentificationService {
   }
 
   async sendResetPasswordEmail(email: string): Promise<void> {
-    const actionCodeSettings = {
-      url: 'https://dabubble-402.developerakademie.net/access',
-      handleCodeInApp: true,
-    };
     const usersCollection = collection(this.firestore, 'users');
     const q = query(usersCollection, where('uEmail', '==', email));
     return getDocs(q).then((querySnapshot) => {
       if (querySnapshot.empty) return Promise.reject('No user with this email found');
-      return sendPasswordResetEmail(this.auth, email, actionCodeSettings);
+      return sendPasswordResetEmail(this.auth, email);
     });
   }
 

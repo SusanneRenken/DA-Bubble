@@ -400,7 +400,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
     const img = ev.target as HTMLImageElement;
     if (!img.dataset['fallback']) {
       img.dataset['fallback'] = 'true';
-      img.src = '/assets/img/avatar-placeholder.png';
+      img.src = 'assets/img/profile.png';
     }
   }
 }

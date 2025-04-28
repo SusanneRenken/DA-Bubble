@@ -1,3 +1,11 @@
+@import "@fontsource/nunito/400.css";
+@import "@fontsource/nunito/600.css";
+@import "@fontsource/nunito/700.css";
+@import "@fontsource/figtree/400.css";
+@import "@fontsource/figtree/500.css";
+@import "@fontsource/material-symbols-rounded/400.css";
+@import "@fontsource/material-symbols-rounded/700.css";
+
 * {
   padding: 0;
   margin: 0;
@@ -104,47 +112,6 @@ textarea {
   gap: $gap + px;
 }
 
-@font-face {
-  font-display: swap;
-  font-family: "Nunito";
-  font-style: normal;
-  font-weight: 400;
-  src: url("./assets/font/nunito-v26-latin-regular.woff2") format("woff2");
-}
-
-@font-face {
-  font-display: swap;
-  font-family: "Nunito";
-  font-style: normal;
-  font-weight: 600;
-  src: url("./assets/font/nunito-v26-latin-600.woff2") format("woff2");
-}
-
-@font-face {
-  font-display: swap;
-  font-family: "Nunito";
-  font-style: normal;
-  font-weight: 700;
-  src: url("./assets/font/nunito-v26-latin-700.woff2") format("woff2");
-}
-
-/* figtree-regular - latin */
-@font-face {
-  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-  font-family: "Figtree";
-  font-style: normal;
-  font-weight: 400;
-  src: url("./assets/font/figtree-v7-latin-regular.woff2") format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
-}
-/* figtree-500 - latin */
-@font-face {
-  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-  font-family: "Figtree";
-  font-style: normal;
-  font-weight: 500;
-  src: url("./assets/font/figtree-v7-latin-500.woff2") format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
-}
-
 .font-figtree {
   font-family: "Figtree";
 }
@@ -153,17 +120,11 @@ textarea {
   font-family: "Nunito";
 }
 
-@font-face {
-  font-family: "MaterialSymbols";
-  font-style: normal;
-  src: url("./assets/font/MaterialSymbolsRounded.woff2") format("woff");
-}
-
 .material-symbols {
   cursor: pointer;
   width: 24px;
   height: 24px;
-  font-family: "MaterialSymbols";
+  font-family: "Material Symbols Rounded";
   font-size: 24px;
   font-weight: 400;
   border-radius: 50%;

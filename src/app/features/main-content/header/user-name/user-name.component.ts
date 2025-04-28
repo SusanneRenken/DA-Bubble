@@ -105,6 +105,6 @@ export class UserNameComponent {
     this.authService.logout();
     setTimeout(() => {
       this.router.navigate(['/access']);
-    }, 400);
+    }, 600);
   }
 }

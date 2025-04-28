@@ -320,7 +320,8 @@ export class MessageComponent implements OnInit {
       .catch(console.error);
   }
 
-  handleDocumentClick(ev: MouseEvent) {
+  @HostListener('document:click', ['$event'])
+  handleDocumentClick(ev: MouseEvent): void {
     if (this.isPermanentDeleteOpen) return;
 
     const target = ev.target as HTMLElement;

@@ -59,10 +59,7 @@ export class ChannelMembersComponent implements OnChanges {
 
     if (!insideSection && !clickedInsideAddMember) {
       this.newChannelMembers = false;
-    }
-    if (!insideSection) {
-      this.close.emit();
-    }
+    }    
   }
 
   toggleMemberProfil(member?: User) {

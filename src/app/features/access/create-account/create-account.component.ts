@@ -53,11 +53,8 @@ export class CreateAccountComponent implements OnInit, OnDestroy {
       regPassword: new FormControl('', [Validators.required, Validators.minLength(8), strongPasswordValidator()]),
       acceptPrivacy: new FormControl(false, Validators.requiredTrue),
     });
-
     this.sub = this.registerForm.valueChanges.subscribe(() => {
-      if (this.confError) {
-        this.confError = '';
-      }
+      if (this.confError) this.confError = '';
     });
   }
 
@@ -65,19 +62,25 @@ export class CreateAccountComponent implements OnInit, OnDestroy {
     this.sub?.unsubscribe();
   }
 
-  onSubmit() {
-    if (this.registerForm.valid) {
-      const { regEmail, regPassword, regName } = this.registerForm.value;
-      this.authService.prepareRegistration(regEmail, regPassword, regName)
-      .then(() => this.changeComponent('avatar'))
-      .catch((error) => {
-        console.error('Email is taken: ', error);
-        if (error) this.confError = 'Diese E-Mail ist bereits vorhanden! Bitte geben sie eine andere E-Mail-Adresse ein.';
-      });
-    }
+  onSubmit(): void {
+    if (!this.registerForm.valid) return;
+
+    const { regEmail, regPassword, regName } = this.registerForm.value;
+    this.registerUser(regEmail, regPassword, regName);
   }
 
-  changeComponent(componentName: string) {
+  private registerUser(email: string, password: string, name: string): void {
+    this.authService.prepareRegistration(email, password, name)
+    .then(() => this.changeComponent('avatar'))
+    .catch(error => this.handleRegisterError(error));
+  }
+  
+  private handleRegisterError(error: any): void {
+    console.error('Email is taken:', error);
+    this.confError = 'Diese E-Mail ist bereits vorhanden! Bitte geben Sie eine andere E-Mail-Adresse ein.';
+  }
+
+  changeComponent(componentName: string): void {
     this.componentSwitcher.setComponent(componentName);
   }
 }

@@ -10,7 +10,7 @@ import { ComponentSwitcherService } from '../../../shared/services/component-swi
 export class ImprintComponent {
   constructor(public componentSwitcher: ComponentSwitcherService) {}
 
-  goBack() {
+  goBack(): void {
     this.componentSwitcher.setComponent('login');
   }
 }

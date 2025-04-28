@@ -22,6 +22,10 @@ form {
   }
 }
 
+.input-container {
+  @include mixin.errMess($text-color: vari.$rose);
+}
+
 .btn-container {
   width: 100%;
   @include mixin.dFlex($justify: flex-end);

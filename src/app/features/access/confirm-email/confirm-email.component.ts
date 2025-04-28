@@ -45,28 +45,34 @@ export class ConfirmEmailComponent implements OnInit, OnDestroy {
     this.sub?.unsubscribe();
   }
 
-  onSubmit() {
-    if (this.confirmForm.valid) {
-      const email = this.confirmForm.value.conEmail;
-      this.authService.sendResetPasswordEmail(email)
-      .then(() => {
-        console.log('Mail is confirmed: ', this.confirmForm.value);
-        this.isConfirmationVisible = true;
-        setTimeout(() => {
-          this.isConfirmationVisible = false;
-        }, 2000);
-        setTimeout(() => {
-          this.changeComponent('goToEmail');
-        }, 3000);
-      })
-      .catch(error => {
-        console.error('Error when sending the reset email:', error);
-        if (error) this.findEmail = 'Es wurde keine übereinstimmende E-Mail gefunden.';
-      });
-    }
+  onSubmit(): void {
+    if (!this.confirmForm.valid) return;  
+    const email = this.confirmForm.value.conEmail;
+    this.sendResetEmail(email);
   }
 
-  changeComponent(componentName: string) {
+  private sendResetEmail(email: string): void {
+    this.authService.sendResetPasswordEmail(email)
+    .then(() => this.handleSendSuccess())
+    .catch(error => this.handleSendError(error));
+  }
+  
+  private handleSendSuccess(): void {
+    this.toggleConfirmation(true);
+    setTimeout(() => this.toggleConfirmation(false), 2000);
+    setTimeout(() => this.changeComponent('goToEmail'), 3000);
+  }
+  
+  private toggleConfirmation(visible: boolean): void {
+    this.isConfirmationVisible = visible;
+  }
+  
+  private handleSendError(error: any): void {
+    console.error('Error when sending the reset email:', error);
+    this.findEmail = 'Es wurde keine übereinstimmende E-Mail gefunden.';
+  }
+
+  changeComponent(componentName: string): void {
     this.componentSwitcher.setComponent(componentName);
   }
 }

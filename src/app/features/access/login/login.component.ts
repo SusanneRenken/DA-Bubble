@@ -39,9 +39,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     });
 
     this.sub = this.loginForm.valueChanges.subscribe(() => {
-      if (this.authError) {
-        this.authError = '';
-      }
+      if (this.authError) this.authError = '';
     });
   }
 
@@ -49,35 +47,50 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.sub?.unsubscribe();
   }
 
-  onSubmit() {
-    if (this.loginForm.valid) {
-      const { email, password } = this.loginForm.value;
-      this.authService.loginWithEmail(email, password)
-      .then(result => {
-        if (result) {
-          this.isConfirmationVisible = true;
-          setTimeout(() => this.isConfirmationVisible = false, 2000);
-          setTimeout(() => {
-            const uid = this.authService.currentUid;
-            this.router.navigate(['/home', uid]);
-          }, 3000);
-        }
-      })
-      .catch(error => {
-        console.error('Login error:', error);
-        switch(error.code) {
-          case 'auth/invalid-credential':
-            this.authError = 'E-Mail oder Passwort ist nicht korrekt.';
-            break;
-          default:
-            this.authError = 'Ein Fehler ist aufgetreten. Bitte versuche es erneut.';
-            break;
-        }
-      });
+  onSubmit(): void {
+    if (!this.loginForm.valid) return;
+  
+    const { email, password } = this.loginForm.value;
+    this.attemptLogin(email, password);
+  }
+
+  private attemptLogin(email: string, password: string): void {
+    this.authService.loginWithEmail(email, password)
+    .then(success => {
+      if (success) this.showConfirmationAndNavigate();
+    })
+    .catch(error => this.handleLoginError(error));
+  }
+  
+  private showConfirmationAndNavigate(): void {
+    this.toggleConfirmation(true);
+    setTimeout(() => this.toggleConfirmation(false), 2000);
+  
+    setTimeout(() => {
+      const uid = this.authService.currentUid;
+      this.router.navigate(['/home', uid]);
+    }, 3000);
+  }
+  
+  private toggleConfirmation(visible: boolean): void {
+    this.isConfirmationVisible = visible;
+  }
+  
+  private handleLoginError(error: any): void {
+    console.error('Login error:', error);
+    this.authError = this.mapErrorToMessage(error.code);
+  }
+  
+  private mapErrorToMessage(code: string): string {
+    switch (code) {
+      case 'auth/invalid-credential':
+        return 'E-Mail oder Passwort ist nicht korrekt.';
+      default:
+        return 'Ein Fehler ist aufgetreten. Bitte versuche es erneut.';
     }
   }
 
-  onLoginWithGoogle() {
+  onLoginWithGoogle(): void {
     this.authService.loginWithGoogle()
     .then(result => {
       if (result) {
@@ -99,7 +112,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     .catch(error => console.error('Guest login error:', error));
   }
 
-  changeComponent(componentName: string) {
+  changeComponent(componentName: string): void {
     this.componentSwitcher.setComponent(componentName);
   }
 }

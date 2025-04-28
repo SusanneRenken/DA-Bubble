@@ -21,10 +21,6 @@
   }
 }
 
-.input-container {
-  @include mixin.errMess($text-color: vari.$rose);
-}
-
 .checkboxItem {
   @include mixin.dFlex();
 

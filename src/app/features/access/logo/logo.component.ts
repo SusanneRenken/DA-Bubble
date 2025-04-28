@@ -90,7 +90,7 @@ export class LogoComponent implements OnInit {
 
   constructor(private bp: BreakpointObserver) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     localStorage.setItem('showAnimation', 'true');
     
     this.bp.observe(['(max-width: 700px)']).pipe(take(1)).subscribe(result => {

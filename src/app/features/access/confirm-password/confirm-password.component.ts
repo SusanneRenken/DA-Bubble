@@ -58,37 +58,52 @@ export class ConfirmPasswordComponent implements OnInit {
     return (!!this.newPassword.errors && this.newPassword.errors['passwordMismatch']);
   }
 
-  onSubmit() {
-    if (this.newPassword.valid) {
-      if (!this.oobCode) {
-        console.error('Kein gültiger oobCode gefunden.');
-        return;
-      }
-      const { newPassword, conPassword } = this.newPassword.value;
-      if (newPassword === conPassword) {
-        this.authService
-          .confirmResetPassword(this.oobCode, newPassword)
-          .then(() => {
-            this.isConfirmationVisible = true;
-            setTimeout(() => this.isConfirmationVisible = false, 2000);
-            setTimeout(() => {
-              this.router.navigate(['/access']);
-              this.changeComponent('login');
-            }, 3000);
-          })
-          .catch((error) => {
-            console.error('Error when resetting the password:', error);
-          });
-      }
+  onSubmit(): void {
+    if (!this.newPassword.valid) return;
+
+    if (!this.oobCode) {
+      console.error('No valid oobCode found.');
+      return;
     }
+
+    const { newPassword, conPassword } = this.newPassword.value;
+    this.processPasswordReset(newPassword, conPassword);
   }
 
-  goBackToEmailConfirm() {
+  private processPasswordReset(newPwd: string, confirmPwd: string): void {
+    if (newPwd !== confirmPwd) {
+      return;
+    }
+  
+    this.authService.confirmResetPassword(this.oobCode!, newPwd)
+    .then(() => this.handleResetSuccess())
+    .catch(error => this.handleResetError(error));
+  }
+  
+  private handleResetSuccess(): void {
+    this.toggleConfirmation(true);
+    setTimeout(() => this.toggleConfirmation(false), 2000);
+  
+    setTimeout(() => {
+      this.router.navigate(['/access']);
+      this.changeComponent('login');
+    }, 3000);
+  }
+  
+  private toggleConfirmation(visible: boolean): void {
+    this.isConfirmationVisible = visible;
+  }
+  
+  private handleResetError(error: any): void {
+    console.error('Error when resetting the password:', error);
+  }
+
+  goBackToEmailConfirm(): void {
     this.router.navigate(['/access']);
     this.changeComponent('conMail');
   }
 
-  changeComponent(componentName: string) {
+  changeComponent(componentName: string): void {
     this.componentSwitcher.setComponent(componentName);
   }
 }

@@ -30,7 +30,7 @@ export class SelectAvatarComponent {
     this.username = this.authService.registrationData?.username;
   }
 
-  goBack() {
+  goBack(): void {
     this.authService.registrationData = null;
     this.changeComponent('signin');
   }
@@ -44,19 +44,30 @@ export class SelectAvatarComponent {
       console.error('No avatar selected!');
       return;
     }
-    this.authService.completeRegistration(this.selectedAvatar)
-      .then(() => {
-        this.isConfirmationVisible = true;
-        setTimeout(() => this.isConfirmationVisible = false, 2000);
-        setTimeout(() => this.changeComponent('login'), 3000);
-      })
-      .catch((error) => {
-        console.error('Error when adding the profile picture: ', error);
-      }
-    );
+    this.completeAvatarSelection(this.selectedAvatar);
   }
 
-  changeComponent(componentName: string) {
+  private completeAvatarSelection(avatar: string): void {
+    this.authService.completeRegistration(avatar)
+    .then(() => this.handleAvatarSuccess())
+    .catch(error => this.handleAvatarError(error));
+  }
+  
+  private handleAvatarSuccess(): void {
+    this.toggleConfirmation(true);
+    setTimeout(() => this.toggleConfirmation(false), 2000);
+    setTimeout(() => this.changeComponent('login'), 3000);
+  }
+  
+  private toggleConfirmation(visible: boolean): void {
+    this.isConfirmationVisible = visible;
+  }
+  
+  private handleAvatarError(error: any): void {
+    console.error('Error when adding the profile picture:', error);
+  }
+
+  changeComponent(componentName: string): void {
     this.componentSwitcher.setComponent(componentName);
   }
 }

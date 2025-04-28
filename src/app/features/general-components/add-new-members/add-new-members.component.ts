@@ -43,6 +43,8 @@ export class AddNewMembersComponent {
 
   
   memberNameAdd(memberName: any, memberImage: any, memberId: any) {
+    console.log(this.selectedUserIds);
+    
     this.memberInputAdd = memberName;
     this.memberInputImage = memberImage;
     this.memberInputId = memberId;

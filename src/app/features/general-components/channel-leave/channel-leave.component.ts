@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output, inject} from '@angular/core';
 import { Channel } from '../../../shared/interfaces/channel.interface';
 import { Firestore} from '@angular/fire/firestore';
-import { map } from 'rxjs/operators';
+import {map, takeUntil } from 'rxjs/operators';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../../shared/services/user.service';
 import { User } from '../../../shared/interfaces/user.interface';
@@ -11,6 +11,7 @@ import { DeviceVisibleComponent } from '../../../shared/services/responsive';
 import { MemberListComponent } from '../member-list/member-list.component';
 import { ProfilComponent } from '../profil/profil.component';
 import { AddNewMembersComponent } from '../add-new-members/add-new-members.component';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-channel-leave',
@@ -20,7 +21,7 @@ import { AddNewMembersComponent } from '../add-new-members/add-new-members.compo
   styleUrl: './channel-leave.component.scss',
 })
 
-export class ChannelLeaveComponent implements OnInit {
+export class ChannelLeaveComponent implements OnInit{
   @Input() channelData: Channel | null = null;
   @Input() channelMembers:  User[] = [];
   @Input() activeUserId: string | null = null;  
@@ -36,6 +37,7 @@ export class ChannelLeaveComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
   @Output() nameUpdated = new EventEmitter<string>();
 
+  private destroy$ = new Subject<void>();
   channelNameSave: boolean = false;
   descriptionSave: boolean = false;
   editedChannelName: string = '';
@@ -47,7 +49,9 @@ export class ChannelLeaveComponent implements OnInit {
   isVisible: boolean = false;
   hasInteracted: boolean = false;
   animateOut = false;
+  nameExists = false;
   createdByUserName: string = 'Unbekannt';
+
   firestore = inject(Firestore);
 
   constructor(private userService: UserService, private channelService: ChannelService) {}
@@ -55,15 +59,35 @@ export class ChannelLeaveComponent implements OnInit {
   ngOnInit(): void {
     this.userService.getEveryUsers()
       .pipe(
-        map((users: User[]) =>
-          users.find((user) => user.uId === this.channelData?.cCreatedByUser)
-        )
+        map(users => users.find(u => u.uId === this.channelData?.cCreatedByUser)),
+        takeUntil(this.destroy$)
       )
-      .subscribe((user) => {
+      .subscribe(user => {
         if (user) {
           this.createdByUserName = user.uName;
         }
       });
+  }
+
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+
+  async onNameInput(value: string) {
+    this.editedChannelName = value;
+    const trimmed = value.trim();
+    if (trimmed.length < 3 || trimmed === this.channelData?.cName) {
+      this.nameExists = false;
+      return;
+    }
+    try {
+      this.nameExists = await this.channelService.checkChannelNameExists(trimmed);
+    } catch (err) {
+      this.nameExists = false;
+    }
   }
 
 
@@ -109,17 +133,25 @@ export class ChannelLeaveComponent implements OnInit {
 
   saveNewName() {
     const newName = this.editedChannelName.trim();
-    if (!newName || !this.channelData?.cId) return;
-    this.channelService.updateChannelName(this.channelData.cId, newName)
+    if (
+      !newName ||
+      newName.length < 3 ||
+      this.nameExists ||
+      !this.channelData?.cId
+    ) {
+      return;
+    }
+    this.channelService
+      .updateChannelName(this.channelData.cId, newName)
       .then(() => {
         this.channelData!.cName = newName;
         this.nameUpdated.emit(newName);
         this.toggleEdit();
       })
-      .catch(() => {});
+      .catch();
   }
 
-
+  
   saveDescription() {
     const newDesc = this.editedDescription.trim();
     if (!newDesc || !this.channelData?.cId) return;

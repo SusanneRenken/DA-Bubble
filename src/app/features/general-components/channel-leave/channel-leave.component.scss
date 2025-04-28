@@ -16,7 +16,7 @@ section {
   top: 50%;
   background-color: white;
   transform: translate(-50%, -50%);
-  height: 620px;
+  height: fit-content;
   width: 870px;
   border-radius: 0 30px 30px 30px;
   padding: 40px;
@@ -183,6 +183,10 @@ header {
     resize: none;
     font-family: "Nunito", sans-serif;
   }
+}
+
+.errorText{
+  color: rgb(237, 30,121);
 }
 
 .editOverMobil{

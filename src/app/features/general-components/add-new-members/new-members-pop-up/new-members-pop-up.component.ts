@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, ViewChild, ElementRef, ViewChildren, QueryList } from '@angular/core';
 import { UserService } from '../../../../shared/services/user.service';
 import { User } from '../../../../shared/interfaces/user.interface';
 import { FormsModule } from '@angular/forms';
@@ -20,7 +20,7 @@ export class NewMembersPopUpComponent implements OnInit{
   filteredMembers: User[] = [];
   selectedMembers: User[] = [];
   selectedUser?: User; 
-  displayCount = 2;
+  displayCount = 1;
 
   @Input() channelMembers: User[] = [];
   @Input() memberAddElement: boolean = false;
@@ -31,35 +31,48 @@ export class NewMembersPopUpComponent implements OnInit{
   @Output() memberNameAddEvent    = new EventEmitter<string>();
   @Output() memberNameRemoveEvent = new EventEmitter<string>();
   @Output() inputNameCloseEvent = new EventEmitter<void>();
+  @ViewChild('memberInput', { static: true }) memberInput!: ElementRef<HTMLInputElement>;
+  @ViewChildren('containerDelete', { read: ElementRef })
+    pills!: QueryList<ElementRef<HTMLDivElement>>;
+  private resizeObserver!: ResizeObserver;
 
   constructor(private userService: UserService, private route: ActivatedRoute, private router: Router, private breakpoint: BreakpointObserver) {}
-
+  
   async ngOnInit() {
-    this.breakpoint
-      .observe(['(max-width: 600px)'])
-      .subscribe(state => {
-        this.displayCount = state.matches ? 1 : 2;
-      });
-      const currentUserId = this.getUserIdFromUrl();
-      const allUsers = await this.userService.allUsers();
-      if (currentUserId) {
-        this.selectedUser = allUsers.find(u => u.uId === currentUserId) ?? undefined;
-        this.channelMembers = allUsers.filter(u => u.uId !== currentUserId);
-      } else {
-        this.channelMembers = allUsers;
-      }
-      this.filteredMembers = [...this.channelMembers];
+    const allUsers = await this.userService.allUsers();
+    this.channelMembers = allUsers;
+    this.filteredMembers = [...this.channelMembers];
   }
 
 
-  private getUserIdFromUrl(): string | null {
-    const paramId = this.route.snapshot.paramMap.get('id');
-    if (paramId) {
-      return paramId;
+  ngAfterViewInit() {
+    this.resizeObserver = new ResizeObserver(() => this.updateDisplayCount());
+    this.resizeObserver.observe(this.memberInput.nativeElement);
+    this.updateDisplayCount();
+    this.pills.changes.subscribe(() => this.updateDisplayCount());
+  }
+
+
+  ngOnDestroy() {
+    this.resizeObserver.disconnect();
+  }
+
+
+  private updateDisplayCount() {
+    const containerW = this.memberInput.nativeElement.clientWidth;
+    const pillsArr = this.pills.toArray();
+    if (!pillsArr.length) {
+      this.displayCount = 1;
+      return;
     }
-    const path = this.router.url.split('?')[0];
-    const segments = path.split('/');
-    return segments.length ? segments.pop()! : null;
+    const pillEl = pillsArr[0].nativeElement;
+    const style   = getComputedStyle(pillEl);
+    const totalPillW =
+      pillEl.offsetWidth +
+      parseFloat(style.marginLeft) +
+      parseFloat(style.marginRight);
+    const rawCount = Math.floor(containerW / totalPillW);
+    this.displayCount = Math.max(1, Math.min(rawCount, 2));
   }
 
 
@@ -130,4 +143,3 @@ export class NewMembersPopUpComponent implements OnInit{
 
   trackById(_: number, u: User) { return u.uId; }
 }
-

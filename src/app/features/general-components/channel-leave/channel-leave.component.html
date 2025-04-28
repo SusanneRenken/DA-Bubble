@@ -29,16 +29,31 @@
                 <div [ngClass]="{ 'fade-in': hasInteractedName && isVisibleName, 'fade-out': hasInteractedName && !isVisibleName }"  class="nameSaveBox">
                     <div class="saveBox">
                         <h3>Channel-Name</h3>
-                        <button class="editOverMobil editButton" (click)="saveNewName()">Speichern</button>
-                        <button class="editOverTablet editButton" (click)="saveNewName()">
+                        <button class="editOverMobil editButton" (click)="saveNewName()"
+                            [disabled]=" !editedChannelName.trim() || editedChannelName.trim().length < 3 || nameExists">
+                             Speichern
+                        </button>
+                        <button  [disabled]=" !editedChannelName.trim() || editedChannelName.trim().length < 3 || nameExists" 
+                            class="editOverTablet editButton" (click)="saveNewName()">
                             <div class="material-symbols closeIcon">check_circle</div>
                         </button>
                     </div>
                     <div class="editChannelName" >
                         <img src="/assets/icons/hashtag.svg">
-                        <input [(ngModel)]="editedChannelName" [placeholder]="editedChannelName"/>
+                        <input [(ngModel)]="editedChannelName"  (ngModelChange)="onNameInput($event)" [placeholder]="editedChannelName"/>
                     </div>
                 </div>
+                @if ( hasInteractedName && editedChannelName.trim().length > 0 &&
+                    editedChannelName.trim().length < 3 && editedChannelName.trim() !== channelData?.cName) {
+                    <span class="errorText">
+                      Der Channel-Name muss mindestens 3 Buchstaben lang sein !
+                    </span>
+                  }
+                @if ( hasInteractedName && editedChannelName.trim().length >= 3 &&nameExists) {
+                    <span class="errorText">
+                      Bitte nutzen Sie einen anderen Channel-Name !
+                    </span>
+                }
             }
             @if (editDescription) {
                 <div [ngClass]="{ 'fade-in': hasInteracted && isVisible, 'fade-out': hasInteracted && !isVisible }" class="descriptionBox">
@@ -116,7 +131,6 @@
       [showButton]="activeUserId !== activChannelMemberProfil?.uId"
       (close)="showProfil.emit()"
     ></app-profil>
-
 }
 @if (newChannelMembers) {
     <div (click)="closeAddMember()" class="memberAdd" #memberAddWrapper>

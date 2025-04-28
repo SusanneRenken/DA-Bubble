@@ -1,8 +1,8 @@
 
   <div class="addInputField" (focusout)="onFocusOut($event)" 
-  tabindex="0">
+  tabindex="0" >
     @if (selectedMembers.length > 0) {
-      <div class="inputNamePush">
+      <div class="inputNamePush" #memberInput>
         @for (member of selectedMembers | slice:0:displayCount; track trackById) {
           <div class="containerDelete">
             <div class="inputNameImgPush">
@@ -33,7 +33,6 @@
         type="text"
         placeholder="Name eingeben">
       }
-      
     }
     @if (showMember) {
       <div class="showMembers" (click)="$event.stopPropagation()">

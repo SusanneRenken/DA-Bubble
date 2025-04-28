@@ -2,7 +2,8 @@
   <app-header
     [messageIn]="messageIn"
     (messageInToggle)="handleMessageInToggle($event)"
-    (onChatOpen)="handleOpenChat($event)"
+    (openChat)="handleOpenChat($event)"
+    (openThread)="handleOpenThread($event)"
     [activeUserId]="activeUserId"
   ></app-header>
   @if (!messageIn) {
@@ -44,6 +45,7 @@
       <div class="messageOut">
         <app-message-area
           class="chat-message-area"
+          [class.hide-chat]="isThreadOpen"
           [chatType]="chatType"
           [chatId]="chatId"
           [activeUserId]="activeUserId"

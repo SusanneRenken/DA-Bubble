@@ -14,7 +14,8 @@
       <app-search-information
       [searchText]="searchValue"
       (close)="closeSearchInfo()"
-      (openChat)="onChatOpen($event)">
+      (openChat)="openChat.emit($event)"
+      (openThread)="openThread.emit($event)">
     </app-search-information>
     }
   

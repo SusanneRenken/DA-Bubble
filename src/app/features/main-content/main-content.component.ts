@@ -4,9 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 import { HeaderComponent } from './header/header.component';
 import { ContactBarComponent } from './contact-bar/contact-bar.component';
 import { MessageAreaComponent } from './message-area/message-area.component';
-import { SearchBarComponent } from "./header/search-bar/search-bar.component";
+import { SearchBarComponent } from './header/search-bar/search-bar.component';
 import { DeviceVisibleComponent } from '../../shared/services/responsive';
-
 
 @Component({
   selector: 'app-main-content',
@@ -17,35 +16,33 @@ import { DeviceVisibleComponent } from '../../shared/services/responsive';
     ContactBarComponent,
     MessageAreaComponent,
     SearchBarComponent,
-    DeviceVisibleComponent
-],
+    DeviceVisibleComponent,
+  ],
   templateUrl: './main-content.component.html',
   styleUrls: ['./main-content.component.scss'],
 })
 export class MainContentComponent {
   private route = inject(ActivatedRoute);
-  smallSize: boolean = false;
-  messageIn: boolean = false;
+
+  smallSize = false;
+  messageIn = false;
+  sectionVisible = true;
+
   activeUserId: string | null = null;
 
   chatType: 'private' | 'channel' | 'thread' | 'new' = 'private';
   chatId: string | null = null;
 
   threadId: string | null = null;
-  isThreadOpen: boolean = false;
-
-  sectionVisible = true;
+  isThreadOpen = false;
 
   ngOnInit(): void {
-    this.activeUserId = this.route.snapshot.paramMap.get('activeUserId');   
+    this.activeUserId = this.route.snapshot.paramMap.get('activeUserId');
     this.chatId = this.activeUserId;
     this.chatType = 'private';
-    this.checkScreenSize();
-    window.addEventListener('resize', this.checkScreenSize.bind(this));
-  }
 
-  checkScreenSize() {
-    this.smallSize = window.innerWidth < 1000;
+    this.updateScreenSize();
+    window.addEventListener('resize', () => this.updateScreenSize());
   }
 
   toggleSection() {
@@ -56,11 +53,25 @@ export class MainContentComponent {
     this.messageIn = state;
   }
 
-  handleOpenChat(eventData: { chatType: 'private' | 'channel' | 'new'; chatId: string | null }) {
-    this.chatType = eventData.chatType;
-    this.chatId = eventData.chatId;
+  handleOpenChat(event: {
+    chatType: 'private' | 'channel' | 'new';
+    chatId: string | null;
+  }) {
+    this.chatType = event.chatType;
+    this.chatId = event.chatId;
     this.isThreadOpen = false;
     this.threadId = '';
+  }
+
+  handleOpenThread(event: {
+    chatType: 'channel' | 'private';
+    chatId: string;
+    threadId: string;
+  }) {
+    this.chatType = event.chatType;
+    this.chatId = event.chatId;
+    this.isThreadOpen = true;
+    this.threadId = event.threadId;
   }
 
   openThread(threadId: string) {
@@ -71,5 +82,9 @@ export class MainContentComponent {
   closeThread() {
     this.isThreadOpen = false;
     this.threadId = null;
+  }
+
+  private updateScreenSize() {
+    this.smallSize = window.innerWidth < 1000;
   }
 }

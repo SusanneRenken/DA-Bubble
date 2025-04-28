@@ -1,96 +1,102 @@
 <main>
-    <section>
-      <div class="everyContactButton">
-        <h1>Gefundene Nutzer</h1>
-        @if (users.length > 0) {
-          <ng-container>
-            <button
-              *ngFor="let user of users"
-              (click)="selectChat(user.uId!, 'private')"
-              class="userPhoto"
-            >
-              <img [src]="'/assets/img/' + user.uUserImage" alt="{{ user.uName }}">
-              <h3>{{ user.uName }}</h3>
-            </button>
-          </ng-container>
-        }
-        @else {
-          <ng-template>
-            <span>Keine Nutzer gefunden!</span>
-          </ng-template>
-        }
-      </div>
-      <div class="everyChannelButton">
-        <h1>Gefundene Channels und Nutzer in Channels</h1>
-        @if (channelsWithNames.length > 0) {
-          <ng-container>
-            <button
-              *ngFor="let ch of channelsWithNames"
-              (click)="selectChat(ch.cId, 'channel')"
-              class="channelName"
-            >
-              <h3># {{ ch.cName }}</h3>
-            </button>
-          </ng-container>
-        }
-        @else {
-          <ng-template>
-            <span>Keine Channels gefunden!</span>
-          </ng-template>
-        }
-      </div>
-      <div class="everyChannelButton">
-        <h1>Gefundene Nachrichten in Channels</h1>
-        @if (matchedMessages.length > 0) {
-          <ng-container>
-            <button
-              *ngFor="let msg of matchedMessages"
-              (click)="selectChat(msg.channelId, 'channel')"
-              class="messagesInChannels">
-              <h3><strong>#{{ msg.channelName }}</strong>: {{ msg.mText }}</h3>
-            </button>
-          </ng-container>
-        }
-        @else {
-          <ng-template>
-            <span>Keine Nachrichten in Channels gefunden!</span>
-          </ng-template>
-        }
-      </div>
-      <div>
-        <h1>Gefundene private Nachrichten</h1>
-        @if (directMessages.length > 0) {
-          <ng-container>
-            <button
-              *ngFor="let msg of directMessages"
-              (click)="selectChat(msg.otherUserId, 'private')"
-              class="messagesInChannels"
-            >
-              <p><strong>{{ msg.otherUserName }}</strong>: {{ msg.mText }}</p>
-            </button>
-          </ng-container>
-        }
-        @else {
-          <ng-template>
-            <span>Keine private Nachrichten gefunden!</span>
-          </ng-template>
-        }
-      </div>
-      <div>
-        <h1>Gefundene Nachrichten in Threads</h1>
-        @if (threadMessages.length > 0) {
-          <ng-container>
-            <button *ngFor="let msg of threadMessages" class="messagesInChannels">
-              <p><strong>Thread {{ msg.threadId }}</strong>: {{ msg.mText }}</p>
-            </button>
-          </ng-container>
-        }
-        @else {
-          <ng-template>
-            <span>Keine Nachrichten in Threads gefunden!</span>
-          </ng-template>
-        }
-      </div>
-    </section>
-  </main>
-  
+  <section>
+    <!-- Gefundene Nutzer -->
+    <div class="everyContactButton">
+      <h1>Gefundene Nutzer</h1>
+      <ng-container *ngIf="users.length > 0; else noUsers">
+        <button
+          *ngFor="let user of users"
+          (click)="selectChat(user.uId!, 'private')"
+          class="userPhoto"
+        >
+          <img
+            [src]="'/assets/img/' + user.uUserImage"
+            alt="{{ user.uName }}"
+          />
+          <h3>{{ user.uName }}</h3>
+        </button>
+      </ng-container>
+      <ng-template #noUsers>
+        <span>Keine Nutzer gefunden!</span>
+      </ng-template>
+    </div>
+
+    <!-- Gefundene Channels -->
+    <div class="everyChannelButton">
+      <h1>Gefundene Channels und Nutzer in Channels</h1>
+      <ng-container *ngIf="channelsWithNames.length > 0; else noCh">
+        <button
+          *ngFor="let ch of channelsWithNames"
+          (click)="selectChat(ch.cId, 'channel')"
+          class="channelName"
+        >
+          <h3># {{ ch.cName }}</h3>
+        </button>
+      </ng-container>
+      <ng-template #noCh>
+        <span>Keine Channels gefunden!</span>
+      </ng-template>
+    </div>
+
+    <!-- Gefundene Nachrichten in Channels -->
+    <div>
+      <h1>Gefundene Nachrichten in Channels</h1>
+      <ng-container *ngIf="matchedMessages.length > 0; else noChanMsgs">
+        <button
+          *ngFor="let msg of matchedMessages"
+          (click)="selectChat(msg.channelId, 'channel')"
+          class="everyInfo"
+        >
+          <h3>
+            <strong>#{{ msg.channelName }}</strong
+            >: {{ msg.mText }}
+          </h3>
+        </button>
+      </ng-container>
+      <ng-template #noChanMsgs>
+        <span>Keine Nachrichten in Channels gefunden!</span>
+      </ng-template>
+    </div>
+
+    <!-- Gefundene private Nachrichten -->
+    <div>
+      <h1>Gefundene private Nachrichten</h1>
+      <ng-container *ngIf="directMessages.length > 0; else noDirect">
+        <button
+          *ngFor="let msg of directMessages"
+          (click)="selectChat(msg.otherUserId, 'private')"
+          class="everyInfo"
+        >
+          <p>
+            <strong>{{ msg.otherUserName }}</strong
+            >: {{ msg.mText }}
+          </p>
+        </button>
+      </ng-container>
+      <ng-template #noDirect>
+        <span>Keine private Nachrichten gefunden!</span>
+      </ng-template>
+    </div>
+
+    <!-- Gefundene Nachrichten in Threads -->
+    <div>
+      <h1>Gefundene Nachrichten in Threads</h1>
+      <ng-container *ngIf="threadMessages.length > 0; else noThread">
+        <button
+          *ngFor="let msg of threadMessages"
+          class="everyInfo"
+          (click)="selectThread(msg)"
+        >
+          <p>
+            <strong>Thread</strong
+            >:
+            {{ msg.mText }}
+          </p>
+        </button>
+      </ng-container>
+      <ng-template #noThread
+        >Keine Nachrichten in Threads gefunden!</ng-template
+      >
+    </div>
+  </section>
+</main>

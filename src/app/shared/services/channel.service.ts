@@ -65,9 +65,8 @@ export class ChannelService {
           cUserIds: updatedUserIds,
         });
   
-        console.log('✅ User-ID wurde am Ende des Arrays hinzugefügt.');
       } else {
-        console.log('ℹ️ User-ID ist bereits vorhanden.');
+        console.error('ℹ️ User-ID ist bereits vorhanden.');
       }
     } else {
       console.error('❌ Channel nicht gefunden.');

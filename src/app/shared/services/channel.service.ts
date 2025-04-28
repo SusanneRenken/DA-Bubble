@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Firestore, collectionData, deleteDoc  } from '@angular/fire/firestore';
-import { collection, doc, getDoc, getDocs, setDoc,updateDoc ,serverTimestamp, onSnapshot} from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, setDoc,updateDoc ,serverTimestamp, onSnapshot, query, where} from 'firebase/firestore';
 import { Channel } from '../interfaces/channel.interface';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -110,6 +110,12 @@ export class ChannelService {
     await updateDoc(channelRef, { cName: newName.trim() });
   }
 
+  async checkChannelNameExists(name: string): Promise<boolean> {
+    const col = collection(this.firestore, 'channels');
+    const q = query(col, where('cName', '==', name));
+    const snap = await getDocs(q);
+    return !snap.empty;
+  }
 
   async updateChannelDescription(channelId: string, newDescription: string): Promise<void> {
     const channelRef = doc(this.firestore, 'channels', channelId);

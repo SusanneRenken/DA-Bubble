@@ -18,20 +18,9 @@ h1{
     margin-bottom: 8px;
 }
 
-main::-webkit-scrollbar{
-    width: 10px;
-}
-
 main::-webkit-scrollbar-track{
-    background-color: white;
-    border-radius: 8px;
     margin-top: 40px;
     margin-bottom: 40px;
-}
-
-main::-webkit-scrollbar-thumb{
-    background: linear-gradient(#ECEEFE, #ECEEFE);
-    border-radius: 8px;
 }
 
 section{
@@ -64,6 +53,19 @@ section{
     @include flexBox("", left, center, 4);
     background-color: white;
     width: 220px;
+    padding: 8px 24px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    &:hover{
+        background-color: #ECEEFE;
+    }
+}
+
+.messagesInChannels{
+    @include flexBox("", left, center, 4);
+    background-color: white;
+    width: fit-content;
     padding: 8px 24px;
     border: none;
     border-radius: 25px;

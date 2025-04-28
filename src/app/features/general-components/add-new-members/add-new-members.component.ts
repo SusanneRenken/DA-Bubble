@@ -5,7 +5,6 @@ import { ChannelService } from '../../../shared/services/channel.service';
 import { UserService } from '../../../shared/services/user.service';
 import { FormsModule } from '@angular/forms';
 import { NewMembersPopUpComponent } from './new-members-pop-up/new-members-pop-up.component';
-import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-add-new-members',
@@ -33,6 +32,7 @@ export class AddNewMembersComponent {
   memberInputAdd: string = '';
   memberInputImage: string = '';
   showMember: boolean = false;
+  selectedUserIds: string[] = [];
  
 
   constructor(private channelService: ChannelService, private userService: UserService) {}
@@ -68,35 +68,31 @@ export class AddNewMembersComponent {
     }
   }
 
-  
-  private async getSelectedUserIds(): Promise<string[]> {
-    let userIds: string[] = [];
-    if (this.selectedOption === 'option1') {
-      const allUsers = await firstValueFrom(this.userService.getEveryUsers());
-      userIds = allUsers
-        .map(user => user.uId)
-        .filter((id): id is string => typeof id === 'string');
-    } else if (this.selectedOption === 'option2') {
-      userIds = [this.memberInputId];
-    }
-    return userIds;
-  }
-  
 
   async createNewChannel(name: string, description: string) {
     if (!name || !this.activeUserId) return;
-    let userIds = await this.getSelectedUserIds();
-    if (!userIds.includes(this.activeUserId)) {
-      userIds.unshift(this.activeUserId);
+    const ids = [...this.selectedUserIds];
+    if (!ids.includes(this.activeUserId)) {
+      ids.unshift(this.activeUserId);
     }
     const newChannelId = await this.userService.createChannelWithUsers(
       name,
       description,
       this.activeUserId,
-      userIds
+      ids
     );
-    this.channelId = newChannelId;
-    this.inputNameClose();
-    this.emitClose();
+    this.emitClose()
+  }
+  
+
+  onMemberAdded(userId: string) {
+    if (!this.selectedUserIds.includes(userId)) {
+      this.selectedUserIds.push(userId);
+    }
+  }
+  
+
+  onMemberRemoved(userId: string) {
+    this.selectedUserIds = this.selectedUserIds.filter(id => id !== userId);
   }
 }

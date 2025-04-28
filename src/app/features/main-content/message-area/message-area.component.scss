@@ -400,34 +400,35 @@ app-add-new-members {
   padding: 40px
 }
 
-.openAddMemberPopUpButton{
-  @include flexBox('', center, center,  '');
-  border: none;
+.openAddMemberPopUpButton {
+  @include flexBox('', center, center);
   width: 40px;
   height: 40px;
   background-color: #eceefe;
-  border: none;
   border-radius: 50px;
-}
-.openAddMemberPopUpButton:hover span{
-  color: #535AF1;
-}
-
-.addButtonAfter{
-  display: none;
-}
-
-.addButtonBefore{
-  @include flexBox(column, '', '',  '');
+  &.addButtonBefore {
+  }
+  &.addButtonAfter {
+    display: none;
+    @media (max-width: 600px) {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+  &:hover span {
+    color: #535AF1;
+  }
 }
 
 @media (max-width: 600px) {
-  .addButtonBefore{
-    display: none;
+  .openAddMemberPopUpButton.addButtonBefore {
+    @media (max-width: 600px) {
+      display: none;  
+    }
   }
-  .addButtonAfter{
-    @include flexBox(column, '', '',  '');
-  }
+
   .channel-header {
     .channel-members {
       div {

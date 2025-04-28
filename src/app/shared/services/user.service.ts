@@ -136,8 +136,7 @@ export class UserService {
     }
   }
 
-  
-  
+    
   async createChannelWithUsers( name: string, description: string, userId: string, userIds: string[] ): Promise<string | void> {
     if (!name || !userId || !userIds.length) return;
     const channelsCollectionRef = collection(this.firestore, 'channels');
@@ -171,7 +170,6 @@ export class UserService {
     return getDocs(usersCollection).then(snap => snap.docs.map(doc => doc.data() as User));
   }
  
-
 
   updateUserImage(userId: string, imageFileName: string): Promise<void> {
     const userDocRef = doc(this.firestore, 'users', userId);

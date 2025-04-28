@@ -7,23 +7,31 @@ import { DeviceVisibleComponent } from '../../../shared/services/responsive';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [ CommonModule, SearchBarComponent, UserNameComponent, DeviceVisibleComponent],
+  imports: [
+    CommonModule,
+    SearchBarComponent,
+    UserNameComponent,
+    DeviceVisibleComponent,
+  ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
-
 export class HeaderComponent {
   @Input() activeUserId!: string | null;
   @Input() messageIn!: boolean;
- 
-  @Output() messageInToggle = new EventEmitter<boolean>();
-  @Output() onChatOpen = new EventEmitter<{ chatType: 'private' | 'channel'; chatId: string }>();
 
+  @Output() messageInToggle = new EventEmitter<boolean>();
+  @Output() openChat = new EventEmitter<{
+    chatType: 'private' | 'channel' | 'new';
+    chatId: string;
+  }>();
+  @Output() openThread = new EventEmitter<{
+    chatType: 'channel' | 'private';
+    chatId: string;
+    threadId: string;
+  }>();
   toggleMessageInView() {
     this.messageInToggle.emit(false);
   }
 
-  openChat(eventData: { chatType: 'private' | 'channel'; chatId: string }): void {
-    this.onChatOpen.emit(eventData);
-  }
 }

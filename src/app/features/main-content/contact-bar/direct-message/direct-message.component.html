@@ -20,14 +20,14 @@
             @for (user of activeUsers$ | async; track $index) {
                 <button (click)="selectPrivateChat(user.uId); someAction()" class="directUser">
                     <div class="user-img-status">
-                        <img [src]="'/assets/img/' + user.uUserImage" alt="" />
+                        <img [src]="user.uUserImage" alt="" />
                         <span [ngClass]="user.uStatus === 'true' || user.uStatus === true ? 'online' : 'offline'"></span>
                     </div>
                     <span>{{ user.uName }} (Du)</span>
                 </button>
                 <button (click)="selectPrivateChat(user.uId); someAction()" class="directUser" *ngFor="let user of inactiveUsers$ | async">
                     <div class="user-img-status">
-                        <img [src]="'/assets/img/' + user.uUserImage" alt="" />
+                        <img [src]="user.uUserImage" alt="" />
                         <span [ngClass]="user.uStatus === 'true' || user.uStatus === true ? 'online' : 'offline'"></span>
                     </div>
                   <span>{{ user.uName }}</span>

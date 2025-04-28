@@ -256,4 +256,10 @@ export class MessageService {
       snap.docs.map((doc) => doc.data() as Message)
     );
   }
+
+  async getMessageById(id: string): Promise<Message | undefined> {
+    const docRef  = doc(this.firestore, 'messages', id);
+    const docSnap = await getDoc(docRef);
+    return docSnap.exists() ? ({ mId: docSnap.id, ...(docSnap.data() as Message) }) : undefined;
+  }
 }

@@ -3,7 +3,7 @@
   [class.edit-open]="isEditOpen"
   [class.thread]="chatType === 'thread'"
 >
-  <img src="/assets/img/{{ senderData?.uUserImage }}" alt="" />
+  <img src="{{ senderData?.uUserImage }}" alt="" />
 
   @if (isEditOpen && message.mSenderId === activeUserId) {
   <div class="edit-message">

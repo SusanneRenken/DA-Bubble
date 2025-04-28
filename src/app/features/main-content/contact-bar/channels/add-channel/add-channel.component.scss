@@ -101,9 +101,20 @@ header {
 }
 
 .channelFields {
-  @include flexBox(column, space-between, "", "");
-  height: 105px;
+  @include flexBox(column, space-between, "", 10);
+  height: fit-content;
   width: 800px;
+}
+
+.errorText{
+  color: rgb(237, 30, 121)
+}
+
+.addChannelButton.disabled,
+.addChannelButton[disabled] {
+  background-color: #ccc;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .channelField {
@@ -157,18 +168,6 @@ input::placeholder {
 
 textarea::placeholder {
   @include fontStyle(18px, #686868, 400);
-}
-textarea::-webkit-scrollbar {
-  width: 8px;
-}
-
-textarea::-webkit-scrollbar-thumb {
-  background-color: #eceefe;
-  border-radius: 4px;
-}
-
-textarea::-webkit-scrollbar-track {
-  background: white;
 }
 
 .addChannel {

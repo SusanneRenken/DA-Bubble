@@ -19,6 +19,7 @@ import { AddNewMembersComponent } from '../add-new-members/add-new-members.compo
   templateUrl: './channel-leave.component.html',
   styleUrl: './channel-leave.component.scss',
 })
+
 export class ChannelLeaveComponent implements OnInit {
   @Input() channelData: Channel | null = null;
   @Input() channelMembers:  User[] = [];
@@ -47,11 +48,9 @@ export class ChannelLeaveComponent implements OnInit {
   hasInteracted: boolean = false;
   animateOut = false;
   createdByUserName: string = 'Unbekannt';
-
   firestore = inject(Firestore);
 
   constructor(private userService: UserService, private channelService: ChannelService) {}
-
 
   ngOnInit(): void {
     this.userService.getEveryUsers()
@@ -86,12 +85,13 @@ export class ChannelLeaveComponent implements OnInit {
     this.isVisible = false;
     setTimeout(() => {
       this.editDescription = !this.editDescription;
-      if (!this.editDescription) {
-        this.editedDescription = '';
+      if (!this.editDescription && this.channelData?.cDescription) {
+        this.editedDescription = this.channelData.cDescription;
       }
       this.isVisible = true;
     }, 200);
   }
+
 
   async removeMember() {
     if (!this.activeUserId || !this.channelData?.cId) return;
@@ -100,6 +100,7 @@ export class ChannelLeaveComponent implements OnInit {
       this.activeUserId
     );
   }
+
 
   closeWindow() {  
     this.close.emit();
@@ -117,7 +118,6 @@ export class ChannelLeaveComponent implements OnInit {
       })
       .catch(() => {});
   }
-  
 
 
   saveDescription() {
@@ -139,5 +139,4 @@ export class ChannelLeaveComponent implements OnInit {
       this.newChannelMembersChange.emit(this.newChannelMembers);
     }, 800);
   }
-  
 }

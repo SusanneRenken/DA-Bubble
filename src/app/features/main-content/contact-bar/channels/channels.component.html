@@ -42,7 +42,10 @@
             </button>
         </section>
     }
-    <app-add-channel [activeUserId]="activeUserId" *ngIf="showAddChannel" (close)="toggleAddChannel()"></app-add-channel>
+    @if (showAddChannel) {
+        <app-add-channel [activeUserId]="activeUserId" (close)="toggleAddChannel()"></app-add-channel>
+    }
+    
 </main>
 
 @if (isPermanentDeleteOpen && openChannelId) {

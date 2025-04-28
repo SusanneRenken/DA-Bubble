@@ -12,12 +12,12 @@
             </button>
         </header>
         @if (!showEditProfil) {
-            <img [src]="'/assets/img/' + userImage">
+            <img [src]="userImage">
         }
         @else {
             <div class="avatarsMain">
                 <button class="buttonImg" (click)="bigUserImg()">
-                    <img [src]="'/assets/img/' + userImage">
+                    <img [src]="userImage">
                 </button>
                 @if (showAvatarChoice) {
                     <div class="avatarChoice">
@@ -34,29 +34,37 @@
             <div class="nameActive">
                 <div class="nameEdit">
                     <span>{{ userName }}</span>
-                    <a *ngIf="!showButton" (click)="onEditClick()">Bearbeiten</a>
-                    <button *ngIf="!showButton" (click)="onEditClick()" class="editIconShow">
-                        <div class="material-symbols editIcon">Edit</div>
-                    </button>
+                    @if (!showButton) {
+                        <a (click)="onEditClick()">Bearbeiten</a>
+                        <button (click)="onEditClick()" class="editIconShow">
+                            <div class="material-symbols editIcon">Edit</div>
+                        </button>
+                    }
                 </div>
-                <div class="status" *ngIf="isActive">
-                    <img src="/assets/img/green_point.png">
-                    <span class="statusActive">Aktive</span>
-                </div>
-                <div class="status" *ngIf="!isActive">
-                    <img src="/assets/img/grey_point.png">
-                    <span class="statusAbsent">Abwesend</span>
-                </div>
+                @if (isActive) {
+                    <div class="status">
+                        <img src="/assets/img/green_point.png">
+                        <span class="statusActive">Aktive</span>
+                    </div>
+                }
+                @else {
+                    <div class="status">
+                        <img src="/assets/img/grey_point.png">
+                        <span class="statusAbsent">Abwesend</span>
+                    </div>
+                }
             </div>
         }
         @else {
-            <div class="editInput" *ngIf="showEditProfil">
-                <div class="editAccountText">
-                    <img src="/assets/icons/account_circle.svg">
-                    <h2>Vollständiger Name</h2>
+            @if (showEditProfil) {
+                <div class="editInput">
+                    <div class="editAccountText">
+                        <img src="/assets/icons/account_circle.svg">
+                        <h2>Vollständiger Name</h2>
+                    </div>
+                    <input [(ngModel)]="editedUserName" [placeholder]="userName" type="text">
                 </div>
-                <input [(ngModel)]="editedUserName" [placeholder]="userName" type="text">
-            </div>
+            }
         }
         @if (!showEditProfil) {
             <div class="mailAdress">

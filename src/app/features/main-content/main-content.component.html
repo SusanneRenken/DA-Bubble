@@ -2,7 +2,8 @@
   <app-header
     [messageIn]="messageIn"
     (messageInToggle)="handleMessageInToggle($event)"
-    (onChatOpen)="handleOpenChat($event)"
+    (openChat)="handleOpenChat($event)"
+    (openThread)="handleOpenThread($event)"
     [activeUserId]="activeUserId"
   ></app-header>
   @if (!messageIn) {
@@ -10,7 +11,6 @@
     <app-device-visible mode="tabletBig">
       <app-search-bar></app-search-bar>
     </app-device-visible>
-
     <div class="content-container">      
       <button class="toogleBar" (click)="toggleSection()">
         <div>
@@ -20,26 +20,32 @@
           <span>Workspace-Menü öffnen</span>
           }
         </div>
-        <div class="imageChange" *ngIf="sectionVisible">
-          <div class="material-symbols closeIcon">left_panel_close</div>
-        </div>
-        <div class="imageChange" *ngIf="!sectionVisible">
-          <div class="material-symbols closeIcon">left_panel_open</div>
-        </div>
+        @if (sectionVisible) {
+          <div class="imageChange">
+            <div class="material-symbols closeIcon">left_panel_close</div>
+          </div>
+        }
+        @else {
+          <div class="imageChange">
+            <div class="material-symbols closeIcon">left_panel_open</div>
+          </div>
+        }
       </button>
 
-      <app-contact-bar
-        *ngIf="sectionVisible"
+      @if (sectionVisible) {
+        <app-contact-bar
         [sectionVisible]="sectionVisible"
         [activeUserId]="activeUserId"
         (toggle)="toggleSection()"
         (openChat)="handleOpenChat($event)"
         (messageInToggle)="handleMessageInToggle($event)"
       ></app-contact-bar>
+      }
 
       <div class="messageOut">
         <app-message-area
           class="chat-message-area"
+          [class.hide-chat]="isThreadOpen"
           [chatType]="chatType"
           [chatId]="chatId"
           [activeUserId]="activeUserId"

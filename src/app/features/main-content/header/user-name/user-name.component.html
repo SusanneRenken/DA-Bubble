@@ -3,10 +3,10 @@
     <span class="avatarNameText">{{ userName }}</span>
     <div class="userStatus">
       <app-device-visible mode="tabletBig">
-          <img #tabletToggleBtn (click)="toggleImage()" [src]="'/assets/img/' + userImage" />
+          <img #tabletToggleBtn (click)="toggleImage()" [src]="userImage" />
       </app-device-visible>
       <app-device-visible mode="desktopBig">
-        <img class="normalImage" (click)="toggleImage()" [src]="'/assets/img/' + userImage" />
+        <img class="normalImage" (click)="toggleImage()" [src]="userImage" />
         <span class="normalImagePoint" [ngClass]="userStatus === 'true' || userStatus === true ? 'online' : 'offline'"></span>
       </app-device-visible>
     </div>
@@ -35,7 +35,8 @@
   </section>
 }
 <div #profilWrapper>
-  <app-profil
+  @if (showProfil) {
+    <app-profil
     [activeUserId]="activeUserId"
     [userImage]="userImage"
     [userName]="userName"
@@ -45,6 +46,6 @@
     (close)="showProfil = false"
     size="small"
     [showButton]="false"
-    *ngIf="showProfil"
   ></app-profil>
+  }
 </div>

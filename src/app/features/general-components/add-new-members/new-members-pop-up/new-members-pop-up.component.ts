@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, Output, EventEmitter, OnInit, ViewChild, ElementRef, ViewChildren, QueryList } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, ViewChild, ElementRef, ViewChildren, QueryList, SimpleChanges, OnChanges } from '@angular/core';
 import { UserService } from '../../../../shared/services/user.service';
 import { User } from '../../../../shared/interfaces/user.interface';
 import { FormsModule } from '@angular/forms';
@@ -14,11 +14,12 @@ import { BreakpointObserver } from '@angular/cdk/layout';
   styleUrl: './new-members-pop-up.component.scss',
 })
 
-export class NewMembersPopUpComponent implements OnInit{
+export class NewMembersPopUpComponent implements OnInit, OnChanges{
   searchValue: string = '';
   charCount: number = 0;
   filteredMembers: User[] = [];
   selectedMembers: User[] = [];
+  availableMembers: User[] = [];
   selectedUser?: User; 
   displayCount = 1;
 
@@ -38,10 +39,22 @@ export class NewMembersPopUpComponent implements OnInit{
 
   constructor(private userService: UserService, private route: ActivatedRoute, private router: Router, private breakpoint: BreakpointObserver) {}
   
-  async ngOnInit() {
+  ngOnInit() {
+    this.rebuildAvailableList();
+  }
+
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['channelMembers']) {
+      this.rebuildAvailableList();
+    }
+  }
+
+  private async rebuildAvailableList() {
     const allUsers = await this.userService.allUsers();
-    this.channelMembers = allUsers;
-    this.filteredMembers = [...this.channelMembers];
+    const existingIds = new Set(this.channelMembers.map(u => u.uId));
+    this.availableMembers = allUsers.filter(u => !existingIds.has(u.uId));
+    this.filteredMembers  = [...this.availableMembers];
   }
 
 
@@ -86,23 +99,25 @@ export class NewMembersPopUpComponent implements OnInit{
   }
 
 
-  onInputFocus(): void {    
-    this.filteredMembers = [...this.channelMembers];
+  onInputFocus(): void {
+    this.filteredMembers = [...this.availableMembers];
     this.showMember = true;
   }
 
   
   onKey(event: KeyboardEvent): void {
-    const input = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    const input = (event.target as HTMLInputElement)
+    .value.trim().toLowerCase();
     this.searchValue = input;
-    if (input.length === 0) {
-      this.filteredMembers = [...this.channelMembers];
-    } else {    
-      this.filteredMembers = this.channelMembers
-        .filter(u => u.uName.toLowerCase().includes(input));
+    if (!input) {
+      this.filteredMembers = [...this.availableMembers];
+    } else {
+      this.filteredMembers = this.availableMembers.filter(u =>
+        u.uName.toLowerCase().startsWith(input)
+      );
     }
   }
-  
+
 
   toggleMember(member: User): void {
     if (this.isSelected(member)) {
@@ -127,9 +142,9 @@ export class NewMembersPopUpComponent implements OnInit{
   removeMember(member: User): void {  
     this.selectedMembers = this.selectedMembers.filter(m => m.uId !== member.uId);
     this.memberNameRemoveEvent.emit(member.uId!);
-    if (this.selectedMembers.length === 0) {     
+    if (this.selectedMembers.length === 0) {
       this.searchValue = '';
-      this.filteredMembers = [...this.channelMembers];
+      this.filteredMembers = [...this.availableMembers];
       this.showMember = true;
       this.memberAddElement = false;
     }

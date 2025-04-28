@@ -41,15 +41,18 @@ export class AddNewMembersComponent {
     this.close.emit();
   }
 
-  
-  memberNameAdd(memberName: any, memberImage: any, memberId: any) {
-    console.log(this.selectedUserIds);
-    
-    this.memberInputAdd = memberName;
+  memberNameAdd(memberName: string, memberImage: string, memberId: string) {
+    this.memberInputAdd   = memberName;
     this.memberInputImage = memberImage;
-    this.memberInputId = memberId;
+    this.memberInputId    = memberId;
+    console.log(this.memberInputId);
+    
+    if (!this.selectedUserIds.includes(memberId)) {
+      this.selectedUserIds.push(memberId);
+    }
+  
     this.memberAddElement = true;
-    this.showMember = false;
+    this.showMember       = false;
   }
   
 
@@ -61,15 +64,17 @@ export class AddNewMembersComponent {
   }
 
 
-  addNewChannelMember() {
-    if (this.memberAddElement === true && this.channelId && this.memberInputId) {
-      this.channelService.addUserToChannel(this.channelId, this.memberInputId)
-      this.inputNameClose()
-      this. emitClose()
-        
-    }
-  }
-
+  async addNewChannelMembers() {
+    if (!this.channelId || this.selectedUserIds.length === 0) return;
+    try {
+      await this.channelService.addUsersToChannel(
+        this.channelId,
+        ...this.selectedUserIds
+      );
+      this.selectedUserIds = [];
+      this.close.emit();
+    } catch (err) {}
+  }  
 
   async createNewChannel(name: string, description: string) {
     if (!name || !this.activeUserId) return;

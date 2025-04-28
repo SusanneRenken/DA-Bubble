@@ -71,9 +71,9 @@
         }
       @else {
           <button  
-          [class.active]="memberInputId !== '' || selectedUserIds.length > 0"
-          [disabled]="memberInputId === '' && selectedUserIds.length === 0" 
-          (click)="addNewChannelMember()" 
+          [class.active]="selectedUserIds.length > 0"
+          [disabled]="selectedUserIds.length === 0"
+          (click)="addNewChannelMembers()" 
           class="addNewMemberButton">Hinzufügen
       </button>
       }

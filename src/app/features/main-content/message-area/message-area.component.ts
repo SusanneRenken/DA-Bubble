@@ -88,7 +88,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   ngAfterViewInit(): void {
     setTimeout(() => {
       this.isLoading = false;
-      setTimeout(() => this.scrollToBottom(), 500);
+      setTimeout(() => this.scrollToBottom(), 2000);
     }, 500);
   }
 
@@ -139,7 +139,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
       this.setThreadContextName(msgs[0]);
     }
 
-    if (hasNew) setTimeout(() => this.scrollToBottom(), 100);
+    if (hasNew) setTimeout(() => this.scrollToBottom(), 1000);
   }
 
   private setThreadContextName(parent: Message) {
@@ -353,7 +353,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
       await this.messageService.createMessage(msg);
     }
     this.newMessageText = '';
-    setTimeout(() => this.scrollToBottom(), 100);
+    setTimeout(() => this.scrollToBottom(), 1000);
   }
 
   shouldShowDateSeparator(i: number): boolean {

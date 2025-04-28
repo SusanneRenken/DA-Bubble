@@ -38,7 +38,14 @@
     @if (chatType === 'private') {
     <div class="private-header" (click)="toggleProfile(chatPartner)">
       <div class="user-img-status">
-        <img src="{{ chatPartner?.uUserImage }}" alt="" />
+        <img
+          [src]="
+            chatPartner?.uUserImage || '/assets/img/avatar-placeholder.png'
+          "
+          loading="lazy"
+          (error)="onAvatarError($event)"
+          alt=""
+        />
         <span [ngClass]="chatPartner?.uStatus ? 'online' : 'offline'"></span>
       </div>
       <h1>{{ chatPartner?.uName }}</h1>

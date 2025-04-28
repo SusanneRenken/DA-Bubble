@@ -395,4 +395,12 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
         return 'Starte eine neue Nachricht';
     }
   }
+
+  onAvatarError(ev: Event): void {
+    const img = ev.target as HTMLImageElement;
+    if (!img.dataset['fallback']) {
+      img.dataset['fallback'] = 'true';
+      img.src = '/assets/img/avatar-placeholder.png';
+    }
+  }
 }

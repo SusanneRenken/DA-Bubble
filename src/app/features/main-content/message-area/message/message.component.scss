@@ -288,6 +288,11 @@ emoji-mart {
   section {
     padding: 10px clamp(50px, calc(50px + 70 * (100vw - 450px) / 550), 120px)
       10px clamp(16px, calc(16px + 16 * (100vw - 450px) / 550), 32px);
+      img {
+        width: clamp(50px, calc(50px + 20 * (100vw - 450px) / 550), 70px);
+        height: clamp(50px, calc(50px + 20 * (100vw - 450px) / 550), 70px);
+        border-radius: 50%;
+      }
   }
 
   .row-reverse {

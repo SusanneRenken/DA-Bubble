@@ -130,6 +130,7 @@ export class UserNameComponent {
   async logOut() {
     if (this.userName === 'Gast') {      
       await this.channelService.deleteChannelsByCreator(this.activeUserId!);
+      await this.messageService.deleteMessagesBySender(this.activeUserId!);
     } 
     await this.authService.logout();
     await this.router.navigate(['/access']);

@@ -204,29 +204,34 @@ export class MessageService {
   }
 
   async deleteMessagesBySender(senderId: string): Promise<void> {
-    if (!senderId) return;
-  
+    if (!senderId) {
+      return;
+    }
     const colRef = collection(this.firestore, 'messages');
-    const q      = query(colRef, where('mSenderId', '==', senderId));
-  
+    const q = query(colRef, where('mSenderId', '==', senderId));
     const snap = await getDocs(q);
-    if (snap.empty) return;
-  
-    let batch   = writeBatch(this.firestore);
-    let counter = 0;
-  
-    snap.forEach(docSnap => {
+
+    if (snap.empty) {
+      return;
+    }
+    let batch = writeBatch(this.firestore);
+    let inBatch = 0;
+    let batchIndex = 1;
+    let processed = 0;
+    snap.forEach((docSnap) => {
       batch.delete(docSnap.ref);
-      counter++;
-  
-      if (counter === 500) {
+      inBatch++;
+      processed++;
+
+      if (inBatch === 500) {
         batch.commit();
-        batch   = writeBatch(this.firestore);
-        counter = 0;
+        batch = writeBatch(this.firestore);
+        inBatch = 0;
+        batchIndex++;
       }
     });
-  
-    if (counter > 0) {
+
+    if (inBatch > 0) {
       await batch.commit();
     }
   }
@@ -286,8 +291,10 @@ export class MessageService {
   }
 
   async getMessageById(id: string): Promise<Message | undefined> {
-    const docRef  = doc(this.firestore, 'messages', id);
+    const docRef = doc(this.firestore, 'messages', id);
     const docSnap = await getDoc(docRef);
-    return docSnap.exists() ? ({ mId: docSnap.id, ...(docSnap.data() as Message) }) : undefined;
+    return docSnap.exists()
+      ? { mId: docSnap.id, ...(docSnap.data() as Message) }
+      : undefined;
   }
 }

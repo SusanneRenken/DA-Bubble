@@ -128,7 +128,7 @@ export class UserNameComponent {
   }
 
   async logOut() {
-    if (this.userName === 'Gast') {
+    if (this.userName === 'Gast') {      
       await this.channelService.deleteChannelsByCreator(this.activeUserId!);
     } 
     await this.authService.logout();

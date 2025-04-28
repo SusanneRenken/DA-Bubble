@@ -12,6 +12,8 @@ import { User } from '../../../shared/interfaces/user.interface';
 import { ChannelService } from '../../../shared/services/channel.service';
 import { MessageService } from '../../../shared/services/message.service';
 import { UserService } from '../../../shared/services/user.service';
+import { Message } from '../../../shared/interfaces/message.interface';
+import { Channel } from '../../../shared/interfaces/channel.interface';
 
 interface ChannelMessage {
   mText: string;
@@ -80,135 +82,131 @@ export class SearchInformationComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // activeUserId wird aus der URL gelesen; alternativ könnt ihr es auch als @Input übergeben
     this.activeUserId = this.route.snapshot.paramMap.get('activeUserId');
   }
 
   private async handleSearch(searchText: string) {
     if (!searchText || searchText.length < 3) return;
 
+    const { users, messages, channels } = await this.fetchData();
+
+    this.users = this.filterUsers(users, searchText);
+    this.channelsWithNames = this.filterChannels(channels, users, searchText);
+    this.matchedMessages = this.findChannelMsgs(messages, channels, searchText);
+    this.directMessages = this.findDirectMsgs(messages, users, searchText);
+    this.threadMessages = await this.findThreadMsgs(messages, searchText);
+
+    this.updateVisibilityFlags();
+  }
+
+  private async fetchData() {
     const [users, messages, channels] = await Promise.all([
       this.userService.getAllUsers(),
       this.messageService.getAllMessages(),
       this.channelService.getAllChannels(),
     ]);
+    return { users, messages, channels };
+  }
 
-    // 1) Nutzer finden
-    this.users = users.filter((u) =>
-      (u.uName || '').toLowerCase().includes(searchText)
-    );
+  private filterUsers(users: User[], q: string): User[] {
+    return users.filter((u) => (u.uName || '').toLowerCase().includes(q));
+  }
 
-    // 2) Channels finden (entweder nach Name oder nach Mitgliedschaft)
-    const filteredChannels = channels.filter((ch) =>
-      (ch.cName || '').toLowerCase().includes(searchText)
-    );
-    this.channelsWithNames = filteredChannels.map((ch) => ({
-      ...ch,
-      memberNames: users
-        .filter(
-          (u) => u.uId && Object.values(ch.cUserIds || {}).includes(u.uId)
-        )
-        .map((u) => u.uName),
-    }));
+  private filterChannels(channels: Channel[], users: User[], q: string) {
+    return channels
+      .filter((ch) => (ch.cName || '').toLowerCase().includes(q))
+      .map((ch) => ({
+        ...ch,
+        memberNames: users
+          .filter((u) => u.uId && (ch.cUserIds || []).includes(u.uId!))
+          .map((u) => u.uName),
+      }));
+  }
 
-    // 3) Gefundene Nachrichten in Channels
-    this.matchedMessages = messages
+  private findChannelMsgs(msgs: Message[], channels: Channel[], q: string) {
+    return msgs
       .filter(
-        (msg) =>
-          // hat eine Channel-ID
-          typeof msg.mChannelId === 'string' &&
-          msg.mChannelId.trim().length > 0 &&
-          // Suchbegriff im Text
-          msg.mText.toLowerCase().includes(searchText)
+        (m) =>
+          typeof m.mChannelId === 'string' &&
+          m.mChannelId.trim() &&
+          m.mText.toLowerCase().includes(q)
       )
-      .map((msg) => {
-        const ch = channels.find((c) => c.cId === msg.mChannelId);
+      .map((m) => {
+        const ch = channels.find((c) => c.cId === m.mChannelId);
         return {
-          mText: msg.mText,
+          mText: m.mText,
           channelName: ch?.cName || '',
           channelId: ch?.cId || '',
         };
       });
+  }
 
-    // 4) Gefundene private Nachrichten
-    this.directMessages = messages
+  private findDirectMsgs(msgs: Message[], users: User[], q: string) {
+    return msgs
       .filter(
-        (msg) =>
-          // Suchbegriff im Text
-          msg.mText.toLowerCase().includes(searchText) &&
-          // activeUserId ist entweder Empfänger (mUserId) oder Sender (mSenderId)
-          (msg.mUserId === this.activeUserId ||
-            msg.mSenderId === this.activeUserId) &&
-          // und mUserId ist nicht leer (damit es wirklich ein DM ist)
-          typeof msg.mUserId === 'string' &&
-          msg.mUserId.trim().length > 0
+        (m) =>
+          m.mText.toLowerCase().includes(q) &&
+          (m.mUserId === this.activeUserId ||
+            m.mSenderId === this.activeUserId) &&
+          typeof m.mUserId === 'string' &&
+          m.mUserId.trim()
       )
-      .map((msg) => {
-        const otherUserId =
-          msg.mUserId === this.activeUserId ? msg.mSenderId! : msg.mUserId!;
-        const otherUser = users.find((u) => u.uId === otherUserId);
+      .map((m) => {
+        const otherId =
+          m.mUserId === this.activeUserId ? m.mSenderId! : m.mUserId!;
+        const otherUser = users.find((u) => u.uId === otherId);
         return {
-          mText: msg.mText,
-          otherUserId,
+          mText: m.mText,
+          otherUserId: otherId,
           otherUserName: otherUser?.uName || '',
         };
       });
-
-    // 5) Gefundene Nachrichten in Threads
-    this.threadMessages = [];
-
-    for (const msg of messages) {
-      if (
-        typeof msg.mThreadId !== 'string' ||
-        !msg.mThreadId.trim() ||
-        !msg.mText.toLowerCase().includes(searchText)
-      ) {
-        continue;
-      }
-    
-      let parent = messages.find(m => m.mId === msg.mThreadId);
-    
-      if (!parent) {
-        try {
-          parent = await this.messageService.getMessageById(msg.mThreadId);
-        } catch {
-          console.warn('Parent-Message nicht gefunden:', msg.mThreadId);
-        }
-      }
-      let chatType: 'channel' | 'private' = 'channel';
-      let chatId   = '';
-    
-      if (parent?.mChannelId) {
-        chatType = 'channel';
-        chatId   = parent.mChannelId;
-      } else if (parent) {
-        chatType = 'private';
-        chatId =
-          parent.mUserId === this.activeUserId
-            ? parent.mSenderId || ''
-            : parent.mUserId || '';
-      }
-    
-      this.threadMessages.push({
-        mText   : msg.mText,
-        threadId: msg.mThreadId!,
-        chatId,
-        chatType,
-      } as ThreadHit);
-    }
-
-    // 6) Sichtbarkeits-Flags setzen
-    this.showContact = this.users.length === 0;
-    this.showChannels = this.channelsWithNames.length === 0;
-    this.showMatchedMessages = this.matchedMessages.length === 0;
-    this.showDirectMessages = this.directMessages.length === 0;
-    this.showThreadMessages = this.threadMessages.length === 0;
   }
 
-  /** Wiederverwendete Funktion zum Chat-Wechsel ohne Neuladen */
+  private async findThreadMsgs(msgs: Message[], q: string) {
+    const hits: ThreadHit[] = [];
+    for (const m of msgs) {
+      if (!this.isThreadHit(m, q)) continue;
+      const parent = await this.resolveParent(msgs, m.mThreadId!);
+      const chatType = parent?.mChannelId ? 'channel' : 'private';
+      const chatId =
+        parent?.mChannelId ??
+        (parent
+          ? parent.mUserId === this.activeUserId
+            ? parent.mSenderId!
+            : parent.mUserId!
+          : '');
+      hits.push({ mText: m.mText, threadId: m.mThreadId!, chatId, chatType });
+    }
+    return hits;
+  }
+
+  private isThreadHit(m: Message, q: string) {
+    return (
+      typeof m.mThreadId === 'string' &&
+      m.mThreadId.trim() &&
+      m.mText.toLowerCase().includes(q)
+    );
+  }
+
+  private async resolveParent(allMsgs: Message[], id: string) {
+    return (
+      allMsgs.find((x) => x.mId === id) ??
+      (await this.messageService.getMessageById(id).catch(() => null))
+    );
+  }
+
+  private updateVisibilityFlags() {
+    this.showContact = !this.users.length;
+    this.showChannels = !this.channelsWithNames.length;
+    this.showMatchedMessages = !this.matchedMessages.length;
+    this.showDirectMessages = !this.directMessages.length;
+    this.showThreadMessages = !this.threadMessages.length;
+  }
+
   selectChat(chatId: string, chatType: 'private' | 'channel') {
     this.openChat.emit({ chatType, chatId });
-    this.close.emit();  
+    this.close.emit();
   }
 
   selectThread(hit: ThreadHit) {
@@ -217,6 +215,6 @@ export class SearchInformationComponent implements OnInit {
       chatId: hit.chatId,
       threadId: hit.threadId,
     });
-    this.close.emit();  
+    this.close.emit();
   }
 }

@@ -324,7 +324,6 @@ app-add-new-members {
   height: 40px;
   background-color: #eceefe;
   border-radius: 50px;
-  &.addButtonBefore {}
   &.addButtonAfter {
     display: none;
     @media (max-width: 600px) {
@@ -335,7 +334,8 @@ app-add-new-members {
     }
   }
   &:hover span {
-    color: #535AF1;
+    color: #535af1;
+  }
 }
 
 @media (max-width: 1000px) {
@@ -369,7 +369,7 @@ app-add-new-members {
 @media (max-width: 600px) {
   .openAddMemberPopUpButton.addButtonBefore {
     @media (max-width: 600px) {
-      display: none;  
+      display: none;
     }
   }
 
@@ -380,4 +380,4 @@ app-add-new-members {
       }
     }
   }
-}}
+}

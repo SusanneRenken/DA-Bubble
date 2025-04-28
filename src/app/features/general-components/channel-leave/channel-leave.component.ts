@@ -36,6 +36,7 @@ export class ChannelLeaveComponent implements OnInit{
   @Output() showProfil = new EventEmitter<User>();
   @Output() close = new EventEmitter<void>();
   @Output() nameUpdated = new EventEmitter<string>();
+  @Output() openChat = new EventEmitter<{chatType: 'private'; chatId: string}>();
 
   private destroy$ = new Subject<void>();
   channelNameSave: boolean = false;

@@ -34,7 +34,7 @@
             <div class="nameActive">
                 <div class="nameEdit">
                     <span>{{ userName }}</span>
-                    @if (!showButton) {
+                    @if (!showButton && userName !== 'Gast' && userName !== 'Guest' ) {
                         <a (click)="onEditClick()">Bearbeiten</a>
                         <button (click)="onEditClick()" class="editIconShow">
                             <div class="material-symbols editIcon">Edit</div>
@@ -77,7 +77,7 @@
         }
         @if (showButton) {
             <div class="messageArea">
-                <button class="messageButton messageButtonBackgroundBlue">
+                <button (click)="onStartChat()" class="messageButton messageButtonBackgroundBlue">
                     <img src="assets/icons/mode_comment.svg">
                     <span>Nachricht</span>
                 </button>

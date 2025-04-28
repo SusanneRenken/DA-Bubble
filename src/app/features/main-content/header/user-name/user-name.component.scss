@@ -1,9 +1,8 @@
 @import "../../../../../styles.scss";
 
 main {
-  @include flexBox("", right, center, "");
+  @include flexBox("", right, center, 0);
   height: 100%;
-  gap: 20px;
   position: relative;
 }
 

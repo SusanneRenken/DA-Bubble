@@ -99,6 +99,7 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
 
   ngOnChanges(ch: SimpleChanges): void {
     if (ch['chatType'] || ch['chatId'] || ch['activeUserId']) {
+      this.isChannelMemberOpen = false;
       this.prepareForReload();
       this.loadMessages();
       this.loadChatData();

@@ -50,7 +50,6 @@ export class UserNameComponent {
   toggleLogOut() {
     if (this.isLogOutVisible) {
       if ( this.windowSize <= 1000) {
-        console.log('bin drin');
         
         this.animateOut = true;
       
@@ -102,8 +101,10 @@ export class UserNameComponent {
   }
 
   
-  logOut(){
+  logOut() {
     this.authService.logout();
-    this.router.navigate(['/access']); 
+    setTimeout(() => {
+      this.router.navigate(['/access']);
+    }, 400);
   }
 }

@@ -21,7 +21,7 @@ import {
   signInWithPopup,
   UserCredential,
 } from '@angular/fire/auth';
-import { collection } from 'firebase/firestore';
+import { arrayUnion, collection } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root',
@@ -53,27 +53,41 @@ export class AuthentificationService {
     });
   }
 
-  async completeRegistration(profilePictureUrl: string): Promise<void | UserCredential> {
-    if (!this.registrationData) return Promise.reject('No active registration available');  
+  async completeRegistration(profilePictureUrl: string): Promise<UserCredential> {
+    if (!this.registrationData) {
+      return Promise.reject('No active registration available');
+    }
+  
     const { email, password, username } = this.registrationData;
-    return createUserWithEmailAndPassword(this.auth, email, password)
-    .then((userCredential) => {
-      const uid = userCredential.user.uid;
-      const userData: UserInterface = {
-        uId: uid,
-        uName: username,
-        uEmail: email,
-        uUserImage: 'assets/img/' + profilePictureUrl,
-        uStatus: false,
-        uLastReactions: ['👍', '😊']
-      };
-      const userRef = collection(this.firestore, 'users');
-      const userDocRef = doc(userRef, uid);
-      return setDoc(userDocRef, userData).then(() => {
-        this.registrationData = null;
-        return userCredential;
-      });
+  
+    const userCredential = await createUserWithEmailAndPassword(
+      this.auth,
+      email,
+      password
+    );
+    const uid = userCredential.user.uid;
+  
+    const userData: UserInterface = {
+      uId:            uid,
+      uName:          username,
+      uEmail:         email,
+      uUserImage:     'assets/img/' + profilePictureUrl,
+      uStatus:        false,
+      uLastReactions: ['👍', '😊'],
+    };
+  
+    const userRef    = collection(this.firestore, 'users');
+    const userDocRef = doc(userRef, uid);
+    await setDoc(userDocRef, userData);
+  
+    const defaultChannelId = 'KV14uSorBJhrWW92IeDS';
+    const channelRef       = doc(this.firestore, 'channels', defaultChannelId);
+    await updateDoc(channelRef, {
+      cUserIds: arrayUnion(uid),
     });
+  
+    this.registrationData = null;
+    return userCredential;
   }
 
   async loginWithEmail(email: string, password: string): Promise<void | UserCredential> {

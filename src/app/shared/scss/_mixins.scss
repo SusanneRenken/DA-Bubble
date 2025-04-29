@@ -44,24 +44,22 @@
 @mixin errMess($text-color) {
   width: 100%;
   position: relative;
-  
+
   @media (max-width: 500px) {
-    @include dFlex($align: flex-start, $direction: column );
+    @include dFlex($align: flex-start, $direction: column);
   }
 
   > small {
+    padding-left: 32px;
     color: $text-color;
-    font-size: 14px;
-
-    @media (min-width: 700px) {
-      position: absolute;
-      bottom: -15px;
-    }
-
-    
+    font-size: 16px;
+    position: absolute;
+    top: 64px;
 
     @media (max-width: 700px) {
-      font-size: 10px;
+      padding-left: 24px;
+      font-size: 14px;
+      top: 52px;
     }
   }
 }

@@ -412,4 +412,5 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
       img.src = 'assets/img/profile.png';
     }
   }
+
 }

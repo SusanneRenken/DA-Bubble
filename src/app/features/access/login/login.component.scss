@@ -12,19 +12,6 @@ form {
     font-size: clamp(16px, 3vw, 20px);
     text-align: center;
   }
-
-  > span {
-    cursor: pointer;
-    font-size: clamp(14px, 3vw, 18px);
-    color: vari.$light-blue;
-    padding: 5px 15px;
-
-    &:hover {
-      color: vari.$dark-blue;
-      background-color: vari.$sky-grey;
-      border-radius: 30px;
-    }
-  }
 }
 
 .input-container {

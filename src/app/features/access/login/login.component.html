@@ -100,13 +100,15 @@
     }
   </div>
 
-  <span (click)="changeComponent('conMail')">Passwort vergessen?</span>
+  <app-button color="sky-grey" [disabled]="!isButtonVisible()" (click)="changeComponent('conMail')">
+    Passwort vergessen?
+  </app-button>
 
   <div class="or-container">
     <span> ODER </span>
   </div>
 
-  <app-button color="gray" (clicked)="onLoginWithGoogle()">
+  <app-button color="gray" [disabled]="!isButtonVisible()" (clicked)="onLoginWithGoogle()">
     <svg
       class="google"
       viewBox="0 0 38 38"
@@ -134,12 +136,12 @@
   </app-button>
 
   <div class="btn-container">
-    <app-button type="submit" [disabled]="loginForm.invalid"
-      >Anmelden</app-button
-    >
-    <app-button color="white" (clicked)="onLoginAsGuest()"
-      >Gäste-Login</app-button
-    >
+    <app-button type="submit" [disabled]="loginForm.invalid || !isButtonVisible()">
+      Anmelden
+    </app-button>
+    <app-button color="white" [disabled]="!isButtonVisible()" (clicked)="onLoginAsGuest()">
+      Gäste-Login
+    </app-button>
   </div>
 </form>
 

@@ -92,18 +92,19 @@ export class AuthentificationService {
 
   async loginWithEmail(email: string, password: string): Promise<void | UserCredential> {
     return signInWithEmailAndPassword(this.auth, email, password)
-    .then((result) => {
+    .then(async (result) => {
       this.currentUid = result.user.uid;
       const userRef = collection(this.firestore, 'users');
       const userDocRef = doc(userRef, this.currentUid);
-      return updateDoc(userDocRef, { uStatus: true }).then(() => result);
+      await updateDoc(userDocRef, { uStatus: true });
+      return result;
     });
   }
 
   async loginWithGoogle(): Promise<void | UserCredential> {
     const provider = new GoogleAuthProvider();
     return signInWithPopup(this.auth, provider)
-    .then((result) => {
+    .then(async (result) => {
       this.currentUid = result.user.uid;
       const userData: UserInterface = {
         uId: this.currentUid,
@@ -115,13 +116,17 @@ export class AuthentificationService {
       };
       const userRef = collection(this.firestore, 'users');
       const userDocRef = doc(userRef, result.user.uid);
-      return setDoc(userDocRef, userData, { merge: true }).then(() => result);
+      await setDoc(userDocRef, userData, { merge: true });
+      const defaultChannelId = 'KV14uSorBJhrWW92IeDS';
+      const channelRef = doc(this.firestore, 'channels', defaultChannelId);
+      await updateDoc(channelRef, { cUserIds: arrayUnion(this.currentUid) });
+      return result;
     });
   }
 
   async loginAsGuest(): Promise<void | UserCredential> {
     return signInAnonymously(this.auth)
-    .then((result) => {
+    .then(async (result) => {
       this.currentUid = result.user.uid;
       const guestData: UserInterface = {
         uId: this.currentUid,
@@ -133,7 +138,11 @@ export class AuthentificationService {
       };
       const userRef = collection(this.firestore, 'users');
       const userDocRef = doc(userRef, this.currentUid);
-      return setDoc(userDocRef, guestData, { merge: true }).then(() => result);
+      await setDoc(userDocRef, guestData, { merge: true });
+      const defaultChannelId = 'KV14uSorBJhrWW92IeDS';
+      const channelRef = doc(this.firestore, 'channels', defaultChannelId);
+      await updateDoc(channelRef, { cUserIds: arrayUnion(this.currentUid) });
+      return result;
     });
   }
 

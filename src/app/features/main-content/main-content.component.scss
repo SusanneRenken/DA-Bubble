@@ -29,7 +29,7 @@ section{
   width: 60px;
   height: 350px;
   position: absolute;
-  top: 420px;
+  bottom: 10%;
   left: 0;
   background-color: white;
   z-index: 20;
@@ -132,6 +132,7 @@ section{
 
   .content-container {
     margin-top: 16px;
+    padding-bottom: 70px;
     app-contact-bar {
       width: 100%;
     }

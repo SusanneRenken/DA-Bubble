@@ -34,7 +34,7 @@
             <div class="nameActive">
                 <div class="nameEdit">
                     <span>{{ userName }}</span>
-                    @if (!showButton) {
+                    @if (!showButton && userName !== 'Gast' && userName !== 'Guest' ) {
                         <a (click)="onEditClick()">Bearbeiten</a>
                         <button (click)="onEditClick()" class="editIconShow">
                             <div class="material-symbols editIcon">Edit</div>
@@ -43,13 +43,13 @@
                 </div>
                 @if (isActive) {
                     <div class="status">
-                        <img src="/assets/img/green_point.png">
+                        <img src="assets/img/green_point.png">
                         <span class="statusActive">Aktive</span>
                     </div>
                 }
                 @else {
                     <div class="status">
-                        <img src="/assets/img/grey_point.png">
+                        <img src="assets/img/grey_point.png">
                         <span class="statusAbsent">Abwesend</span>
                     </div>
                 }
@@ -59,7 +59,7 @@
             @if (showEditProfil) {
                 <div class="editInput">
                     <div class="editAccountText">
-                        <img src="/assets/icons/account_circle.svg">
+                        <img src="assets/icons/account_circle.svg">
                         <h2>Vollständiger Name</h2>
                     </div>
                     <input [(ngModel)]="editedUserName" [placeholder]="userName" type="text">
@@ -69,7 +69,7 @@
         @if (!showEditProfil) {
             <div class="mailAdress">
                 <div>
-                    <img src="/assets/icons/mail.svg">
+                    <img src="assets/icons/mail.svg">
                     <h2>E-Mail-Adresse</h2>
                 </div>
                 <span>{{ userEmail }}</span>
@@ -77,8 +77,8 @@
         }
         @if (showButton) {
             <div class="messageArea">
-                <button class="messageButton messageButtonBackgroundBlue">
-                    <img src="/assets/icons/mode_comment.svg">
+                <button (click)="onStartChat()" class="messageButton messageButtonBackgroundBlue">
+                    <img src="assets/icons/mode_comment.svg">
                     <span>Nachricht</span>
                 </button>
             </div>

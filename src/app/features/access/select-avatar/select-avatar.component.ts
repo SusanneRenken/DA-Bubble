@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ButtonComponent } from '../../general-components/button/button.component';
 import { ComponentSwitcherService } from '../../../shared/services/component-switcher.service';
 import { AuthentificationService } from '../../../shared/services/authentification.service';
 import { SuccessIndicatorComponent } from '../../general-components/success-indicator/success-indicator.component';
+import { VisibleButtonService } from '../../../shared/services/visible-button.service';
 
 @Component({
   selector: 'app-select-avatar',
@@ -11,6 +12,8 @@ import { SuccessIndicatorComponent } from '../../general-components/success-indi
   styleUrl: './select-avatar.component.scss',
 })
 export class SelectAvatarComponent {
+  private visibleBtn = inject(VisibleButtonService);
+
   avatars = [
     'avatar-1.png',
     'avatar-2.png',
@@ -23,10 +26,13 @@ export class SelectAvatarComponent {
   username: string | undefined | null = null;
   isConfirmationVisible: boolean = false;
 
+  readonly isButtonVisible = this.visibleBtn.visibleButton;
+  
   constructor(
     public componentSwitcher: ComponentSwitcherService,
     private authService: AuthentificationService
   ) {
+    this.visibleBtn.show();
     this.username = this.authService.registrationData?.username;
   }
 
@@ -44,6 +50,7 @@ export class SelectAvatarComponent {
       console.error('No avatar selected!');
       return;
     }
+    this.visibleBtn.hide();
     this.completeAvatarSelection(this.selectedAvatar);
   }
 
@@ -62,8 +69,9 @@ export class SelectAvatarComponent {
   private toggleConfirmation(visible: boolean): void {
     this.isConfirmationVisible = visible;
   }
-  
+
   private handleAvatarError(error: any): void {
+    this.visibleBtn.show();
     console.error('Error when adding the profile picture:', error);
   }
 

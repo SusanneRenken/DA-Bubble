@@ -12,9 +12,9 @@
 
 button {
   @include mixin.dFlex($gap: clamp(10px, 2.5vw, 20px));
-  font-size: clamp(14px, 2.5vw, 18px);
+  font-size: clamp(16px, 2.5vw, 18px);
   padding: clamp(10px, 2.5vw, 12px) clamp(18px, 2.5vw, 25px);
-  border: 1px solid transparent;
+  border: 1px solid;
   border-radius: 25px;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
@@ -62,5 +62,36 @@ button {
 
   &:active:not(:disabled) {
     border-color: vari.$gray;
+  }
+
+  &:disabled {
+    border-color: vari.$gray;
+    color: vari.$gray;
+  }
+}
+
+.btn-transparent {
+  padding: 10px 15px;
+  @include mixin.btnColor($bg-color: transparent, $bor-color: transparent, $text-color: vari.$light-blue);
+
+  &:hover:not(:disabled) {
+    @include mixin.btnColor($bg-color: transparent, $bor-color: #adb0d9, $text-color: vari.$dark-blue);
+  }
+
+  &:disabled {
+    color: vari.$gray;
+  }
+}
+
+.btn-sky-grey {
+  padding: 5px 15px;
+  @include mixin.btnColor($bg-color: transparent, $bor-color: transparent, $text-color: vari.$light-blue);
+
+  &:hover:not(:disabled) {
+    @include mixin.btnColor($bg-color: vari.$sky-grey, $bor-color: transparent, $text-color: vari.$dark-blue);
+  }
+
+  &:disabled {
+    color: vari.$gray;
   }
 }

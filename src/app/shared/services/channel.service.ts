@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Firestore, collectionData, deleteDoc  } from '@angular/fire/firestore';
-import { collection, doc, getDoc, getDocs, setDoc,updateDoc ,serverTimestamp, onSnapshot, query, where, arrayUnion} from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, setDoc,updateDoc ,serverTimestamp, onSnapshot, query, where, arrayUnion, writeBatch} from 'firebase/firestore';
 import { Channel } from '../interfaces/channel.interface';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -105,15 +105,17 @@ export class ChannelService {
     await updateDoc(channelRef, { cDescription: newDescription });
   }
 
-  getSortedChannels(): Observable<{ id: string; name: string; createdAt: any }[]> {
-    const channelsCollection = collection(this.firestore, 'channels');
-    return collectionData(channelsCollection, { idField: 'id' }).pipe(
+  getSortedChannels(userId: string | null): Observable<{ id: string; name: string; createdAt: any }[]> {
+    const channelsRef  = collection(this.firestore, 'channels');
+    const channelQuery = query(channelsRef, where('cUserIds', 'array-contains', userId));
+  
+    return collectionData(channelQuery, { idField: 'id' }).pipe(
       map((channels: any[]) =>
         channels
-          .map(channel => ({
-            id: channel.id,
-            name: channel.cName,
-            createdAt: channel.createdAt || 0,
+          .map(ch => ({
+            id:        ch.id,
+            name:      ch.cName, 
+            createdAt: ch.createdAt || 0,
           }))
           .sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1))
       )
@@ -130,5 +132,33 @@ export class ChannelService {
   deleteChannel(channelId: string): Promise<void> {
     const channelRef = doc(this.firestore, 'channels', channelId);
     return deleteDoc(channelRef);
+  }
+
+  async deleteChannelsByCreator(userId: string): Promise<void> {
+    if (!userId) return;
+  
+    const colRef = collection(this.firestore, 'channels');
+    const q      = query(colRef, where('cCreatedByUser', '==', userId));
+  
+    const snap = await getDocs(q);
+    if (snap.empty) return;
+  
+    let batch   = writeBatch(this.firestore);
+    let counter = 0;
+  
+    snap.forEach(docSnap => {
+      batch.delete(docSnap.ref);
+      counter++;
+  
+      if (counter === 500) {
+        batch.commit();
+        batch   = writeBatch(this.firestore);
+        counter = 0;
+      }
+    });
+  
+    if (counter > 0) {
+      await batch.commit();
+    }
   }
 }

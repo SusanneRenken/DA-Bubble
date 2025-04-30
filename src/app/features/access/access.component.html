@@ -66,9 +66,10 @@
 @if (componentSwitcher.currentComponent() === LoginComponent) {
   <div class="sign-in-container">
     <p>Neu bei DABubble?</p>
-    <p class="link font-figtree" (click)="changeComponent('signin')">
+
+    <app-button color="transparent" [disabled]="!isButtonVisible()" (click)="changeComponent('signin')">
       Konto erstellen
-    </p>
+    </app-button>
   </div>
 }
 
@@ -78,9 +79,11 @@
 
 @if (componentSwitcher.currentComponent() !== PrivacyComponent && componentSwitcher.currentComponent() !== ImprintComponent) {
   <footer>
-    <p class="link font-figtree" (click)="changeComponent('imprit')">Impressum</p>
-    <p class="link font-figtree" (click)="changeComponent('privacy')">
+    <app-button color="transparent" [disabled]="!isButtonVisible()" (click)="changeComponent('imprit')">
+      Impressum
+    </app-button>
+    <app-button color="transparent" [disabled]="!isButtonVisible()" (click)="changeComponent('privacy')">
       Dateschutz
-    </p>
+    </app-button>
   </footer>
 }

@@ -3,6 +3,7 @@
 
 .checkbox-container {
   @include mixin.dFlex($justify: flex-start, $gap: 10px);
+  padding-top: 24px;
   padding-left: clamp(0px, 0.01vw, 10px);
 
   > p {
@@ -19,6 +20,9 @@
       }
     }
   }
+  @media (max-width: 700px) {
+    padding-top: 32px;
+    }
 }
 
 .checkboxItem {

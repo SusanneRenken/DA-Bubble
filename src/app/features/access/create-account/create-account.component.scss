@@ -10,7 +10,7 @@
 }
 
 form {
-  @include mixin.dFlex($gap: clamp(12px, 2.5vw, 30px), $direction: column);
+  @include mixin.dFlex($gap: 30px, $direction: column);
 
   > h1 {
     @include mixin.accHead(vari.$dark-blue);
@@ -20,6 +20,9 @@ form {
     font-size: clamp(16px, 2.5vw, 20px);
     text-align: center;
   }
+  @media (max-width: 700px) {
+    @include mixin.dFlex($gap: 16px, $direction: column);
+    }
 }
 
 .input-container {

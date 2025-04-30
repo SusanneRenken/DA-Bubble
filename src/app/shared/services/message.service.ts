@@ -21,6 +21,7 @@ import {
   updateDoc,
   getDocs,
   deleteDoc,
+  writeBatch,
 } from 'firebase/firestore';
 import { Reaction } from '../interfaces/reaction.interface';
 
@@ -202,6 +203,39 @@ export class MessageService {
     return deleteDoc(messageRef);
   }
 
+  async deleteMessagesBySender(senderId: string): Promise<void> {
+    if (!senderId) {
+      return;
+    }
+    const colRef = collection(this.firestore, 'messages');
+    const q = query(colRef, where('mSenderId', '==', senderId));
+    const snap = await getDocs(q);
+
+    if (snap.empty) {
+      return;
+    }
+    let batch = writeBatch(this.firestore);
+    let inBatch = 0;
+    let batchIndex = 1;
+    let processed = 0;
+    snap.forEach((docSnap) => {
+      batch.delete(docSnap.ref);
+      inBatch++;
+      processed++;
+
+      if (inBatch === 500) {
+        batch.commit();
+        batch = writeBatch(this.firestore);
+        inBatch = 0;
+        batchIndex++;
+      }
+    });
+
+    if (inBatch > 0) {
+      await batch.commit();
+    }
+  }
+
   async toggleReaction(messageId: string, reaction: Reaction): Promise<void> {
     const messageRef = doc(this.firestore, 'messages', messageId);
 
@@ -249,7 +283,6 @@ export class MessageService {
     });
   }
 
-  // Das ist noch nicht ganz richtig. Dann bekommt der User auch alle Nachrichten angezeigt, die er nicht sehen soll.
   getAllMessages(): Promise<Message[]> {
     const messagesCollection = collection(this.firestore, 'messages');
     return getDocs(messagesCollection).then((snap) =>
@@ -258,8 +291,10 @@ export class MessageService {
   }
 
   async getMessageById(id: string): Promise<Message | undefined> {
-    const docRef  = doc(this.firestore, 'messages', id);
+    const docRef = doc(this.firestore, 'messages', id);
     const docSnap = await getDoc(docRef);
-    return docSnap.exists() ? ({ mId: docSnap.id, ...(docSnap.data() as Message) }) : undefined;
+    return docSnap.exists()
+      ? { mId: docSnap.id, ...(docSnap.data() as Message) }
+      : undefined;
   }
 }

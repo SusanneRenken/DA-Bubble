@@ -39,7 +39,7 @@ export class ChannelsComponent{
   
   
   loadChannels() {
-    this.channels$ = this.channelService.getSortedChannels();
+    this.channels$ = this.channelService.getSortedChannels(this.activeUserId);
   }
   
   

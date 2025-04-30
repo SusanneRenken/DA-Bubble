@@ -38,10 +38,12 @@
   [userName]="activChannelMemberProfil?.uName"
   [userEmail]="activChannelMemberProfil?.uEmail"
   [userStatus]="activChannelMemberProfil?.uStatus"
+  [userId]="activChannelMemberProfil?.uId"
   #profilRef
   size="big"
   [showButton]="activeUserId !== activChannelMemberProfil?.uId"
   (close)="toggleMemberProfil()"
+  (openChat)="openChat.emit($event)"
 ></app-profil>
 }
 

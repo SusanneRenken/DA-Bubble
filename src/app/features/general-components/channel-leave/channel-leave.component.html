@@ -2,7 +2,7 @@
     <section (click)="$event.stopPropagation()">
         <header>
             <div>
-                <img src="/assets/icons/hashtag.svg">
+                <img src="assets/icons/hashtag.svg">
                 <h1>{{ channelData?.cName}}</h1>
             </div>
             <button (click)="closeWindow()" class="closeChannelLeave">
@@ -20,7 +20,7 @@
                         </button>
                     </div>
                     <div class="channelHashtagName">
-                        <img src="/assets/icons/hashtag.svg">
+                        <img src="assets/icons/hashtag.svg">
                         <span>{{ channelData?.cName}}</span>
                     </div>
                 </div>
@@ -39,7 +39,7 @@
                         </button>
                     </div>
                     <div class="editChannelName" >
-                        <img src="/assets/icons/hashtag.svg">
+                        <img src="assets/icons/hashtag.svg">
                         <input [(ngModel)]="editedChannelName"  (ngModelChange)="onNameInput($event)" [placeholder]="editedChannelName"/>
                     </div>
                 </div>
@@ -125,11 +125,13 @@
       [userImage]="activChannelMemberProfil?.uUserImage"
       [userName]="activChannelMemberProfil?.uName"
       [userEmail]="activChannelMemberProfil?.uEmail"
-      [userStatus]="activChannelMemberProfil?.uStatus"
+      [userStatus]="activChannelMemberProfil?.uStatus"    
+      [userId]="activChannelMemberProfil?.uId"
       #profilRef
       size="big"
       [showButton]="activeUserId !== activChannelMemberProfil?.uId"
       (close)="showProfil.emit()"
+      (openChat)="openChat.emit($event)" 
     ></app-profil>
 }
 @if (newChannelMembers) {

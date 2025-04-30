@@ -39,9 +39,7 @@
     <div class="private-header" (click)="toggleProfile(chatPartner)">
       <div class="user-img-status">
         <img
-          [src]="
-            chatPartner?.uUserImage || 'assets/img/profile.png'
-          "
+          [src]="chatPartner?.uUserImage || 'assets/img/profile.png'"
           loading="lazy"
           (error)="onAvatarError($event)"
           alt=""
@@ -172,6 +170,7 @@
   @if (chatType != 'new') {
   <div class="chatbox-textfield thread-margin">
     <app-message-composer
+      #composer
       [placeholder]="getPlaceholder()"
       (messageSend)="sendMessageFromComposer($event)"
       >>
@@ -193,10 +192,12 @@
     [userName]="userProfil?.uName"
     [userEmail]="userProfil?.uEmail"
     [userStatus]="userProfil?.uStatus"
+    [userId]="userProfil?.uId"
     #profilRef
     size="big"
     [showButton]="activeUserId !== userProfil?.uId"
     (close)="toggleProfile(null)"
+    (openChat)="openChat.emit($event)"
   ></app-profil>
   } @if (isChannelMemberOpen) {
   <app-channel-members
@@ -207,6 +208,7 @@
     [channelId]="channelData?.cId"
     (addMember)="addChannelMember()"
     (close)="toggleChannelMembers()"
+    (openChat)="openChat.emit($event)"
   ></app-channel-members>
 
   }

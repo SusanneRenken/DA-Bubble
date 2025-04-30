@@ -74,4 +74,4 @@
   </div>
 </form>
 
-<app-success-indicator [visible]="isConfirmationVisible">E-Mail gesendet</app-success-indicator>
+<app-success-indicator [visible]="isConfirmationVisible || !isButtonVisible()">E-Mail gesendet</app-success-indicator>

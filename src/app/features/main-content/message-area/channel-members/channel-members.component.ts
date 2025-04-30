@@ -37,6 +37,7 @@ export class ChannelMembersComponent{
 
 
   @Output() close = new EventEmitter<void>();
+  @Output() openChat = new EventEmitter<{chatType: 'private'; chatId: string}>();
   @ViewChild('channelWrapper') channelWrapper?: ElementRef;
   @ViewChild('memberAddWrapper') memberAddWrapper?: ElementRef;
 

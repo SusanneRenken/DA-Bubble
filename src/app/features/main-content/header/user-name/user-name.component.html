@@ -42,8 +42,10 @@
     [userName]="userName"
     [userEmail]="userEmail"
     [userStatus]="userStatus"
+    [userId]="userId"
     #profilRef
     (close)="showProfil = false"
+    (openChat)="openChat.emit($event)" 
     size="small"
     [showButton]="false"
   ></app-profil>

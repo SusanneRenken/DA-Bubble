@@ -43,14 +43,23 @@
 
 @mixin errMess($text-color) {
   width: 100%;
-  @include dFlex($align: flex-start, $direction: column );
+  position: relative;
+
+  @media (max-width: 500px) {
+    @include dFlex($align: flex-start, $direction: column);
+  }
 
   > small {
+    padding-left: 32px;
     color: $text-color;
-    font-size: 14px;
+    font-size: 16px;
+    position: absolute;
+    top: 64px;
 
     @media (max-width: 700px) {
-      font-size: 10px;
+      padding-left: 24px;
+      font-size: 14px;
+      top: 52px;
     }
   }
 }

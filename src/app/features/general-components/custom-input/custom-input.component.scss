@@ -9,7 +9,7 @@ label {
   @include mixin.dFlex($gap: 18px);
   width: 100%;
   background-color: vari.$sky-grey;
-  padding: clamp(5px, 1vw, 18px) clamp(20px, 4vw, 32px);
+  padding: 18px 32px;
   border: 1px solid vari.$sky-grey;
   border-radius: 100px;
   transition: border-color 0.2s ease-in-out;
@@ -30,5 +30,10 @@ label {
   &:has(> input:focus) {
     border-color: vari.$purple;
     --icon-color: #000000;
+  }
+
+  @media (max-width: 700px) {
+    margin-bottom: 8px;
+  padding: 12px 24px;
   }
 }

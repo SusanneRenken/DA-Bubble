@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormControl,
@@ -14,6 +14,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthentificationService } from '../../../shared/services/authentification.service';
 import { CustomInputComponent } from '../../general-components/custom-input/custom-input.component';
 import { SuccessIndicatorComponent } from '../../general-components/success-indicator/success-indicator.component';
+import { VisibleButtonService } from '../../../shared/services/visible-button.service';
 
 @Component({
   selector: 'app-confirm-password',
@@ -27,6 +28,8 @@ import { SuccessIndicatorComponent } from '../../general-components/success-indi
   styleUrl: './confirm-password.component.scss',
 })
 export class ConfirmPasswordComponent implements OnInit {
+  private visibleBtn = inject(VisibleButtonService);
+
   newPassword!: FormGroup;
   oobCode: string | null = null;
   isConfirmationVisible: boolean = false;
@@ -37,12 +40,16 @@ export class ConfirmPasswordComponent implements OnInit {
     return newPassword === conPassword ? null : { passwordMismatch: true };
   };
 
+  readonly isButtonVisible = this.visibleBtn.visibleButton;
+
   constructor(
     public componentSwitcher: ComponentSwitcherService,
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthentificationService
-  ) {}
+  ) {
+    this.visibleBtn.show();
+  }
 
   ngOnInit(): void {
     this.oobCode = this.route.snapshot.queryParamMap.get('oobCode');
@@ -66,6 +73,7 @@ export class ConfirmPasswordComponent implements OnInit {
       return;
     }
 
+    this.visibleBtn.hide();
     const { newPassword, conPassword } = this.newPassword.value;
     this.processPasswordReset(newPassword, conPassword);
   }
@@ -95,6 +103,7 @@ export class ConfirmPasswordComponent implements OnInit {
   }
   
   private handleResetError(error: any): void {
+    this.visibleBtn.show();
     console.error('Error when resetting the password:', error);
   }
 

@@ -38,7 +38,7 @@
   </div>
   
   <div class="btn-container">
-    <app-button [disabled]="!selectedAvatar" (click)="onNext()">Weiter</app-button>
+    <app-button [disabled]="!selectedAvatar || !isButtonVisible()" (click)="onNext()">Weiter</app-button>
   </div>
 </div>
 

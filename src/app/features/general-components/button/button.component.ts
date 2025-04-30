@@ -1,6 +1,6 @@
 import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/core';
 
-type ButtonColor = 'blue' | 'white' | 'gray';
+type ButtonColor = 'blue' | 'white' | 'gray' | 'transparent' | 'sky-grey';
 
 @Component({
   selector: 'app-button',

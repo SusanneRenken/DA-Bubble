@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { CustomInputComponent } from '../../general-components/custom-input/custom-input.component';
 import { SuccessIndicatorComponent } from '../../general-components/success-indicator/success-indicator.component';
 import { Subscription } from 'rxjs';
+import { VisibleButtonService } from '../../../shared/services/visible-button.service';
 
 @Component({
   selector: 'app-login',
@@ -21,16 +22,22 @@ import { Subscription } from 'rxjs';
   styleUrl: './login.component.scss',
 })
 export class LoginComponent implements OnInit, OnDestroy {
+  private visibleBtn = inject(VisibleButtonService);
+
   loginForm!: FormGroup;
   authError: string = '';
   isConfirmationVisible: boolean = false;
   private sub?: Subscription;
 
+  readonly isButtonVisible = this.visibleBtn.visibleButton;
+
   constructor(
     public componentSwitcher: ComponentSwitcherService,
     private authService: AuthentificationService,
     private router: Router
-  ) {}
+  ) {
+    this.visibleBtn.show();
+  }
 
   ngOnInit(): void {
     this.loginForm = new FormGroup({
@@ -50,6 +57,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     if (!this.loginForm.valid) return;
   
+    this.visibleBtn.hide();
     const { email, password } = this.loginForm.value;
     this.attemptLogin(email, password);
   }
@@ -77,6 +85,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
   
   private handleLoginError(error: any): void {
+    this.visibleBtn.show();
     console.error('Login error:', error);
     this.authError = this.mapErrorToMessage(error.code);
   }
@@ -91,6 +100,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   onLoginWithGoogle(): void {
+    this.visibleBtn.hide();
     this.authService.loginWithGoogle()
     .then(result => {
       if (result) {
@@ -98,10 +108,14 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.router.navigate(['/home', uid]);
       }
     })
-    .catch(error => console.error('Error during Google login:', error));
+    .catch(error => {
+      this.visibleBtn.show();
+      console.error('Error during Google login:', error);
+    });
   }
 
   onLoginAsGuest(): void {
+    this.visibleBtn.hide();
     this.authService.loginAsGuest()
     .then(result => {
       if (result) {
@@ -109,7 +123,10 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.router.navigate(['/home', uid]);
       }
     })
-    .catch(error => console.error('Guest login error:', error));
+    .catch(error => {
+      this.visibleBtn.show();
+      console.error('Guest login error:', error)
+    });
   }
 
   changeComponent(componentName: string): void {

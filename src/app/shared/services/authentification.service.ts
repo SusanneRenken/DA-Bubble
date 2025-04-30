@@ -21,7 +21,7 @@ import {
   signInWithPopup,
   UserCredential,
 } from '@angular/fire/auth';
-import { collection } from 'firebase/firestore';
+import { arrayUnion, collection } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root',
@@ -53,27 +53,41 @@ export class AuthentificationService {
     });
   }
 
-  async completeRegistration(profilePictureUrl: string): Promise<void | UserCredential> {
-    if (!this.registrationData) return Promise.reject('No active registration available');  
+  async completeRegistration(profilePictureUrl: string): Promise<UserCredential> {
+    if (!this.registrationData) {
+      return Promise.reject('No active registration available');
+    }
+  
     const { email, password, username } = this.registrationData;
-    return createUserWithEmailAndPassword(this.auth, email, password)
-    .then((userCredential) => {
-      const uid = userCredential.user.uid;
-      const userData: UserInterface = {
-        uId: uid,
-        uName: username,
-        uEmail: email,
-        uUserImage: 'assets/img/' + profilePictureUrl,
-        uStatus: false,
-        uLastReactions: ['👍', '😊']
-      };
-      const userRef = collection(this.firestore, 'users');
-      const userDocRef = doc(userRef, uid);
-      return setDoc(userDocRef, userData).then(() => {
-        this.registrationData = null;
-        return userCredential;
-      });
+  
+    const userCredential = await createUserWithEmailAndPassword(
+      this.auth,
+      email,
+      password
+    );
+    const uid = userCredential.user.uid;
+  
+    const userData: UserInterface = {
+      uId:            uid,
+      uName:          username,
+      uEmail:         email,
+      uUserImage:     'assets/img/' + profilePictureUrl,
+      uStatus:        false,
+      uLastReactions: ['👍', '😊'],
+    };
+  
+    const userRef    = collection(this.firestore, 'users');
+    const userDocRef = doc(userRef, uid);
+    await setDoc(userDocRef, userData);
+  
+    const defaultChannelId = 'KV14uSorBJhrWW92IeDS';
+    const channelRef       = doc(this.firestore, 'channels', defaultChannelId);
+    await updateDoc(channelRef, {
+      cUserIds: arrayUnion(uid),
     });
+  
+    this.registrationData = null;
+    return userCredential;
   }
 
   async loginWithEmail(email: string, password: string): Promise<void | UserCredential> {
@@ -111,7 +125,7 @@ export class AuthentificationService {
       this.currentUid = result.user.uid;
       const guestData: UserInterface = {
         uId: this.currentUid,
-        uName: 'Guest',
+        uName: 'Gast',
         uEmail: '',
         uUserImage: 'assets/img/profile.png',
         uStatus: true,
@@ -138,30 +152,38 @@ export class AuthentificationService {
 
   async logout(): Promise<void> {
     const uid = this.currentUid;
-    const currentUser = this.auth.currentUser;
-    let deletePromise: Promise<any>;
-    if (currentUser && currentUser.isAnonymous && uid) {
-      const userRef = collection(this.firestore, 'users');
-      const userDocRef = doc(userRef, uid);
-      deletePromise = deleteDoc(userDocRef)
-      .then(() => {
-        return currentUser.delete();
-      });
-    } else {
-      deletePromise = Promise.resolve();
-    }
-    return deletePromise.then(() => {
-      const oldUid = this.currentUid;
-      if (oldUid) {
-        const userRef = collection(this.firestore, 'users');
-        const userDocRef = doc(userRef, oldUid);
-        return updateDoc(userDocRef, { uStatus: false });
-      } else {
-        return Promise.resolve();
+    const user = this.auth.currentUser;
+    
+    await this.handleAnonymousGuest(user, uid);
+    await this.updateUserStatus(uid);
+    await this.signOutUser();
+  }
+
+  private async handleAnonymousGuest(user: any | null, uid: string | null): Promise<void> {
+    if (user?.isAnonymous && uid) {
+      const userDocRef = doc(collection(this.firestore, 'users'), uid);
+      try {
+        await deleteDoc(userDocRef);
+        await user.delete();
+      } catch (deleteErr) {
+        console.warn('Gast-Löschen fehlgeschlagen, weiter mit Sign-Out', deleteErr);
       }
-    }).then(() => {
-      this.currentUid = null;
-      return this.auth.signOut();
-    });
+    }
+  }
+
+  private async updateUserStatus(uid: string | null): Promise<void> {
+    if (!uid) return;
+
+    const userDoc = doc(collection(this.firestore, 'users'), uid);
+    try {
+      await updateDoc(userDoc, { uStatus: false });
+    } catch (err) {
+      console.warn('Status-Update fehlgeschlagen (Dokument evtl. gelöscht)', err);
+    }
+  }
+
+  private async signOutUser(): Promise<void> {
+    await this.auth.signOut();
+    this.currentUid = null;
   }
 }

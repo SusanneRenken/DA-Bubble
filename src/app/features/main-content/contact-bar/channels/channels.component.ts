@@ -19,7 +19,7 @@ export class ChannelsComponent{
   isPermanentDeleteOpen = false;
   openChannelId: string | null = null;
   channels$: Observable<any[]> = of([]); 
-  @Input() activeUserId!: string | null;
+  @Input() activeUserId!: any;
   @Output() openChat = new EventEmitter<{ chatType: 'private' | 'channel'; chatId: string }>();
   @Output() toggleMessage = new EventEmitter<boolean>();
 
@@ -53,9 +53,9 @@ export class ChannelsComponent{
   }
 
 
-  selectChannel(channelId: string): void {        
+  selectChannel(channelId: string, type: 'channel' | 'private' = 'channel'): void {
     this.openChat.emit({
-      chatType: 'channel',
+      chatType: `${type}`,
       chatId: channelId
     });
   }
@@ -65,6 +65,7 @@ export class ChannelsComponent{
     event.stopPropagation();
     this.openChannelId = channelId;
     this.isPermanentDeleteOpen = true;
+    this.selectChannel(this.activeUserId, 'private');
   }
 }
 

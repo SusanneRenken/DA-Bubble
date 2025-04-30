@@ -6,6 +6,7 @@ import { ContactBarComponent } from './contact-bar/contact-bar.component';
 import { MessageAreaComponent } from './message-area/message-area.component';
 import { SearchBarComponent } from './header/search-bar/search-bar.component';
 import { DeviceVisibleComponent } from '../../shared/services/responsive';
+import { AuthentificationService } from '../../shared/services/authentification.service';
 
 @Component({
   selector: 'app-main-content',
@@ -23,6 +24,7 @@ import { DeviceVisibleComponent } from '../../shared/services/responsive';
 })
 export class MainContentComponent {
   private route = inject(ActivatedRoute);
+  private authService = inject(AuthentificationService);
 
   smallSize = false;
   messageIn = false;
@@ -40,6 +42,8 @@ export class MainContentComponent {
     this.activeUserId = this.route.snapshot.paramMap.get('activeUserId');
     this.chatId = this.activeUserId;
     this.chatType = 'private';
+
+    if (this.authService.currentUid === null) this.authService.currentUid = this.activeUserId;
 
     this.updateScreenSize();
     window.addEventListener('resize', () => this.updateScreenSize());

@@ -9,12 +9,11 @@ import { User } from '../../../shared/interfaces/user.interface';
   templateUrl: './member-list.component.html',
   styleUrl: './member-list.component.scss'
 })
+
 export class MemberListComponent {
   @Input() channelMembers: User[] = [];
   @Input() activeUserId!: string | null;
 
   @Output() addMember = new EventEmitter<void>();
-  @Output() showProfil = new EventEmitter<User>();
-
-  
+  @Output() showProfil = new EventEmitter<User>();  
 }

@@ -22,12 +22,12 @@ import { Subject } from 'rxjs';
 })
 
 export class ChannelLeaveComponent implements OnInit{
+  firestore = inject(Firestore);
   @Input() channelData: Channel | null = null;
   @Input() channelMembers:  User[] = [];
   @Input() activeUserId: string | null = null;  
   @Input() activChannelMemberProfil: User | null = null;
   @Input() newChannelMembers: boolean = false;
-  @Input() channelId: any;
   @Input() channelName: string = '';
   @Input() isChannelMemberProfilOpen: boolean = false;
 
@@ -53,9 +53,8 @@ export class ChannelLeaveComponent implements OnInit{
   nameExists = false;
   createdByUserName: string = 'Unbekannt';
 
-  firestore = inject(Firestore);
-
   constructor(private userService: UserService, private channelService: ChannelService) {}
+
 
   ngOnInit(): void {
     this.userService.getEveryUsers()
@@ -89,6 +88,13 @@ export class ChannelLeaveComponent implements OnInit{
     } catch (err) {
       this.nameExists = false;
     }
+  }
+
+
+  toggleMemberProfil(member?: User) {
+    const isOpen = !this.isChannelMemberProfilOpen;
+    this.isChannelMemberProfilOpen = isOpen;
+    this.activChannelMemberProfil = member || null;
   }
 
 
@@ -134,12 +140,7 @@ export class ChannelLeaveComponent implements OnInit{
 
   saveNewName() {
     const newName = this.editedChannelName.trim();
-    if (
-      !newName ||
-      newName.length < 3 ||
-      this.nameExists ||
-      !this.channelData?.cId
-    ) {
+    if (!newName || newName.length < 3 || this.nameExists || !this.channelData?.cId) {
       return;
     }
     this.channelService

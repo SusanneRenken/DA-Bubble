@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, Output, EventEmitter, SimpleChanges, ViewChild, ViewChildren, ElementRef, QueryList, OnChanges, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, SimpleChanges, ViewChild, ViewChildren, ElementRef, QueryList, OnChanges, OnInit, ViewEncapsulation } from '@angular/core';
 import { User } from '../../../shared/interfaces/user.interface';
 import { ChannelService } from '../../../shared/services/channel.service';
 import { UserService } from '../../../shared/services/user.service';
@@ -10,19 +10,29 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './add-new-members.component.html',
-  styleUrl: './add-new-members.component.scss',
+  styleUrls: ['./add-new-members.component.scss'], 
+  encapsulation: ViewEncapsulation.None,
+  host: {
+    '(click)': '$event.stopPropagation()'
+  }
 })
 
 export class AddNewMembersComponent implements OnInit, OnChanges{
+  private resizeObserver?: ResizeObserver;
+  memberAddElement: boolean = false;
+  memberInputId: string = '';
+  memberInputAdd: string = '';
+  memberInputImage: string = '';
+  showMember: boolean = false;
+  showOverlay = false;
   searchValue: string = '';
   charCount: number = 0;
   filteredMembers: User[] = [];
-  selectedMembers: User[] = [];
   availableMembers: User[] = [];
-
+  selectedMemberIds: string[] = [];
+  selectedMembers: User[] = [];
   displayCount = 1;
   selectedOption: string = '';
-
 
   @Input() channelMembers: User[] = [];
   @Input() activeUserId!: string | null;
@@ -32,77 +42,34 @@ export class AddNewMembersComponent implements OnInit, OnChanges{
   @Input() channelDescription: string = '';
   @Input() showXLine: boolean = false;
   @Output() close = new EventEmitter<void>();
- 
-
-
-
-  @Output() memberNameAddEvent    = new EventEmitter<string>();
-  @Output() memberNameRemoveEvent = new EventEmitter<string>();
- 
-
-  
   @ViewChild('memberInput', { static: false })memberInput?: ElementRef<HTMLElement>;
   @ViewChildren('containerDelete', { read: ElementRef })pills!: QueryList<ElementRef<HTMLDivElement>>;
   
-  
-  memberAddElement: boolean = false;
-  memberInputId: string = '';
-  memberInputAdd: string = '';
-  memberInputImage: string = '';
-  showMember: boolean = false;
-  selectedUserIds: string[] = [];
-  private resizeObserver?: ResizeObserver;
-
-
-
-
   constructor(private channelService: ChannelService, private userService: UserService) {}
-
-
-
-
-  onFocusOut() {
-    this.showMember = false;
-    
-  }
-
-  onInputFocus(): void {
-    this.filteredMembers = [...this.availableMembers];
-    this.showMember = true;
-  }
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
   ngOnInit() {
     this.rebuildAvailableList();
   }
+
+
   ngOnChanges(changes: SimpleChanges) {
     if (changes['channelMembers']) {
       this.rebuildAvailableList();
     }
   }
 
+
   private async rebuildAvailableList() {
     const allUsers = await this.userService.allUsers();
-    const existingIds = new Set(this.channelMembers.map(u => u.uId));
-    this.availableMembers = allUsers.filter(u => !existingIds.has(u.uId));
+    const excluded = new Set<string>();
+    for (const u of this.channelMembers) {
+      if (u.uId) excluded.add(u.uId);
+    }
+    if (this.activeUserId) {
+      excluded.add(this.activeUserId);
+    }
+    this.availableMembers = allUsers.filter(u => u.uId && !excluded.has(u.uId));
     this.filteredMembers  = [...this.availableMembers];
   }
 
@@ -112,13 +79,26 @@ export class AddNewMembersComponent implements OnInit, OnChanges{
       this.resizeObserver = new ResizeObserver(() => this.updateDisplayCount());
       this.resizeObserver.observe(this.memberInput.nativeElement);
       this.updateDisplayCount();
-  
       this.pills.changes.subscribe(() => this.updateDisplayCount());
     }
   }
 
+
   ngOnDestroy(): void {
     this.resizeObserver?.disconnect();
+  }
+
+
+  onFocusOut(): void {
+    this.showMember = false;
+    this.showOverlay = false; 
+  }
+
+
+  onInputFocus(): void {
+    this.filteredMembers = [...this.availableMembers];
+    this.showMember = true;
+    this.showOverlay = true;
   }
 
 
@@ -155,37 +135,31 @@ export class AddNewMembersComponent implements OnInit, OnChanges{
   }
 
 
-  toggleMember(member: User): void {
-    if (this.isSelected(member)) {
-      this.removeMember(member);
-      this.selectedMembers = this.selectedMembers.filter(m => m.uId !== member.uId);
-      this.memberNameRemoveEvent.emit(member.uId!);
+  toggleMember(member: User) {
+    const id = member.uId!;
+    const idx = this.selectedMemberIds.indexOf(id);
+    if (idx > -1) {
+      this.selectedMemberIds.splice(idx, 1);
+      this.selectedMembers = this.selectedMembers.filter(m => m.uId !== id);
+      this.showOverlay = true;
     } else {
+      this.selectedMemberIds.push(id);
       this.selectedMembers.push(member);
-      this.memberNameAddEvent.emit(member.uId!);
     }
-    if (this.searchValue.length > 0) {    
+    if (this.searchValue) {
       this.memberAddElement = true;
-      this.showMember = false;
+      this.showMember       = false;
+    } 
+    if (this.selectedMembers.length) {
+      this.memberAddElement = true;
+      this.showMember       = true;
     }
-    if (this.selectedMembers.length > 0 && this.searchValue.length === 0) {
-      this.showMember = true;
-      this.memberAddElement = true;
+    else{
+      this.memberAddElement = false;
+      this.showMember       = false;
     }
   }
   
-
-  removeMember(member: User): void {  
-    this.selectedMembers = this.selectedMembers.filter(m => m.uId !== member.uId);
-    this.memberNameRemoveEvent.emit(member.uId!);
-    if (this.selectedMembers.length === 0) {
-      this.searchValue = '';
-      this.filteredMembers = [...this.availableMembers];
-      this.showMember = true;
-      this.memberAddElement = false;
-    }
-  }
-
 
   isSelected(member: User): boolean {
     return this.selectedMembers.some(m => m.uId === member.uId);
@@ -194,23 +168,11 @@ export class AddNewMembersComponent implements OnInit, OnChanges{
 
   trackById(_: number, u: User) { return u.uId; }
 
+
   emitClose() {
     this.close.emit();
   }
 
-    memberNameAdd(memberName: string, memberImage: string, memberId: string) {
-    this.memberInputAdd   = memberName;
-    this.memberInputImage = memberImage;
-    this.memberInputId = memberId;
-    console.log(this.memberInputId);
-
-    if (!this.selectedUserIds.includes(memberId)) {
-      this.selectedUserIds.push(memberId);
-    }
-
-    this.memberAddElement = true;
-    this.showMember = false;
-  }
 
   inputNameClose(): void {
     this.memberAddElement = false;
@@ -220,36 +182,31 @@ export class AddNewMembersComponent implements OnInit, OnChanges{
   }
 
   async addNewChannelMembers() {
-    if (!this.channelId || this.selectedUserIds.length === 0) return;
-    try {
-      await this.channelService.addUsersToChannel(
-        this.channelId,
-        ...this.selectedUserIds
-      );
-      this.selectedUserIds = [];
-      this.close.emit();
-    } catch (err) {}
+    if (!this.channelId || this.selectedMemberIds.length === 0) return;
+    await this.channelService.addUsersToChannel(
+      this.channelId,
+      ...this.selectedMemberIds
+    );
+    this.selectedMemberIds = [];
+    this.selectedMembers   = [];
+    this.close.emit();
   }
 
   async createNewChannel(name: string, description: string) {
-    if (!name || !this.activeUserId) return;
-
+    if (!name || !this.activeUserId) return;    
     let ids: string[];
-
     if (this.selectedOption === 'option1') {
       const allUsers = await this.userService.allUsers();
-
       ids = allUsers
         .map((u) => u.uId)
         .filter((id): id is string => typeof id === 'string');
     } else {
-      ids = [...this.selectedUserIds];
+      ids = [...this.selectedMemberIds];
     }
 
     if (!ids.includes(this.activeUserId)) {
       ids.unshift(this.activeUserId);
     }
-
     await this.userService.createChannelWithUsers(
       name,
       description,
@@ -257,15 +214,5 @@ export class AddNewMembersComponent implements OnInit, OnChanges{
       ids
     );
     this.emitClose();
-  }
-
-  onMemberAdded(userId: string) {
-    if (!this.selectedUserIds.includes(userId)) {
-      this.selectedUserIds.push(userId);
-    }
-  }
-
-  onMemberRemoved(userId: string) {
-    this.selectedUserIds = this.selectedUserIds.filter((id) => id !== userId);
   }
 }

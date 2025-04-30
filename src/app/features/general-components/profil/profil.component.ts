@@ -20,10 +20,14 @@ import { UserService } from '../../../shared/services/user.service';
   templateUrl: './profil.component.html',
   styleUrl: './profil.component.scss',
 })
+
 export class ProfilComponent {
+  private originalUserImage!: string;
+  
   firestore = inject(Firestore);
   isActive: boolean = true;
   showEditProfil: boolean = false;
+  showAvatarChoice = false;
   editedUserName: string = '';
   items = [1, 2, 3, 4, 5, 6];
 
@@ -39,17 +43,11 @@ export class ProfilComponent {
   @Output() openChat = new EventEmitter<{chatType: 'private'; chatId: string}>();
   @ViewChild('profilWrapper') profilWrapper?: ElementRef;
 
-  showAvatarChoice = false;
-
-  private originalUserImage!: string;
-
   constructor(private router: Router, private userService: UserService) {}
 
   ngOnInit(): void {
     this.isActive = this.userStatus === true || this.userStatus === 'true';
-    this.originalUserImage = this.userImage;
-    console.log('OnInit', this.originalUserImage);
-    
+    this.originalUserImage = this.userImage;    
   }
 
   closeProfil() {
@@ -57,16 +55,16 @@ export class ProfilComponent {
     this.close.emit();
   }
 
+
   async saveAvatarChange(): Promise<void> {
     try {
       await this.userService.updateUserImage(this.activeUserId, this.userImage);
       this.originalUserImage = this.userImage;
     } finally {
       this.showAvatarChoice = false;
-    }
-    console.log('async', this.originalUserImage);
-    
+    }    
   }
+
 
   changeUserName() {
     if (!this.activeUserId || !this.editedUserName.trim()) return;
@@ -79,6 +77,7 @@ export class ProfilComponent {
     });
   }
 
+
   onMainClick(event: MouseEvent) {
     const insideSection = this.profilWrapper?.nativeElement?.contains(
       event.target
@@ -88,9 +87,11 @@ export class ProfilComponent {
     }
   }
 
+
   onEditClick() {
     this.showEditProfil = true;
   }
+
 
   async deleteMember() {
     if (!this.activeUserId) return;
@@ -99,18 +100,22 @@ export class ProfilComponent {
     this.router.navigate(['/access']);
   }
 
+
   selectAvatar(item: number): void {    
     this.userImage = `assets/img/avatar-${item}.png`;    
     this.showAvatarChoice = false;
   }
 
+
   bigUserImg(): void {
     this.showAvatarChoice = !this.showAvatarChoice;
   }
 
+  
   trackById(index: number, id: number) {
     return id;
   }
+
 
   onStartChat() {
     this.openChat.emit({ chatType: 'private', chatId: this.userId! });

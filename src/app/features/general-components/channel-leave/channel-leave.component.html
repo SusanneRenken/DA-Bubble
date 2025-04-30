@@ -45,14 +45,10 @@
                 </div>
                 @if ( hasInteractedName && editedChannelName.trim().length > 0 &&
                     editedChannelName.trim().length < 3 && editedChannelName.trim() !== channelData?.cName) {
-                    <span class="errorText">
-                      Der Channel-Name muss mindestens 3 Buchstaben lang sein !
-                    </span>
+                    <span class="errorText">Der Channel-Name muss mindestens 3 Buchstaben lang sein !</span>
                   }
                 @if ( hasInteractedName && editedChannelName.trim().length >= 3 &&nameExists) {
-                    <span class="errorText">
-                      Bitte nutzen Sie einen anderen Channel-Name !
-                    </span>
+                    <span class="errorText">Bitte nutzen Sie einen anderen Channel-Name !</span>
                 }
             }
             @if (editDescription) {
@@ -108,7 +104,7 @@
                     [channelMembers]="channelMembers"
                     [activeUserId]="activeUserId"
                     (addMember)="addMember.emit()"
-                    (showProfil)="showProfil.emit($event)"
+                    (showProfil)="toggleMemberProfil($event)"
                   ></app-member-list>
                 </app-device-visible>
             </div>
@@ -118,32 +114,33 @@
         </div>
     </section>
 </main>
-
 @if (isChannelMemberProfilOpen) {
     <app-profil
-      [activeUserId]="activeUserId"
-      [userImage]="activChannelMemberProfil?.uUserImage"
-      [userName]="activChannelMemberProfil?.uName"
-      [userEmail]="activChannelMemberProfil?.uEmail"
-      [userStatus]="activChannelMemberProfil?.uStatus"    
-      [userId]="activChannelMemberProfil?.uId"
-      #profilRef
-      size="big"
-      [showButton]="activeUserId !== activChannelMemberProfil?.uId"
-      (close)="showProfil.emit()"
-      (openChat)="openChat.emit($event)" 
+    [activeUserId]="activeUserId"
+    [userImage]="activChannelMemberProfil?.uUserImage"
+    [userName]="activChannelMemberProfil?.uName"
+    [userEmail]="activChannelMemberProfil?.uEmail"
+    [userStatus]="activChannelMemberProfil?.uStatus"    
+    [userId]="activChannelMemberProfil?.uId"
+    #profilRef
+    size="big"
+    [showButton]="activeUserId !== activChannelMemberProfil?.uId"
+    (close)="toggleMemberProfil()"
+    (openChat)="openChat.emit($event)" 
     ></app-profil>
 }
 @if (newChannelMembers) {
-    <div (click)="closeAddMember()" class="memberAdd" #memberAddWrapper>
-        <app-add-new-members 
+    <div (click)="closeAddMember()" class="memberAdd">
+        <app-add-new-members
+        (click)="$event.stopPropagation()"
+        (close)="closeAddMember()"
         [ngClass]="{ 
             'slide-up': !animateOut, 
             'slide-down': animateOut 
         }"
         [channelMembers]="channelMembers"
         [activeUserId]="activeUserId"
-        [channelId]="channelId"
+        [channelId]="channelData?.cId"
         [channelName]="channelData?.cName"
         [showInput]="true"
         [showXLine]="true"  

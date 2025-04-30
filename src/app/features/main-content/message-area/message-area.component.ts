@@ -80,8 +80,6 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
   foundUsersNew: User[] = [];
   foundChannelsNew: Channel[] = [];
   newChatInput = '';
-  activChannelMemberProfil: User | null = null;
-  isChannelMemberProfilOpen = false;
   newChannelMembers = false;
   addMemberPopUp = false;
 
@@ -257,11 +255,6 @@ export class MessageAreaComponent implements OnChanges, OnDestroy {
 
   toggleChannelMembers() {
     this.isChannelMemberOpen = !this.isChannelMemberOpen;
-  }
-
-  toggleMemberProfil(u?: User) {
-    this.isChannelMemberProfilOpen = !this.isChannelMemberProfilOpen;
-    this.activChannelMemberProfil = u ?? null;
   }
 
   addChannelMember() {

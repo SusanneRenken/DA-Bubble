@@ -95,8 +95,8 @@ export class UserNameComponent {
     }
   }
 
-  
-  openProfil() {
+
+  openProfil() { 
     this.showProfil = true;
   }
 

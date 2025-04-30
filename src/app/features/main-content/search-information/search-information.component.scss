@@ -5,7 +5,7 @@ main {
     top: 90%;
     left: 5%;
     background-color: white;
-    height: 500px;
+    height: 400px;
     width: 90%;
     border-radius: 0 30px 30px 30px;
     padding: 40px;
@@ -84,6 +84,29 @@ section{
     background-color: white;
     padding: 4px 16px;
     border: none;
+    &:hover{
+        background-color: #ECEEFE;
+    }
+}
+
+.headline{
+    @include flexBox('', left, top, '');
+    @include fontStyle(16px, black, 400);
+}
+
+.messageButton span{
+    display: block; 
+    text-align: left;
+}
+
+.messageButton{
+    @include flexBox(column, '', '', 4);
+    background-color: white;
+    width: fit-content;
+    padding: 8px 24px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
     &:hover{
         background-color: #ECEEFE;
     }

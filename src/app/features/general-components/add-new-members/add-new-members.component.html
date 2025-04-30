@@ -1,80 +1,121 @@
-
 @if (showXLine) {
-  <div class="greyxLineContainer">
-    <div class="greyxLine"></div>
-  </div>
+<div class="greyxLineContainer">
+  <div class="greyxLine"></div>
+</div>
 }
 <header class="addMemberHeader">
   <div>
     <h1>Leute hinzufügen</h1>
-    <button class="closeIconButton" (click)="emitClose()">
+    <button class="closeIconButton" (click)="emitClose(); $event.stopPropagation()">
       <div class="material-symbols closeIcon">close</div>
     </button>
   </div>
   @if (showInput) {
-    <span class="addMemberChannel"><div class="material-symbols">tag</div> {{ channelName }}</span>
+  <span class="addMemberChannel"
+    ><div class="material-symbols">tag</div>
+    {{ channelName }}</span
+  >
   }
-  </header>
-  @if (!showInput) {
-      <div class="addEveryOrOneMember">
-          <div class="custom-radio">
-              <input type="radio" [(ngModel)]="selectedOption" name="memberOption" value="option1" id="option1"/>
-              <span class="radio-mark" (click)="selectedOption = 'option1'"></span>
-              <span class="radio-label"> 
-                  Alle Mitglieder von 
-                  <a class="devspaceElement" (click)="selectedOption = 'option1'" href="javascript:void(0)">Devspace</a>
-                  hinzufügen
-              </span>
-            </div>
-          <div class="custom-radio">
-              <input type="radio" [(ngModel)]="selectedOption" name="memberOption" value="option2" id="option2">
-              <span class="radio-mark" (click)="selectedOption = 'option2'"></span>
-              <span class="radio-label">Bestimmte Leute hinzufügen</span>
-          </div>
+</header>
+@if (!showInput) {
+<div class="addEveryOrOneMember">
+  <div class="custom-radio">
+    <input
+      type="radio"
+      [(ngModel)]="selectedOption"
+      name="memberOption"
+      value="option1"
+      id="option1"
+    />
+    <span class="radio-mark" (click)="selectedOption = 'option1'"></span>
+    <span class="radio-label">
+      Alle Mitglieder von
+      <a class="devspaceElement" (click)="selectedOption = 'option1'" href="javascript:void(0)">Devspace</a>
+      hinzufügen
+    </span>
+  </div>
+  <div class="custom-radio">
+    <input
+      type="radio"
+      [(ngModel)]="selectedOption"
+      name="memberOption"
+      value="option2"
+      id="option2"
+    />
+    <span class="radio-mark" (click)="selectedOption = 'option2'"></span>
+    <span class="radio-label">Bestimmte Leute hinzufügen</span>
+  </div>
+</div>
+}
+@if ((!showInput && selectedOption === 'option2') || (showInput)) {
+<div class="overlay" (click)="onFocusOut()"></div>
+
+<div class="popup" (click)="$event.stopPropagation()">
+  <div class="addInputField" #inputWrapper>
+    @if (selectedMembers.length > 0) {
+    <div class="inputNamePush" #memberInput>
+      @for (member of selectedMembers | slice:0:displayCount; track trackById) {
+      <div class="containerDelete">
+        <div class="inputNameImgPush">
+          <img src="{{ member.uUserImage }}" alt="{{ member.uName }}" />
+          <span>{{ member.uName }}</span>
+        </div>
+        <button class="inputNamePushClose" (click)="removeMember(member)">
+          <div class="material-symbols">close</div>
+        </button>
       </div>
-  }
-  @if (!showInput && selectedOption === 'option2'){
-      <app-new-members-pop-up
-          [channelMembers]="channelMembers"
-          [memberAddElement]="memberAddElement"
-          [memberInputId]="memberInputId"
-          [showMember]="showMember"
-          [memberInputAdd]="memberInputAdd"
-          [memberInputImage]="memberInputImage"
-          (memberNameAddEvent)="onMemberAdded($event)"
-          (memberNameRemoveEvent)="onMemberRemoved($event)"
-          (inputNameCloseEvent)="inputNameClose()"
-      ></app-new-members-pop-up>
-  }
-  @if (showInput) {
-      <app-new-members-pop-up
-          [channelMembers]="channelMembers"
-          [memberAddElement]="memberAddElement"
-          [memberInputId]="memberInputId"
-          [showMember]="showMember"
-          [memberInputAdd]="memberInputAdd"
-          [memberInputImage]="memberInputImage"
-          (memberNameAddEvent)="onMemberAdded($event)"
-          (memberNameRemoveEvent)="onMemberRemoved($event)"
-          (inputNameCloseEvent)="inputNameClose()"
-      ></app-new-members-pop-up>
-  }
-  <div  class="addNewMember">
-      @if (!showInput) {
-          <button 
-            [class.active]="selectedOption !== 'option2' || selectedUserIds.length > 0"
-            [disabled]="selectedOption === 'option2' && selectedUserIds.length === 0"
-            class="addNewMemberButton"
-            (click)="createNewChannel(channelName, channelDescription)">
-            Erstellen
-          </button>
-        }
-      @else {
-          <button  
-          [class.active]="selectedUserIds.length > 0"
-          [disabled]="selectedUserIds.length === 0"
-          (click)="addNewChannelMembers()" 
-          class="addNewMemberButton">Hinzufügen
+      } @if (selectedMembers.length > displayCount) {
+      <div class="more-count">+{{ selectedMembers.length - displayCount }}</div>
+      }
+    </div>
+    } @if (memberAddElement) {
+    <ng-container></ng-container>
+    } @else { @if (!memberAddElement) {
+    <input
+      (keyup)="onKey($event)"
+      (focus)="onInputFocus()"
+      [value]="searchValue"
+      type="text"
+      placeholder="Name eingeben"
+    />
+    } } @if (showMember) {
+    <div class="showMembers" (click)="$event.stopPropagation()">
+      @for(member of filteredMembers; track trackById) {
+      <button
+        (mousedown)="toggleMember(member)"
+        [ngClass]="{ selected: isSelected(member) }"
+        class="memberItem"
+      >
+        <div class="user-img-status">
+          <img src="{{ member.uUserImage }}" alt="" />
+          <span [ngClass]="member.uStatus ? 'online' : 'offline'"></span>
+        </div>
+        <h3>{{ member.uName }}</h3>
       </button>
       }
+    </div>
+    }
   </div>
+</div>
+}
+<div class="addNewMember">
+  @if (!showInput) {
+  <button
+    [class.active]="selectedOption !== 'option2' || selectedUserIds.length > 0"
+    [disabled]="selectedOption === 'option2' && selectedUserIds.length === 0"
+    class="addNewMemberButton"
+    (click)="createNewChannel(channelName, channelDescription)"
+  >
+    Erstellen
+  </button>
+  } @else {
+  <button
+    [class.active]="selectedUserIds.length > 0"
+    [disabled]="selectedUserIds.length === 0"
+    (click)="addNewChannelMembers()"
+    class="addNewMemberButton"
+  >
+    Hinzufügen
+  </button>
+  }
+</div>

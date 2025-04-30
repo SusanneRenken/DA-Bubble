@@ -6,8 +6,6 @@ import {
   EventEmitter,
   ElementRef,
   ViewChild,
-  SimpleChanges,
-  OnChanges,
 } from '@angular/core';
 import { User } from '../../../../shared/interfaces/user.interface';
 import { ProfilComponent } from '../../../general-components/profil/profil.component';
@@ -25,7 +23,8 @@ import { MemberListComponent } from '../../../general-components/member-list/mem
   templateUrl: './channel-members.component.html',
   styleUrl: './channel-members.component.scss',
 })
-export class ChannelMembersComponent implements OnChanges {
+
+export class ChannelMembersComponent{
   @Input() channelMembers: User[] = [];
   @Input() activeUserId: string | null = null;
   @Input() channelId: any;
@@ -34,40 +33,45 @@ export class ChannelMembersComponent implements OnChanges {
   @Input() newChannelMembers: boolean = false;
   @Input() isChannelMemberProfilOpen: boolean = false;
 
-  @Output() newChannelMembersChange = new EventEmitter<boolean>();
-  @Output() activChannelMemberProfilChange = new EventEmitter<User | null>();
-  @Output() isChannelMemberProfilOpenChange = new EventEmitter<boolean>();
+  @Output() newChannelMembersChange = new EventEmitter<boolean>(); // keine Ahnung was das ist 
+
+
   @Output() close = new EventEmitter<void>();
   @ViewChild('channelWrapper') channelWrapper?: ElementRef;
   @ViewChild('memberAddWrapper') memberAddWrapper?: ElementRef;
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['channelMembers']) {
-    }
-  }
+  
 
-  closeChannelMembers() {
+  closeChannelMembers() { 
     this.close.emit();
   }
 
-  onMainClick(event: MouseEvent) {
-    const insideSection = this.channelWrapper?.nativeElement?.contains(
-      event.target
-    );
-    const clickedInsideAddMember =
-      this.memberAddWrapper?.nativeElement?.contains(event.target);
+  onOverlayClick(event: MouseEvent) {
+    const target = event.target as Node;
 
-    if (!insideSection && !clickedInsideAddMember) {
-      this.newChannelMembers = false;
-    }    
+    // falls gerade Add-Members-Modal offen ist …
+    if (this.newChannelMembers) {
+      // … und Klick außerhalb seines Wrappers war
+      if (this.memberAddWrapper && !this.memberAddWrapper.nativeElement.contains(target)) {
+        this.closeAddMembers();
+      }
+    } else {
+      // sonst: Channel-Members-Modal war offen
+      if (this.channelWrapper && !this.channelWrapper.nativeElement.contains(target)) {
+        this.closeChannelMembers();
+      }
+    }
   }
 
   toggleMemberProfil(member?: User) {
     const isOpen = !this.isChannelMemberProfilOpen;
     this.isChannelMemberProfilOpen = isOpen;
     this.activChannelMemberProfil = member || null;
-    this.isChannelMemberProfilOpenChange.emit(isOpen);
-    this.activChannelMemberProfilChange.emit(this.activChannelMemberProfil);
+  }
+
+  closeAddMembers() {
+    this.newChannelMembers = false;
+    this.newChannelMembersChange.emit(false);
   }
 
   addChannelMember() {

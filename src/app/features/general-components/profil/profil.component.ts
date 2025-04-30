@@ -40,6 +40,8 @@ export class ProfilComponent {
   ngOnInit(): void {
     this.isActive = this.userStatus === true || this.userStatus === 'true';
     this.originalUserImage = this.userImage;
+    console.log('OnInit', this.originalUserImage);
+    
   }
 
 
@@ -55,6 +57,8 @@ export class ProfilComponent {
     }finally {
       this.showAvatarChoice = false;
     }
+    console.log('async', this.originalUserImage);
+    
   }
 
 
@@ -92,8 +96,8 @@ export class ProfilComponent {
     this.router.navigate(['/access']);
   }
 
-  selectAvatar(item: number): void {
-    this.userImage = `avatar-${item}.png`;
+  selectAvatar(item: number): void {    
+    this.userImage = `assets/img/avatar-${item}.png`;    
     this.showAvatarChoice = false;
   }
 

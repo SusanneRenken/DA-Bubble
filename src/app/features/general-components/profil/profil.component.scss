@@ -69,7 +69,7 @@ img{
 
 .avatarsMain{
     @include flexBox(column, center, center, 10);
-    position: relative
+    position: relative;
 }
 
 .avatarChoice{

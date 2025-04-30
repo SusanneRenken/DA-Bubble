@@ -179,14 +179,11 @@
   </div>
   } @if (isEditChannelOpen) {
   <app-channel-leave
-    [activChannelMemberProfil]="activChannelMemberProfil"
     [(newChannelMembers)]="newChannelMembers"
-    [isChannelMemberProfilOpen]="isChannelMemberProfilOpen"
     [channelMembers]="channelMembers"
     [activeUserId]="activeUserId"
     [channelData]="channelData"
     (addMember)="addChannelMember()"
-    (showProfil)="toggleMemberProfil($event)"
     (close)="toggleEdit()"
   ></app-channel-leave>
   } @if (isProfilOpen) {
@@ -203,22 +200,19 @@
   ></app-profil>
   } @if (isChannelMemberOpen) {
   <app-channel-members
-    [activChannelMemberProfil]="activChannelMemberProfil"
     [newChannelMembers]="newChannelMembers"
-    [isChannelMemberProfilOpen]="isChannelMemberProfilOpen"
     [channelName]="channelData?.cName"
     [channelMembers]="channelMembers"
     [activeUserId]="activeUserId"
     [channelId]="channelData?.cId"
     (addMember)="addChannelMember()"
-    (showProfil)="toggleMemberProfil()"
     (close)="toggleChannelMembers()"
   ></app-channel-members>
 
   }
 </section>
 } @if (addMemberPopUp) {
-<div (click)="closeAddMember()" class="memberAdd" #memberAddWrapper>
+<div (click)="closeAddMember()" class="memberAddMessage" #memberAddWrapper>
   <app-add-new-members
     (click)="$event.stopPropagation()"
     [activeUserId]="activeUserId"

@@ -12,16 +12,17 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideFirebaseApp(() =>
       initializeApp({
-        projectId: 'da-bubble-fed7a',
-        appId: '1:193046112939:web:39c744774fe5237130a5ee',
-        storageBucket: 'da-bubble-fed7a.firebasestorage.app',
-        apiKey: 'AIzaSyDL-3-FphqdH6rZA3Nz67hYvTCkVQ89Sgc',
-        authDomain: 'da-bubble-fed7a.firebaseapp.com',
-        messagingSenderId: '193046112939',
+        apiKey: 'AIzaSyAhQi1adgAX2v3PLkdRUDRJr48llcDiTPU',
+        authDomain: 'dabubble-586d2.firebaseapp.com',
+        projectId: 'dabubble-586d2',
+        storageBucket: 'dabubble-586d2.firebasestorage.app',
+        messagingSenderId: '155220965649',
+        appId: '1:155220965649:web:5f87c097ce167fbcc4b4b0',
+        measurementId: 'G-4KEKXPJ8CK',
       })
     ),
     provideAuth(() => getAuth()),
-    provideFirestore(() => getFirestore()),   
-    provideAnimations()
+    provideFirestore(() => getFirestore()),
+    provideAnimations(),
   ],
 };

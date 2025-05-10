@@ -67,17 +67,6 @@
   }
 
 
-  .overlay{
-    position: fixed;
-    top:   0;
-    right: 0;
-    height: 100vh;
-    width: 100vw;
-    background: red;
-    z-index: 1000;
-  }
-
-
   .popup {
     position: fixed;
     /* zentriert, kannst Du anpassen */
@@ -186,9 +175,10 @@
 }
 
 .showMembers::-webkit-scrollbar-track {
-  margin-top: 40px;
-  margin-bottom: 40px;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
+
 
 .memberItem {
   @include flexBox("", left, center, 15);

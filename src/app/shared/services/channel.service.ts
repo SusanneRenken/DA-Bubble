@@ -117,7 +117,7 @@ export class ChannelService {
             name:      ch.cName, 
             createdAt: ch.createdAt || 0,
           }))
-          .sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1))
+          .sort((a, b) => a.name.localeCompare(b.name, 'de', { sensitivity: 'base' }))
       )
     );
   }
